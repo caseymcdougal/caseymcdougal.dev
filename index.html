@@ -366,22 +366,6 @@
     }
     .kit-tag + .kit-tag::before { content: ' · '; color: var(--accent); }
 
-    /* public-repo link — honest signal that an open tool needs no email gate */
-    .kit-repo {
-      display: inline-block;
-      margin-top: 11px;
-      font-size: 11px;
-      color: var(--dim);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      text-decoration-color: transparent;
-      transition: color 0.12s, text-decoration-color 0.12s;
-    }
-    .kit-repo:hover {
-      color: var(--accent);
-      text-decoration-color: var(--accent-dim);
-    }
-
     .kit-badge {
       display: inline-flex;
       align-items: center;
@@ -584,7 +568,6 @@
           <span class="kit-tag">self-host</span>
           <span class="kit-tag">macOS</span>
         </div>
-        <a href="https://github.com/caseymcdougal/poke-mac-bridge" target="_blank" rel="noopener" class="kit-repo">public repo, no email needed — view source ↗</a>
       </div>
       <div class="kit-badge">live</div>
     </div>
@@ -650,6 +633,7 @@
     var note     = document.getElementById('newsletter-note');
     var input    = form.email;
     var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var DEFAULT_NOTE = note.textContent;
 
     try {
       if (localStorage.getItem(SUB_KEY)) {
@@ -670,8 +654,11 @@
 
     // clear the error state the moment the user starts fixing it
     input.addEventListener('input', function () {
+      if (!input.hasAttribute('aria-invalid')) return;
       input.removeAttribute('aria-invalid');
       input.style.borderColor = '';
+      note.style.color = '';
+      note.textContent = DEFAULT_NOTE;
     });
 
     form.addEventListener('submit', function (e) {
