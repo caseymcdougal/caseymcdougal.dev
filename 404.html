@@ -4,15 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>404 · Casey McDougal</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #201d1d;
+      --text: #fdfcfc;
+      --muted: #9a9898;
+      --dim: #6f6c6c;
+      --accent: #ff5a1f;
+      --r: 4px;
+      --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #0d0d10;
-      color: #e2e2e8;
-      font-family: 'Satoshi', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
@@ -22,43 +33,45 @@
       padding: 2rem;
       -webkit-font-smoothing: antialiased;
     }
+    /* CRT grain + scanlines — same system as the rest of the site */
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.035;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.9  0 0 0 0 0.8  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px);
+    }
+    .wrap { position: relative; z-index: 1; }
+    .cmd { font-size: 13px; color: var(--dim); margin-bottom: 1.5rem; }
+    .cmd::before { content: '$ '; color: var(--accent); }
     .num {
-      font-size: 7rem;
+      font-size: clamp(4rem, 14vw, 7rem);
       font-weight: 700;
-      letter-spacing: -0.05em;
-      color: #1e1e27;
+      letter-spacing: -0.04em;
+      color: var(--accent);
       line-height: 1;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.75rem;
-    }
-    p {
-      color: #7a7a92;
-      font-size: 0.95rem;
-      margin-bottom: 2.5rem;
-    }
+    h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.6rem; }
+    p { color: var(--muted); font-size: 0.85rem; margin-bottom: 2.25rem; }
     a {
-      display: inline-block;
-      background: #c8622a;
-      color: #0d0d10;
-      font-weight: 600;
-      font-size: 0.9rem;
-      padding: 0.75rem 1.75rem;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: opacity 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #201d1d;
+      font-family: var(--mono); font-weight: 600; font-size: 13px;
+      padding: 9px 18px; border-radius: var(--r);
+      text-decoration: none; transition: opacity 0.12s;
     }
-    a:hover { opacity: 0.85; }
+    a:hover { opacity: 0.82; }
   </style>
 </head>
 <body>
-  <div class="num">404</div>
-  <h1>Nothing here.</h1>
-  <p>This page doesn't exist. But the homepage does.</p>
-  <a href="/">Take me home</a>
+  <div class="wrap">
+    <div class="cmd">cd /that-page &amp;&amp; ls</div>
+    <div class="num">404</div>
+    <h1>No such file or directory.</h1>
+    <p>That page doesn't exist. The homepage does.</p>
+    <a href="/">cd ~/ →</a>
+  </div>
 </body>
 </html>

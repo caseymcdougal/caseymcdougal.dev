@@ -3,9 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Casey McDougal</title>
-  <meta name="description" content="18 y/o builder shipping AI tools, games, and automations with Claude Code + Codex. Free kits for builders who actually ship.">
+  <title>Casey McDougal — AI Builder</title>
+  <meta name="description" content="18 y/o builder shipping free MCP tools for Poke. Run your Mac and manage Google Ads by text. Built with Claude Code + Codex. Nothing held back.">
+  <link rel="canonical" href="https://caseymcdougal.dev/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://caseymcdougal.dev/">
+  <meta property="og:title" content="Casey McDougal — AI Builder">
+  <meta property="og:description" content="Two free MCP servers for Poke: run your Mac and manage Google Ads by text. Built with Claude Code + Codex. Nothing held back.">
+  <meta property="og:image" content="https://caseymcdougal.dev/headshot.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@caseymcdougal">
+  <meta name="twitter:creator" content="@caseymcdougal">
+  <meta name="twitter:title" content="Casey McDougal — AI Builder">
+  <meta name="twitter:description" content="Two free MCP servers for Poke: run your Mac and manage Google Ads by text. Built with Claude Code + Codex.">
+  <meta name="twitter:image" content="https://caseymcdougal.dev/headshot.jpg">
+
+  <!-- JSON-LD: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Casey McDougal",
+    "url": "https://caseymcdougal.dev",
+    "image": "https://caseymcdougal.dev/headshot.jpg",
+    "description": "18 y/o indie developer from Tennessee building MCP servers, AI tools, and Roblox games with Claude Code and Codex. Ships free Poke MCP tools for builders.",
+    "sameAs": [
+      "https://github.com/caseymcdougal",
+      "https://twitter.com/caseymcdougal"
+    ],
+    "jobTitle": "Indie Developer",
+    "knowsAbout": ["Model Context Protocol", "Poke", "Claude Code", "AI automation", "Roblox development", "Next.js", "Cloudflare Workers"]
+  }
+  </script>
+
+  <!-- JSON-LD: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Casey McDougal",
+    "url": "https://caseymcdougal.dev",
+    "description": "Free MCP library for builders who ship. Poke MCP servers, AI tools, and dev resources by Casey McDougal.",
+    "author": {
+      "@type": "Person",
+      "name": "Casey McDougal"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -17,16 +67,17 @@
       --bg-hover:  rgba(255,255,255,0.025);
       --text:      #fdfcfc;
       --muted:     #9a9898;
-      --dim:       #5e5b5b;
+      --dim:       #6f6c6c;
       --accent:    #ff5a1f;
       --accent-dim: rgba(255,90,31,0.28);
+      --success:   #30d158;
       --border:    rgba(255,255,255,0.07);
       --mono:      'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
       --r:         4px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; }
 
     body {
       font-family: var(--mono);
@@ -37,7 +88,7 @@
       overflow-x: hidden;
     }
 
-    /* Grain — barely-there texture */
+    /* CRT grain */
     body::before {
       content: '';
       position: fixed;
@@ -48,7 +99,7 @@
       background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.9  0 0 0 0 0.8  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     }
 
-    /* Scanlines — CRT warmth */
+    /* Scanlines */
     body::after {
       content: '';
       position: fixed;
@@ -64,7 +115,6 @@
       );
     }
 
-    /* Stacking above overlays */
     nav, .hero, .kits, .footer { position: relative; z-index: 1; }
 
     /* === NAV === */
@@ -80,6 +130,7 @@
       max-width: 860px;
       margin: 0 auto;
       padding: 0 28px;
+      width: calc(100% - 2rem);
       height: 46px;
       display: flex;
       align-items: center;
@@ -91,7 +142,6 @@
       font-weight: 500;
       color: var(--muted);
       text-decoration: none;
-      letter-spacing: 0;
       transition: color 0.12s;
     }
     .nav-brand:hover { color: var(--text); }
@@ -118,21 +168,19 @@
       text-underline-offset: 3px;
       text-decoration-color: var(--accent-dim);
     }
-    .nav-links .nav-accent:hover { color: var(--accent); opacity: 0.8; }
+    .nav-links .nav-accent:hover { opacity: 0.8; }
 
     /* === HERO === */
     .hero {
-      min-height: 100vh;
       display: flex;
-      align-items: center;
-      padding: 46px 28px 80px;
+      align-items: flex-start;
+      padding: 118px 28px 72px;
       max-width: 860px;
       margin: 0 auto;
     }
 
     .hero-inner { max-width: 660px; }
 
-    /* Staggered entrance */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -141,17 +189,17 @@
     .hero-label {
       font-size: 12px;
       color: var(--dim);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       animation: fadeUp 0.5s ease-out 0.05s both;
     }
     .hero-label::before { content: '// '; }
 
     h1 {
-      font-size: clamp(34px, 6vw, 58px);
+      font-size: clamp(32px, 5.5vw, 54px);
       font-weight: 700;
       line-height: 1.12;
       letter-spacing: -0.015em;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       color: var(--text);
       animation: fadeUp 0.5s ease-out 0.15s both;
     }
@@ -177,12 +225,12 @@
     }
 
     .hero-sub {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 400;
       color: var(--muted);
       line-height: 1.75;
-      max-width: 460px;
-      margin-bottom: 40px;
+      max-width: 440px;
+      margin-bottom: 36px;
       animation: fadeUp 0.5s ease-out 0.28s both;
     }
 
@@ -194,15 +242,15 @@
       animation: fadeUp 0.5s ease-out 0.4s both;
     }
 
-    /* === BUTTONS & LINKS === */
+    /* === BUTTONS === */
     .btn-primary {
       display: inline-flex;
       align-items: center;
       background: var(--accent);
-      color: #fdfcfc;
+      color: #201d1d;
       font-family: var(--mono);
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       padding: 8px 18px;
       border-radius: var(--r);
       border: none;
@@ -228,13 +276,12 @@
     .kits {
       max-width: 860px;
       margin: 0 auto;
-      padding: 0 28px 120px;
+      padding: 0 28px 100px;
     }
 
     .kits-header {
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 0;
     }
 
     .section-label {
@@ -250,15 +297,15 @@
       color: var(--muted);
     }
 
-    /* Kit rows — ls -la style */
+    /* Kit rows */
     .kit-list { margin-bottom: 0; }
 
     .kit-row {
       display: grid;
-      grid-template-columns: 52px 1fr 60px;
+      grid-template-columns: 52px 1fr 64px;
       gap: 0 14px;
       align-items: start;
-      padding: 18px 10px 18px 10px;
+      padding: 20px 10px;
       border-bottom: 1px solid var(--border);
       border-radius: 2px;
       margin: 0 -10px;
@@ -268,17 +315,23 @@
 
     .kit-row:hover { background: var(--bg-hover); }
 
-    .kit-row a.kit-row-link {
-      display: contents;
-      text-decoration: none;
-      color: inherit;
+    /* Open call row is visually receded */
+    .kit-row.call {
+      opacity: 0.6;
+    }
+    .kit-row.call:hover {
+      opacity: 0.85;
+      background: var(--bg-hover);
+    }
+    .kit-row.call .kit-title {
+      color: var(--muted);
     }
 
     .kit-id {
       font-size: 11px;
       font-weight: 500;
       color: var(--accent);
-      padding-top: 2px;
+      padding-top: 3px;
       letter-spacing: 0.03em;
       user-select: none;
     }
@@ -286,15 +339,15 @@
     .kit-body {}
 
     .kit-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       line-height: 1.3;
     }
 
     .kit-desc {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--muted);
       line-height: 1.65;
       margin-bottom: 10px;
@@ -313,18 +366,44 @@
     }
     .kit-tag + .kit-tag::before { content: ' · '; color: var(--accent); }
 
-    .kit-badge {
-      font-size: 10px;
-      font-weight: 500;
+    /* public-repo link — honest signal that an open tool needs no email gate */
+    .kit-repo {
+      display: inline-block;
+      margin-top: 11px;
+      font-size: 11px;
+      color: var(--dim);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: transparent;
+      transition: color 0.12s, text-decoration-color 0.12s;
+    }
+    .kit-repo:hover {
       color: var(--accent);
-      border: 1px solid var(--accent-dim);
-      padding: 2px 7px;
+      text-decoration-color: var(--accent-dim);
+    }
+
+    .kit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--success);
+      border: 1px solid rgba(48,209,88,0.3);
+      padding: 2px 8px;
       border-radius: 2px;
       letter-spacing: 0.04em;
       align-self: start;
       margin-top: 3px;
-      text-align: center;
       white-space: nowrap;
+    }
+    /* green status dot on live badges (matches library) */
+    .kit-badge:not(.open)::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
     }
 
     .kit-badge.open {
@@ -334,9 +413,8 @@
 
     /* === SUBSCRIBE === */
     .subscribe {
-      padding: 36px 0 0;
+      padding: 40px 0 0;
       border-top: 1px solid var(--border);
-      margin-top: 0;
     }
 
     .subscribe-label {
@@ -418,10 +496,10 @@
     @media (max-width: 600px) {
       .nav-links a:not(.nav-accent) { display: none; }
 
-      .hero { padding: 46px 20px 60px; }
+      .hero { padding: 84px 20px 56px; }
       .hero-sub { max-width: 100%; }
 
-      .kits { padding-left: 20px; padding-right: 20px; padding-bottom: 80px; }
+      .kits { padding-left: 20px; padding-right: 20px; padding-bottom: 72px; }
 
       .kit-row {
         grid-template-columns: 44px 1fr 52px;
@@ -440,11 +518,11 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-brand"><span class="prompt">$ </span>casey-mcdougal</a>
+    <a href="/" class="nav-brand"><span class="prompt">$ </span>casey-mcdougal</a>
     <div class="nav-links">
       <a href="https://github.com/caseymcdougal" target="_blank" rel="noopener">github</a>
       <a href="https://twitter.com/caseymcdougal" target="_blank" rel="noopener">x</a>
-      <a href="#kits" class="nav-accent">get free kits ↓</a>
+      <a href="#kits" class="nav-accent">get free tools ↓</a>
     </div>
   </div>
 </nav>
@@ -454,12 +532,12 @@
   <div class="hero-inner">
     <div class="hero-label">18 y/o · Tennessee · building in public</div>
     <h1>
-      158 sites. $0.<br>
-      <span class="line-hot">&gt;&nbsp;now: Claude&nbsp;+&nbsp;Codex<span class="cursor"></span></span>
+      Two free MCP tools.<br>
+      <span class="line-hot">&gt;&nbsp;give Poke real hands.<span class="cursor"></span></span>
     </h1>
     <p class="hero-sub">
-      Shipping AI tools, games, and automations with Claude Code + Codex.
-      Free kits for builders who actually ship. Nothing held back.
+      Drop-in MCP servers that let Poke run your Mac and manage your Google Ads, straight from a text.
+      Built with Claude Code + Codex. Free, no upsell, nothing held back.
     </p>
     <div class="hero-actions">
       <a href="#kits" class="btn-primary">unlock the library →</a>
@@ -472,23 +550,23 @@
 <section class="kits" id="kits" aria-label="Free kits library">
 
   <div class="kits-header">
-    <div class="section-label">// free kits — a library, not a launch</div>
-    <p class="kits-sub">One email unlocks every kit. Current and future. No upsell.</p>
+    <div class="section-label">// free mcp servers · a library, not a launch</div>
+    <p class="kits-sub">One email unlocks every tool. Current and future. No upsell.</p>
   </div>
 
   <div class="kit-list">
 
     <!-- kit_01 -->
     <div class="kit-row">
-      <div class="kit-id">kit_01</div>
+      <div class="kit-id">tool_01</div>
       <div class="kit-body">
-        <div class="kit-title">158 Sites, $0: The Vantage Teardown</div>
-        <div class="kit-desc">Full autopsy of the failed lead-gen pipeline. Every workflow, prompt, and pitch, plus a written post-mortem of why it broke at conversion, not code. The failure is the moat.</div>
+        <div class="kit-title">Google Ads MCP for Poke</div>
+        <div class="kit-desc">Manage Google Ads by texting Poke. Link your account once, then ask it to pull metrics, surface wasted spend, pause campaigns, or block junk search terms. Every change is confirm-gated.</div>
         <div class="kit-tags">
-          <span class="kit-tag">n8n export</span>
-          <span class="kit-tag">124 pitches</span>
-          <span class="kit-tag">post-mortem</span>
-          <span class="kit-tag">raw workflows</span>
+          <span class="kit-tag">Poke MCP</span>
+          <span class="kit-tag">Google Ads API</span>
+          <span class="kit-tag">hosted</span>
+          <span class="kit-tag">$0</span>
         </div>
       </div>
       <div class="kit-badge">live</div>
@@ -496,58 +574,27 @@
 
     <!-- kit_02 -->
     <div class="kit-row">
-      <div class="kit-id">kit_02</div>
+      <div class="kit-id">tool_02</div>
       <div class="kit-body">
-        <div class="kit-title">PonderUI: one-shot glass + neuo sites</div>
-        <div class="kit-desc">A private Claude Code skill that one-shots glassmorphism and neumorphism landing pages with a hard anti-AI-tell filter. Pick a niche, run it, ship a site that looks shipped.</div>
+        <div class="kit-title">Poke Mac Bridge</div>
+        <div class="kit-desc">Give Poke a body on your Mac. 17 tools: run commands, edit files, screenshot, control apps, kick off background builds, all from your phone. Bearer-secured, audit-logged, self-hosted.</div>
         <div class="kit-tags">
-          <span class="kit-tag">Claude Code skill</span>
-          <span class="kit-tag">glass + neuo</span>
-          <span class="kit-tag">anti-AI-tell filter</span>
-          <span class="kit-tag">subs only</span>
+          <span class="kit-tag">Poke MCP</span>
+          <span class="kit-tag">17 tools</span>
+          <span class="kit-tag">self-host</span>
+          <span class="kit-tag">macOS</span>
         </div>
+        <a href="https://github.com/caseymcdougal/poke-mac-bridge" target="_blank" rel="noopener" class="kit-repo">public repo, no email needed — view source ↗</a>
       </div>
       <div class="kit-badge">live</div>
     </div>
 
-    <!-- kit_03 -->
-    <div class="kit-row">
-      <div class="kit-id">kit_03</div>
-      <div class="kit-body">
-        <div class="kit-title">Daily AI Digest Kit</div>
-        <div class="kit-desc">A cron that emails a curated AI digest every morning. $0/month, deploys in five minutes, runs on Vercel's free tier. One Next.js file and a deploy button.</div>
-        <div class="kit-tags">
-          <span class="kit-tag">Next.js cron</span>
-          <span class="kit-tag">HN + RSS + GitHub</span>
-          <span class="kit-tag">Claude Haiku</span>
-          <span class="kit-tag">$0/mo</span>
-        </div>
-      </div>
-      <div class="kit-badge">live</div>
-    </div>
-
-    <!-- kit_04 -->
-    <div class="kit-row">
-      <div class="kit-id">kit_04</div>
-      <div class="kit-body">
-        <div class="kit-title">Newsletter Writer Kit</div>
-        <div class="kit-desc">A Monday cron that reads your notes from the past week and emails you a draft. It assembles what you already wrote, quoting your actual sentences. Edit, not blank-page.</div>
-        <div class="kit-tags">
-          <span class="kit-tag">Next.js cron</span>
-          <span class="kit-tag">GitHub notes repo</span>
-          <span class="kit-tag">Claude Sonnet 4.5</span>
-          <span class="kit-tag">~$0.25/mo</span>
-        </div>
-      </div>
-      <div class="kit-badge">live</div>
-    </div>
-
-    <!-- kit_05 open call -->
-    <div class="kit-row">
-      <div class="kit-id">kit_05</div>
+    <!-- kit_03 open call -->
+    <div class="kit-row call">
+      <div class="kit-id">tool_03</div>
       <div class="kit-body">
         <div class="kit-title">What should I build next?</div>
-        <div class="kit-desc">The library grows from real builder problems. Reply on X with the workflow you wish existed. Most-requested becomes the next kit.</div>
+        <div class="kit-desc">The library grows from real builder problems. Reply on X with the MCP you wish existed. Most-requested becomes the next tool.</div>
         <div class="kit-tags">
           <span class="kit-tag">request on X</span>
           <span class="kit-tag">@caseymcdougal</span>
@@ -596,11 +643,13 @@
 
 <script>
   (function () {
-    var SUB_KEY = 'cmd_subscribed_v1';
-    var form    = document.getElementById('newsletter-form');
-    var welcome = document.getElementById('welcome-back');
-    var btn     = document.getElementById('newsletter-submit');
-    var note    = document.getElementById('newsletter-note');
+    var SUB_KEY  = 'cmd_subscribed_v1';
+    var form     = document.getElementById('newsletter-form');
+    var welcome  = document.getElementById('welcome-back');
+    var btn      = document.getElementById('newsletter-submit');
+    var note     = document.getElementById('newsletter-note');
+    var input    = form.email;
+    var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     try {
       if (localStorage.getItem(SUB_KEY)) {
@@ -611,12 +660,30 @@
       }
     } catch (e) {}
 
+    function showError(msg) {
+      note.style.color        = 'var(--accent)';
+      note.textContent        = msg;
+      input.setAttribute('aria-invalid', 'true');
+      input.style.borderColor = 'var(--accent)';
+      input.focus();
+    }
+
+    // clear the error state the moment the user starts fixing it
+    input.addEventListener('input', function () {
+      input.removeAttribute('aria-invalid');
+      input.style.borderColor = '';
+    });
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var email = form.email.value.trim();
-      if (!email) return;
-      btn.disabled    = true;
-      btn.textContent = 'unlocking...';
+      var email = input.value.trim();
+
+      if (!email)                return showError('// enter your email to unlock.');
+      if (!EMAIL_RE.test(email)) return showError("// that doesn't look like a valid email.");
+
+      note.style.color = '';
+      btn.disabled     = true;
+      btn.textContent  = 'unlocking...';
 
       fetch('/api/subscribe', {
         method:  'POST',
@@ -624,23 +691,30 @@
         body:    JSON.stringify({ email: email })
       })
         .then(function (r) {
-          return r.json().then(function (j) { return { ok: r.ok && j.ok }; });
+          return r.json().then(function (j) { return { ok: r.ok && j.ok, error: j.error }; });
         })
         .then(function (res) {
           if (res.ok) {
             try { localStorage.setItem(SUB_KEY, '1'); } catch (e) {}
+            note.style.color = '';
             note.textContent = "you're in. redirecting...";
             setTimeout(function () { window.location.href = 'library.html'; }, 600);
           } else {
             btn.disabled    = false;
             btn.textContent = 'unlock →';
-            note.textContent = 'something broke. try again or email casey directly.';
+            if (res.error === 'invalid_email') {
+              showError("// that doesn't look like a valid email.");
+            } else {
+              note.style.color = 'var(--accent)';
+              note.textContent = 'something broke. try again, or email casey directly.';
+            }
           }
         })
         .catch(function () {
           btn.disabled    = false;
           btn.textContent = 'unlock →';
-          note.textContent = 'network error. try again.';
+          note.style.color = 'var(--accent)';
+          note.textContent = 'network error. check your connection and retry.';
         });
     });
   })();

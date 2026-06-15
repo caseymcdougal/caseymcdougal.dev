@@ -1,0 +1,25 @@
+# Casey McDougal
+
+> 18 y/o builder from Tennessee shipping free MCP servers for Poke and AI tools with Claude Code + Codex. Give your AI assistant real-world hands. Nothing held back.
+
+## About
+
+Casey McDougal is an 18-year-old indie developer building in public. He ships MCP (Model Context Protocol) servers, AI tools, and Roblox games using Claude Code and Codex. His site hosts a free MCP library: one email unlocks every tool, no upsell.
+
+The library is positioned as a library, not a launch. New MCP servers are added over time and subscribers get them first.
+
+## Free MCP Library
+
+Subscribe at caseymcdougal.dev to unlock all tools. Free forever.
+
+- **tool_01 · Google Ads MCP for Poke**: A centrally-hosted MCP server that lets you manage Google Ads by texting Poke. Read tools pull campaign metrics, search terms, and negative keywords. Mutating tools (pause/enable, set budget, add/remove negatives) are all confirm-gated. Link your account once via OAuth and get a personal /sse URL to paste into Poke. Tags: Poke, MCP, Google Ads API, OAuth, hosted.
+
+- **tool_02 · Poke Mac Bridge**: A local MCP server that gives Poke a body on your Mac. 17 tools across five groups: core (run_command, healthcheck), files & git, system & app control (clipboard, app control, notifications, screen capture), and background jobs with no 60-second cap. Bearer-secured with the token stripped from child process env, every state change appended to an audit log, localhost-only behind a cloudflared tunnel. Self-host: clone the public repo, run setup.sh. Tags: Poke, MCP, macOS, self-host, automation.
+
+## Links
+
+- Website: https://caseymcdougal.dev
+- GitHub: https://github.com/caseymcdougal
+- Poke Mac Bridge repo: https://github.com/caseymcdougal/poke-mac-bridge
+- X (Twitter): https://twitter.com/caseymcdougal
+- Email: caseysandersmcdougal@gmail.com

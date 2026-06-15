@@ -4,651 +4,401 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Library · caseymcdougal.dev</title>
-  <meta name="description" content="The private kits library for subscribers. Read the full teardown, grab the workflows, add the skills.">
+  <meta name="description" content="The private MCP library for subscribers. Two free Poke MCP servers you can connect tonight.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <style>
+    /* === DESIGN TOKENS — opencode-ai system, orange accent (matches index) === */
     :root {
-      --bg: #f5f3ee;
-      --surface: #ffffff;
-      --text: #0c0c0d;
-      --text-secondary: #6b6862;
-      --accent: #0c0c0d;
-      --accent-hot: #ff5a1f;
-      --accent-glow: rgba(255,90,31,0.12);
-      --border: rgba(12,12,13,0.12);
-      --shadow: 0 4px 24px rgba(12,12,13,0.05);
-      --shadow-lg: 0 12px 48px rgba(12,12,13,0.10);
-      --ease: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --bg:         #201d1d;
+      --bg-raised:  #2b2727;
+      --bg-sunk:    #1a1818;
+      --bg-hover:   rgba(255,255,255,0.025);
+      --text:       #fdfcfc;
+      --muted:      #9a9898;
+      --dim:        #6f6c6c;
+      --accent:     #ff5a1f;
+      --accent-dim: rgba(255,90,31,0.28);
+      --accent-glow:rgba(255,90,31,0.07);
+      --success:    #30d158;
+      --border:     rgba(255,255,255,0.07);
+      --border-mid: rgba(255,255,255,0.11);
+      --mono:       'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --r:          4px;
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: var(--mono);
       background: var(--bg);
       color: var(--text);
-      line-height: 1.55;
+      font-size: 16px;
+      line-height: 1.5;
       overflow-x: hidden;
       min-height: 100vh;
     }
-    .glow {
-      position: fixed;
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(120px);
-      opacity: 0.55;
-      width: 640px;
-      height: 640px;
-      background: radial-gradient(circle, rgba(255,90,31,0.18) 0%, transparent 70%);
-      top: -15%;
-      right: -10%;
-    }
+
+    /* CRT grain — same as index */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 1;
-      opacity: 0.05;
-      mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      z-index: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.9  0 0 0 0 0.8  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    }
+    /* Scanlines — same as index */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 3px
+      );
     }
 
-    main {
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 4rem 1.5rem 6rem;
-    }
+    main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 56px 28px 110px; }
 
+    /* === BACK LINK === */
     .back-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      text-transform: lowercase;
-      color: var(--text-secondary);
+      gap: 7px;
+      font-size: 13px;
+      color: var(--dim);
       text-decoration: none;
-      padding: 0.5rem 0.9rem;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s var(--ease);
+      transition: color 0.12s;
     }
-    .back-link:hover {
-      color: var(--accent-hot);
-      border-color: var(--accent-hot);
-      transform: translateX(-2px);
-    }
+    .back-link:hover { color: var(--muted); }
+    .back-link::before { content: '$ cd'; color: var(--accent); }
 
-    header.hero {
-      margin-top: 2.5rem;
-      margin-bottom: 3rem;
-    }
+    /* === HERO === */
+    header.hero { margin-top: 40px; margin-bottom: 52px; }
+
     .eyebrow {
-      display: inline-block;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent-hot);
-      padding: 0.35rem 0.75rem;
-      border: 1px solid var(--accent-hot);
-      border-radius: 100px;
-      margin-bottom: 1.25rem;
-      background: var(--accent-glow);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
     }
+    .eyebrow::before { content: '// '; }
+
     h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
+      font-size: clamp(28px, 5vw, 42px);
       font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.05;
-      margin-bottom: 1rem;
+      line-height: 1.14;
+      letter-spacing: -0.015em;
+      margin-bottom: 16px;
     }
-    h1 em {
-      font-style: normal;
-      color: var(--accent-hot);
-    }
+    h1 em { font-style: normal; color: var(--accent); }
+
     .lede {
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      max-width: 620px;
-    }
-    .lede code {
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      background: rgba(12,12,13,0.06);
-      padding: 0.1rem 0.4rem;
-      border-radius: 4px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 580px;
     }
 
-    .kit {
-      background: var(--surface);
+    /* === TOOL BLOCK === */
+    .tool {
+      background: var(--bg-raised);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.25rem 2rem;
-      box-shadow: var(--shadow);
-      margin-bottom: 1.75rem;
-      position: relative;
-      overflow: hidden;
+      border-radius: var(--r);
+      padding: 30px 30px 26px;
+      margin-bottom: 26px;
     }
-    .kit::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent-hot), transparent);
-    }
-    .kit-head {
+
+    .tool-head {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
     }
-    .kit-head .id { color: var(--accent-hot); }
+    .tool-id { color: var(--accent); font-weight: 500; }
+
     .status {
-      padding: 0.25rem 0.6rem;
-      border-radius: 100px;
-      background: rgba(34,197,94,0.1);
-      color: #16a34a;
-      border: 1px solid rgba(34,197,94,0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--success);
+      border: 1px solid rgba(48,209,88,0.3);
+      border-radius: 2px;
+      padding: 2px 8px;
+      letter-spacing: 0.04em;
     }
-    .kit h2 {
-      font-size: 1.6rem;
+    .status::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+    }
+
+    .tool h2 {
+      font-size: 21px;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
     }
-    .kit > p {
-      color: var(--text-secondary);
-      margin-bottom: 1.5rem;
+    .tool-intro {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 600px;
     }
-    .kit > p em {
-      font-style: italic;
+    .tool-intro em { font-style: normal; color: var(--text); }
+
+    .inside-label {
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: 0.04em;
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .inside-label::before { content: '// '; }
+
+    /* Pieces */
+    .piece {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 0 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .piece:last-of-type { border-bottom: none; padding-bottom: 4px; }
+    .piece-num {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 500;
+      padding-top: 2px;
+      user-select: none;
+    }
+    .piece-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; line-height: 1.35; }
+    .piece-detail { font-size: 12.5px; color: var(--muted); line-height: 1.72; }
+    .piece-detail code {
+      background: var(--bg-sunk);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 11.5px;
       color: var(--text);
     }
 
-    .inside-label {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-secondary);
-      margin-bottom: 0.9rem;
-      padding-top: 1rem;
-      border-top: 1px dashed var(--border);
-    }
-    .piece {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1rem 1.1rem;
-      margin-top: 0.6rem;
-      background: rgba(245,243,238,0.5);
-    }
-    .piece-head {
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-    }
-    .piece-icon {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--accent-hot);
-      font-weight: 700;
-      padding-top: 0.15rem;
-    }
-    .piece-title {
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 0.2rem;
-    }
-    .piece-desc {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-    }
-    .piece-detail {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      margin-top: 0.6rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid var(--border);
-    }
-
+    /* CTA */
     .cta-row {
-      margin-top: 1.75rem;
       display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
       align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
     }
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.55rem;
-      padding: 0.9rem 1.5rem;
-      border-radius: 100px;
-      font-weight: 600;
-      font-size: 0.92rem;
-      text-decoration: none;
-      border: 1px solid var(--accent);
+      gap: 8px;
       background: var(--accent);
-      color: #fff;
-      transition: all 0.3s var(--ease);
-      font-family: inherit;
-      cursor: pointer;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(12,12,13,0.2);
-      background: var(--accent-hot);
-      border-color: var(--accent-hot);
-    }
-    .btn-hot {
-      background: var(--accent-hot);
-      border-color: var(--accent-hot);
-    }
-    .btn-hot:hover {
-      background: #e84a10;
-      border-color: #e84a10;
-    }
-    .btn-note {
+      color: #201d1d;
       font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--text-secondary);
-      text-transform: lowercase;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: var(--r);
+      text-decoration: none;
+      transition: opacity 0.12s;
+      white-space: nowrap;
     }
+    .btn:hover { opacity: 0.82; }
+    .btn-note { font-size: 11px; color: var(--dim); line-height: 1.5; }
 
+    /* Meta */
     .meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem 1rem;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      text-transform: lowercase;
-      margin-top: 1.25rem;
-      padding-top: 1rem;
-      border-top: 1px dashed var(--border);
+      gap: 0;
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 18px;
     }
-    .meta span::before { content: '· '; color: var(--accent-hot); }
-    .meta span:first-child::before { content: ''; }
+    .meta span + span::before { content: ' · '; color: var(--accent); }
 
+    /* Footer note */
     .note {
-      margin-top: 2.5rem;
-      padding: 1.25rem 1.5rem;
-      border-left: 3px solid var(--accent-hot);
-      background: rgba(255,90,31,0.04);
-      border-radius: 0 12px 12px 0;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
+      margin-top: 40px;
+      padding: 18px 20px;
+      border: 1px solid var(--accent-dim);
+      background: var(--accent-glow);
+      border-radius: var(--r);
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.7;
     }
-    .note strong { color: var(--text); }
+    .note strong { color: var(--text); font-weight: 700; }
+    .note::before { content: '// heads up'; display: block; color: var(--accent); font-size: 11px; margin-bottom: 8px; }
 
-    @media (max-width: 640px) {
-      main { padding: 2.5rem 1rem 4rem; }
-      .kit { padding: 1.75rem 1.25rem; }
-      .kit h2 { font-size: 1.35rem; }
+    @media (max-width: 600px) {
+      main { padding: 40px 20px 80px; }
+      .tool { padding: 22px 18px 20px; }
+      .tool h2 { font-size: 18px; }
+      .piece { grid-template-columns: 30px 1fr; gap: 0 8px; }
     }
   </style>
 </head>
 <body>
-  <div class="glow"></div>
 
   <main>
-    <a href="/" class="back-link">← back to site</a>
+    <a href="/" class="back-link">&nbsp;~/</a>
 
     <header class="hero">
       <div class="eyebrow">the library · subscribers only</div>
-      <h1>You're in. Here's <em>everything</em>.</h1>
-      <p class="lede">Four live kits, no funnels, no upsell. Kit 01 is a teardown of a failed pipeline. Kit 02 turns taste into shipped sites. Kit 03 is a free cron that emails you a curated AI digest every morning. Kit 04 turns your weekly notes into a newsletter draft in your voice. All yours.</p>
+      <h1>You're in. Two MCP servers, <em>nothing held back</em>.</h1>
+      <p class="lede">Both free, both give Poke real-world hands. Connect Google Ads in a single OAuth, or self-host the Mac Bridge and drive your machine from a text. New tools land here first.</p>
     </header>
 
-    <!-- Kit 01 -->
-    <section class="kit">
-      <div class="kit-head">
-        <span class="id">kit_01</span>
+    <!-- tool_01 — Google Ads MCP -->
+    <section class="tool">
+      <div class="tool-head">
+        <span class="tool-id">tool_01</span>
         <span class="status">live</span>
       </div>
-      <h2>158 Sites, $0: The Vantage Teardown</h2>
-      <p>The full autopsy of my failed lead-gen pipeline. Every workflow, prompt, and pitch, plus a written post-mortem of why it broke at <em>conversion</em>, not code. The failure is the moat: you can't drag-and-drop scar tissue.</p>
+      <h2>Google Ads MCP for Poke</h2>
+      <p class="tool-intro">A centrally-hosted MCP server for managing Google Ads by text. Link your account once, then ask Poke to pull numbers, find wasted spend, pause a campaign, or block a junk search term. <em>Every change asks before it acts.</em></p>
 
-      <div class="inside-label">inside the teardown</div>
+      <div class="inside-label">what's inside</div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[01]</span>
-          <div>
-            <div class="piece-title">The full pipeline (n8n + code)</div>
-            <div class="piece-desc">Workflow exports, scraper config, deploy script. Fork the whole thing.</div>
-          </div>
+        <span class="piece-num">[01]</span>
+        <div>
+          <div class="piece-title">Reporting, read-only</div>
+          <div class="piece-detail">Four read tools: <code>list_campaigns</code>, <code>get_campaign_metrics</code> (impressions, clicks, cost, conversions over the last 7 days), <code>get_search_terms</code> (sorted by spend, so wasteful keywords surface fast), and <code>list_negative_keywords</code>. Ask "how did my ads do this week" and Poke just answers.</div>
         </div>
-        <p class="piece-detail">Firecrawl → Gemini → batch deploy. The exact node graph and the glue code that templates leave out: rate-limit handling, retry logic, dedupe, the JSON schema I landed on after site #40.</p>
       </div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[02]</span>
-          <div>
-            <div class="piece-title">The prompt vault</div>
-            <div class="piece-desc">Every LLM prompt I shipped, every variant, with notes on what broke.</div>
-          </div>
+        <span class="piece-num">[02]</span>
+        <div>
+          <div class="piece-title">Campaign control, confirm-gated</div>
+          <div class="piece-detail">Four mutating tools: pause or enable a campaign, set a daily budget, add or remove a negative keyword. Each refuses to act unless called with <code>confirm: true</code>, so Poke always asks before it spends or changes anything. No budget blowout from a misread text.</div>
         </div>
-        <p class="piece-detail">Industry-classifier prompts, copy-generation prompts, the one that hallucinated phone numbers, the one that finally stopped. With diffs so you can see how I got from v1 to v9.</p>
       </div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[03]</span>
-          <div>
-            <div class="piece-title">The pitch graveyard</div>
-            <div class="piece-desc">124 real pitches, redacted, annotated with what I'd change now.</div>
-          </div>
+        <span class="piece-num">[03]</span>
+        <div>
+          <div class="piece-title">One OAuth, one private URL</div>
+          <div class="piece-detail">Hit connect, authorize Google Ads once, and the server prints a personal <code>/sse</code> URL. Paste it into Poke and you're live. Each URL is its own identity, tokens stored per user, zero cross-user leakage.</div>
         </div>
-        <p class="piece-detail">The cold emails, the DMs, the follow-ups. Subject lines, open rates where I have them, replies (rare), and the one near-close that taught me distribution beats automation.</p>
       </div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[04]</span>
-          <div>
-            <div class="piece-title">Where it actually broke</div>
-            <div class="piece-desc">A written post-mortem. Not "iterate faster," real failure modes.</div>
-          </div>
+        <span class="piece-num">[04]</span>
+        <div>
+          <div class="piece-title">Revoke whenever</div>
+          <div class="piece-detail">A <code>/disconnect</code> link deletes your token and kills any live session on the spot, then hands you a fresh URL. You hold the keys to your own ad account.</div>
         </div>
-        <p class="piece-detail">The technical pipeline worked. The business pipeline didn't. This is the section nobody on n8n.io can write because they didn't ship the failure first. Bottlenecks, false signals, the tells I missed.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[05]</span>
-          <div>
-            <div class="piece-title">Site #1, redo</div>
-            <div class="piece-desc">If I started over tomorrow. The pipeline I'd actually run.</div>
-          </div>
-        </div>
-        <p class="piece-detail">The smaller, slower, distribution-first version. What I'd cut, what I'd keep, where I'd put the human in the loop, and the one metric I'd watch instead of "sites deployed."</p>
       </div>
 
       <div class="cta-row">
-        <a href="assets/downloads/No-Code-Automation-Starter-Kit.zip" download class="btn btn-hot">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          download the workflows
-        </a>
-        <span class="btn-note">.zip · n8n + prompts + pitches</span>
+        <a href="https://google-ads-mcp-production-d7ae.up.railway.app/auth/google" target="_blank" rel="noopener" class="btn">connect google ads →</a>
+        <span class="btn-note">authorize once, paste the printed url into poke · hosted free · pending google verification</span>
       </div>
 
       <div class="meta">
-        <span>n8n export</span>
-        <span>124 pitches</span>
-        <span>post-mortem</span>
-        <span>+ raw workflows</span>
+        <span>Poke MCP</span>
+        <span>Google Ads API</span>
+        <span>OAuth</span>
+        <span>hosted free</span>
       </div>
     </section>
 
-    <!-- Kit 02 -->
-    <section class="kit">
-      <div class="kit-head">
-        <span class="id">kit_02</span>
+    <!-- tool_02 — Poke Mac Bridge -->
+    <section class="tool">
+      <div class="tool-head">
+        <span class="tool-id">tool_02</span>
         <span class="status">live</span>
       </div>
-      <h2>PonderUI — one-shot sites for any niche</h2>
-      <p>A private Claude Code skill that one-shots glass + neuo landing pages with a hard anti-AI-tell filter. Pick a niche, run it, ship a site that actually looks shipped. Built to turn taste into cash, fast.</p>
+      <h2>Poke Mac Bridge</h2>
+      <p class="tool-intro">A local MCP server that gives Poke a body on your Mac. 17 tools to run commands, edit files, screenshot, control apps, and kick off background builds, all from your phone. <em>Your machine becomes an extension of Poke's brain.</em></p>
 
-      <div class="inside-label">what it does</div>
+      <div class="inside-label">what's inside</div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[01]</span>
-          <div>
-            <div class="piece-title">Taste, enforced</div>
-            <div class="piece-desc">Built on Leonxlnx's taste-skill, layered with a stricter anti-AI-tell catalog.</div>
-          </div>
+        <span class="piece-num">[01]</span>
+        <div>
+          <div class="piece-title">17 tools, five groups</div>
+          <div class="piece-detail">Core (<code>run_command</code>, <code>healthcheck</code>), files &amp; git (read, write, patch, <code>list_dir</code>, <code>git_status</code>), system &amp; app control (clipboard, open/quit/focus apps, desktop notify, <code>say</code>, screen capture, tail logs), and background jobs (start, status, output, kill).</div>
         </div>
-        <p class="piece-detail">Zero em dashes. No purple-pink AI gradients. No Sparkles icon. No "Get Started / Learn More" CTA pair. No three-col Features grid with icon+heading+lorem. No Supercharge/Unleash/Transform copy. The tells that scream "AI slop" are blocked at the skill level.</p>
       </div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[02]</span>
-          <div>
-            <div class="piece-title">A real visual vocabulary</div>
-            <div class="piece-desc">Glass, neuo, and hybrid — with rules for when each one actually works.</div>
-          </div>
+        <span class="piece-num">[02]</span>
+        <div>
+          <div class="piece-title">Run anything, cleanly</div>
+          <div class="piece-detail"><code>run_command</code> executes in a fresh <code>zsh -f</code> subshell with optional <code>cwd</code> and timeout. A non-zero exit comes back as normal output, not a tool error, so Poke can read a failing build and reason about it instead of giving up.</div>
         </div>
-        <p class="piece-detail">8 reference docs: anti-ai-tells, glassmorphism, neumorphism, hybrid glass-neuo, spacing rhythm, color systems, typography, motion. Glass has to be earned against a rich background. Neuo base must share color with its surface. Hybrid only works one way.</p>
       </div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[03]</span>
-          <div>
-            <div class="piece-title">Templates + examples, not lorem</div>
-            <div class="piece-desc">4 page templates, 5 components, 3 full example sites to fork.</div>
-          </div>
+        <span class="piece-num">[03]</span>
+        <div>
+          <div class="piece-title">Long jobs, no 60s cap</div>
+          <div class="piece-detail">Builds, installs, and dev servers run detached and return a <code>jobId</code> immediately. Poll status, tail output, or kill them later. No more "tool timed out" on a three-minute install.</div>
         </div>
-        <p class="piece-detail">Landing, pricing, dashboard, auth. Button, card, nav, modal, input. Plus three real example sites: Loomwright (SaaS landing), Iris Park (portfolio), Tidewater (neuo+glass dashboard). Something to point Claude at instead of "make it look nice."</p>
       </div>
 
       <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[04]</span>
-          <div>
-            <div class="piece-title">A binary QA gate before you ship</div>
-            <div class="piece-desc">A pre-ship checklist that catches the tells before a client does.</div>
-          </div>
+        <span class="piece-num">[04]</span>
+        <div>
+          <div class="piece-title">Built to hold a token safely</div>
+          <div class="piece-detail">The bearer token is stripped from every child process env, so a prompt-injected <code>echo $TOKEN</code> can't exfiltrate it. Every state-changing call is appended to an audit log. It listens on localhost only and reaches Poke through a cloudflared tunnel you control.</div>
         </div>
-        <p class="piece-detail">The stuff you'd forget to check at 1am: infinite float animations, backdrop-blur spam, glass over flat backgrounds, copy that sounds like a landing page generator wrote it. Binary. Pass or fix.</p>
+      </div>
+
+      <div class="piece">
+        <span class="piece-num">[05]</span>
+        <div>
+          <div class="piece-title">One command to install</div>
+          <div class="piece-detail"><code>./setup.sh</code> compiles the project and installs a LaunchAgent so the bridge auto-starts at login. Point a cloudflared tunnel at <code>localhost:3000</code>, paste the URL and token into Poke, done.</div>
+        </div>
       </div>
 
       <div class="cta-row">
-        <a href="https://github.com/caseymcdougal/ponderui" target="_blank" rel="noopener" class="btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8 0 3.2a4.6 4.6 0 0 1 1.2 3.2c0 4.6-2.8 5.6-5.5 5.9.5.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/>
-          </svg>
-          add the skill →
-        </a>
-        <span class="btn-note">private repo · request access if locked</span>
-      </div>
-
-      <div class="meta">
-        <span>Claude Code skill</span>
-        <span>glass + neuo</span>
-        <span>anti-AI-tell filter</span>
-        <span>built on taste-skill</span>
-      </div>
-    </section>
-
-    <!-- Kit 03 -->
-    <section class="kit">
-      <div class="kit-head">
-        <span class="id">kit_03</span>
-        <span class="status">live</span>
-      </div>
-      <h2>Daily AI Digest Kit — your own curated AI newsletter</h2>
-      <p>A cron that emails you a curated AI digest every morning. <em>$0/month</em>, deploys in five minutes, runs on Vercel's free tier. No n8n, no Zapier, no paid scrapers. Most "build an AI digest" tutorials route you through a $20/mo workflow tool. This is one Next.js file and a deploy button.</p>
-
-      <div class="inside-label">what's in the kit</div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[01]</span>
-          <div>
-            <div class="piece-title">Three sources, zero scraping fees</div>
-            <div class="piece-desc">Hacker News + GitHub trending + 15 RSS feeds, all free APIs.</div>
-          </div>
-        </div>
-        <p class="piece-detail">HN via Algolia, GitHub via the search API, RSS via rss-parser. No Apify, no Twitter API, no rented residential proxies. Anthropic, OpenAI, DeepMind, Mistral, Hugging Face, Latent Space, Simon Willison, Sebastian Raschka, Import AI, The Batch — already wired in. Add or remove feeds in one config file.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[02]</span>
-          <div>
-            <div class="piece-title">Interest-weighted ranking</div>
-            <div class="piece-desc">Tell it what you care about. Items mentioning those things get boosted.</div>
-          </div>
-        </div>
-        <p class="piece-detail">A regex/weight table you edit by hand: MCP gets +80, agents get +60, your specific framework gets whatever you decide. Then a Claude Haiku call reads your interest profile in plain English and writes the digest in a voice that sounds like a friend tipping you off — not an LLM summary blob.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[03]</span>
-          <div>
-            <div class="piece-title">An email that actually looks shipped</div>
-            <div class="piece-desc">Hand-written HTML template, not a Resend default.</div>
-          </div>
-        </div>
-        <p class="piece-detail">Headline pulled from the day's biggest story, source labels, hover-friendly link styles, dynamic date header, dark-mode safe. Sends through your own Gmail via an App Password — no domain verification, no Postmark account, no "from" address that screams "marketing tool."</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[04]</span>
-          <div>
-            <div class="piece-title">Failure alerts so it never silently dies</div>
-            <div class="piece-desc">If the cron crashes, you get an email about it.</div>
-          </div>
-        </div>
-        <p class="piece-detail">The annoying thing about morning crons isn't the build — it's discovering three weeks later that the digest stopped arriving and you didn't notice. This one wraps the whole route in a try/catch that emails you the error so you can fix it the same morning.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[05]</span>
-          <div>
-            <div class="piece-title">One-click deploy</div>
-            <div class="piece-desc">Click the Vercel button, paste five env vars, done.</div>
-          </div>
-        </div>
-        <p class="piece-detail">The README walks you through every key — Anthropic API key, Gmail App Password, the cron secret. Total cost forever: pennies a month on Haiku. Total setup time: under five minutes if you already have a Vercel account.</p>
-      </div>
-
-      <div class="cta-row">
-        <a href="https://github.com/caseymcdougal/ai-digest-kit" target="_blank" rel="noopener" class="btn btn-hot">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <a href="https://github.com/caseymcdougal/poke-mac-bridge" target="_blank" rel="noopener" class="btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8 0 3.2a4.6 4.6 0 0 1 1.2 3.2c0 4.6-2.8 5.6-5.5 5.9.5.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/>
           </svg>
           grab the kit →
         </a>
-        <span class="btn-note">public repo · MIT · deploy with one click</span>
+        <span class="btn-note">public repo · self-host on your mac · one-command setup</span>
       </div>
 
       <div class="meta">
-        <span>Next.js cron</span>
-        <span>HN + RSS + GitHub</span>
-        <span>Claude Haiku</span>
-        <span>$0/mo on Vercel free</span>
-      </div>
-    </section>
-
-    <!-- Kit 04 -->
-    <section class="kit">
-      <div class="kit-head">
-        <span class="id">kit_04</span>
-        <span class="status">live</span>
-      </div>
-      <h2>Newsletter Writer Kit — your notes, your voice, shipped weekly</h2>
-      <p>A Monday cron that reads your notes from the past week and emails you a newsletter draft. Most "AI newsletter" tools generate from scratch and the result sounds like an LLM. <em>This one doesn't write — it assembles.</em> It quotes your actual sentences, picks the strongest theme of the week, and gets you to "edit" instead of "blank page."</p>
-
-      <div class="inside-label">what's in the kit</div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[01]</span>
-          <div>
-            <div class="piece-title">The voice rule</div>
-            <div class="piece-desc">The whole kit hinges on one prompt instruction.</div>
-          </div>
-        </div>
-        <p class="piece-detail">"You do NOT write FOR them. You ASSEMBLE what they already wrote. Quote from the notes liberally. Bridge with one sentence at most." That's the difference between a newsletter that sounds like you and a newsletter that sounds like ChatGPT did your homework. The model is reduced from author to editor — exactly the role it's actually good at.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[02]</span>
-          <div>
-            <div class="piece-title">A real voice profile, not a vibes prompt</div>
-            <div class="piece-desc">A voice.md file you author once with samples, rules, and a forbidden list.</div>
-          </div>
-        </div>
-        <p class="piece-detail">Tone bullets, 2-3 paragraphs of your actual writing as live examples, hard-no rules ("no em dashes, no supercharge, no stay curious"), and an optional newsletter structure. Claude reads this every run. Most voice-matching tools rely on a one-line "write like X" prompt — this one gives the model real surface to mimic.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[03]</span>
-          <div>
-            <div class="piece-title">Reads from any markdown notes repo</div>
-            <div class="piece-desc">Obsidian Git, a private notes repo, anything that puts .md files in GitHub.</div>
-          </div>
-        </div>
-        <p class="piece-detail">Uses the GitHub commits API to find files actually modified in the last 7 days — accurate mtimes, not folder scans. Read-only token, fine-grained scope. Works with any folder structure. The README has a one-time setup walkthrough for Obsidian users (install the Git plugin, point it at a private repo, done).</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[04]</span>
-          <div>
-            <div class="piece-title">Half-formed thoughts get marked, not invented</div>
-            <div class="piece-desc">Where you have a thought but didn't finish it, the draft leaves an HTML comment.</div>
-          </div>
-        </div>
-        <p class="piece-detail">The model is told: "Where the user clearly has a thought but didn't finish it, leave a &lt;!-- expand: ... --&gt; comment instead of inventing content." So you open the draft and see exactly which lines need your finger and which are already shippable. No guessing what's yours and what's hallucinated.</p>
-      </div>
-
-      <div class="piece">
-        <div class="piece-head">
-          <span class="piece-icon">[05]</span>
-          <div>
-            <div class="piece-title">Email + .md attachment, edit in any editor</div>
-            <div class="piece-desc">No vendor lock-in. The draft is a markdown file you can edit anywhere.</div>
-          </div>
-        </div>
-        <p class="piece-detail">Mondays at 8am ET, the cron sends you an email with the headline, the chosen theme, and the full draft attached as a markdown file. Open it in your editor, edit, paste into Beehiiv/Substack/wherever. Total cost on Sonnet 4.5: about a quarter a month at weekly cadence.</p>
-      </div>
-
-      <div class="cta-row">
-        <a href="https://github.com/caseymcdougal/newsletter-writer-kit" target="_blank" rel="noopener" class="btn btn-hot">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8 0 3.2a4.6 4.6 0 0 1 1.2 3.2c0 4.6-2.8 5.6-5.5 5.9.5.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/>
-          </svg>
-          grab the kit →
-        </a>
-        <span class="btn-note">public repo · MIT · deploy with one click</span>
-      </div>
-
-      <div class="meta">
-        <span>Next.js cron</span>
-        <span>GitHub notes repo</span>
-        <span>Claude Sonnet 4.5</span>
-        <span>~$0.25/mo</span>
+        <span>Poke MCP</span>
+        <span>17 tools</span>
+        <span>macOS</span>
+        <span>self-host</span>
       </div>
     </section>
 
     <div class="note">
-      <strong>Heads up:</strong> bookmark this page. New kits get added here as they ship, and subscribers get them first. If the PonderUI repo shows 404, reply to the welcome email with your GitHub username and I'll add you as a collaborator.
+      <strong>Bookmark this page.</strong> New MCP servers land here as they ship, and subscribers get them first. Reply to the welcome email with the tool you wish existed, it might become tool_03.
     </div>
   </main>
 </body>
