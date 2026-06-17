@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Casey McDougal — AI Builder</title>
-  <meta name="description" content="18 y/o builder shipping free MCP tools for Poke. Run your Mac and manage Google Ads by text. Built with Claude Code + Codex. Nothing held back.">
+  <title>Casey McDougal — Indie Builder · AI Tools, MCP & Web</title>
+  <meta name="description" content="18 y/o indie builder from Tennessee. I ship MCP servers, AI tools, and fast web products end-to-end with Claude Code and Codex. Selected work, a free MCP library, open to freelance.">
   <link rel="canonical" href="https://caseymcdougal.dev/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://caseymcdougal.dev/">
-  <meta property="og:title" content="Casey McDougal — AI Builder">
-  <meta property="og:description" content="Two free MCP servers for Poke: run your Mac and manage Google Ads by text. Built with Claude Code + Codex. Nothing held back.">
+  <meta property="og:title" content="Casey McDougal — Indie Builder">
+  <meta property="og:description" content="I ship MCP servers, AI tools, and fast web products end-to-end. Selected work, a free MCP library, open to freelance.">
   <meta property="og:image" content="https://caseymcdougal.dev/headshot.jpg">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="@caseymcdougal">
   <meta name="twitter:creator" content="@caseymcdougal">
-  <meta name="twitter:title" content="Casey McDougal — AI Builder">
-  <meta name="twitter:description" content="Two free MCP servers for Poke: run your Mac and manage Google Ads by text. Built with Claude Code + Codex.">
+  <meta name="twitter:title" content="Casey McDougal — Indie Builder">
+  <meta name="twitter:description" content="I ship MCP servers, AI tools, and fast web products end-to-end. Selected work + a free MCP library.">
   <meta name="twitter:image" content="https://caseymcdougal.dev/headshot.jpg">
 
   <!-- JSON-LD: Person -->
@@ -31,13 +31,13 @@
     "name": "Casey McDougal",
     "url": "https://caseymcdougal.dev",
     "image": "https://caseymcdougal.dev/headshot.jpg",
-    "description": "18 y/o indie developer from Tennessee building MCP servers, AI tools, and Roblox games with Claude Code and Codex. Ships free Poke MCP tools for builders.",
+    "description": "18 y/o indie developer from Tennessee. Ships MCP servers, AI tools, fast web products, and Roblox games end-to-end with Claude Code and Codex. Open to freelance.",
     "sameAs": [
       "https://github.com/caseymcdougal",
       "https://twitter.com/caseymcdougal"
     ],
     "jobTitle": "Indie Developer",
-    "knowsAbout": ["Model Context Protocol", "Poke", "Claude Code", "AI automation", "Roblox development", "Next.js", "Cloudflare Workers"]
+    "knowsAbout": ["Model Context Protocol", "AI automation", "Claude Code", "Next.js", "Cloudflare Workers", "Roblox development", "React Native"]
   }
   </script>
 
@@ -48,7 +48,7 @@
     "@type": "WebSite",
     "name": "Casey McDougal",
     "url": "https://caseymcdougal.dev",
-    "description": "Free MCP library for builders who ship. Poke MCP servers, AI tools, and dev resources by Casey McDougal.",
+    "description": "Portfolio and free MCP library of Casey McDougal, an indie builder shipping AI tools, MCP servers, and web products.",
     "author": {
       "@type": "Person",
       "name": "Casey McDougal"
@@ -64,6 +64,7 @@
     :root {
       --bg:        #201d1d;
       --bg-raised: #2b2727;
+      --bg-sunk:   #1a1818;
       --bg-hover:  rgba(255,255,255,0.025);
       --text:      #fdfcfc;
       --muted:     #9a9898;
@@ -72,8 +73,18 @@
       --accent-dim: rgba(255,90,31,0.28);
       --success:   #30d158;
       --border:    rgba(255,255,255,0.07);
+      --border-mid: rgba(255,255,255,0.11);
       --mono:      'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
       --r:         4px;
+
+      /* === DEPTH SYSTEM — whisper-subtle liquid glass. Depth from light, not roundness. === */
+      --glass-fill:  linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
+      --glass-top:   inset 0 1px 0 rgba(255,255,255,0.10);   /* specular top edge */
+      --glass-lip:   inset 0 -1px 0 rgba(0,0,0,0.28);        /* recessed bottom */
+      --lift-1:      0 1px 2px rgba(0,0,0,0.34), 0 4px 12px rgba(0,0,0,0.20);
+      --lift-2:      0 2px 5px rgba(0,0,0,0.40), 0 14px 32px rgba(0,0,0,0.30);
+      --sunk:        inset 0 1px 2px rgba(0,0,0,0.45), inset 0 -1px 0 rgba(255,255,255,0.035);
+      --ease:        cubic-bezier(.22,.61,.36,1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -115,19 +126,22 @@
       );
     }
 
-    nav, .hero, .kits, .footer { position: relative; z-index: 1; }
+    nav, .hero, .work, .library, .footer { position: relative; z-index: 1; }
 
-    /* === NAV === */
+    /* === NAV (frosted glass bar) === */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: var(--bg);
+      background: rgba(32,29,29,0.72);
+      backdrop-filter: blur(14px) saturate(1.3);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3);
       border-bottom: 1px solid var(--border);
+      box-shadow: var(--glass-top), 0 1px 12px rgba(0,0,0,0.22);
     }
 
     .nav-inner {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
       padding: 0 28px;
       width: calc(100% - 2rem);
@@ -174,12 +188,12 @@
     .hero {
       display: flex;
       align-items: flex-start;
-      padding: 118px 28px 72px;
-      max-width: 860px;
+      padding: 118px 28px 64px;
+      max-width: 880px;
       margin: 0 auto;
     }
 
-    .hero-inner { max-width: 660px; }
+    .hero-inner { max-width: 680px; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
@@ -229,38 +243,63 @@
       font-weight: 400;
       color: var(--muted);
       line-height: 1.75;
-      max-width: 440px;
+      max-width: 500px;
       margin-bottom: 36px;
       animation: fadeUp 0.5s ease-out 0.28s both;
     }
+    .hero-sub strong { color: var(--text); font-weight: 500; }
 
     .hero-actions {
       display: flex;
       align-items: center;
-      gap: 22px;
+      gap: 16px;
       flex-wrap: wrap;
       animation: fadeUp 0.5s ease-out 0.4s both;
     }
 
-    /* === BUTTONS === */
+    /* === BUTTONS (liquid-glass depth) === */
     .btn-primary {
       display: inline-flex;
       align-items: center;
-      background: var(--accent);
-      color: #201d1d;
+      gap: 8px;
+      background: linear-gradient(180deg, #ff6e38 0%, #ff5a1f 55%, #f04f10 100%);
+      color: #1c1411;
       font-family: var(--mono);
       font-size: 13px;
       font-weight: 600;
-      padding: 8px 18px;
+      padding: 9px 18px;
       border-radius: var(--r);
-      border: none;
+      border: 1px solid rgba(0,0,0,0.18);
       cursor: pointer;
       text-decoration: none;
-      transition: opacity 0.12s;
       white-space: nowrap;
+      box-shadow: var(--glass-top), var(--lift-1);
+      transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease), filter 0.16s var(--ease);
     }
-    .btn-primary:hover { opacity: 0.82; }
-    .btn-primary:disabled { opacity: 0.5; cursor: default; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--glass-top), var(--lift-2); filter: brightness(1.05); }
+    .btn-primary:active { transform: translateY(0); box-shadow: var(--glass-top), var(--lift-1); filter: brightness(0.97); }
+    .btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; filter: none; }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--glass-fill);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 18px;
+      border-radius: var(--r);
+      border: 1px solid var(--border-mid);
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: var(--glass-top), var(--lift-1);
+      transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease), border-color 0.16s var(--ease);
+    }
+    .btn-secondary:hover { transform: translateY(-1px); border-color: var(--accent-dim); box-shadow: var(--glass-top), var(--lift-2); }
+    .btn-secondary:active { transform: translateY(0); box-shadow: var(--glass-top), var(--lift-1); }
 
     .link-ghost {
       font-size: 13px;
@@ -272,62 +311,67 @@
     }
     .link-ghost:hover { color: var(--muted); }
 
-    /* === KITS SECTION === */
-    .kits {
-      max-width: 860px;
+    /* === SECTION SCAFFOLD === */
+    .section {
+      max-width: 880px;
       margin: 0 auto;
-      padding: 0 28px 100px;
+      padding: 0 28px;
     }
-
-    .kits-header {
-      padding-bottom: 20px;
+    .section-head {
+      padding-bottom: 18px;
       border-bottom: 1px solid var(--border);
+      margin-bottom: 6px;
     }
-
     .section-label {
       font-size: 11px;
       font-weight: 400;
       color: var(--dim);
-      margin-bottom: 5px;
       letter-spacing: 0.02em;
+      margin-bottom: 5px;
     }
-
-    .kits-sub {
+    .section-label::before { content: '// '; color: var(--accent); }
+    .section-sub {
       font-size: 13px;
       color: var(--muted);
+      line-height: 1.6;
+      max-width: 560px;
     }
 
-    /* Kit rows */
-    .kit-list { margin-bottom: 0; }
+    /* group subhead inside work */
+    .group-label {
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: 0.04em;
+      margin: 28px 0 2px;
+      padding-top: 4px;
+    }
+    .group-label::before { content: '> '; color: var(--accent); }
 
-    .kit-row {
+    /* === WORK / KIT ROWS === */
+    .work { padding-bottom: 18px; }
+
+    .row {
       display: grid;
-      grid-template-columns: 52px 1fr 64px;
-      gap: 0 14px;
+      grid-template-columns: 60px 1fr auto;
+      gap: 0 16px;
       align-items: start;
-      padding: 20px 10px;
+      padding: 20px 12px;
       border-bottom: 1px solid var(--border);
-      border-radius: 2px;
-      margin: 0 -10px;
-      transition: background 0.1s;
-      cursor: default;
+      border-radius: var(--r);
+      margin: 0 -12px;
+      transition: transform 0.18s var(--ease), background 0.18s var(--ease), box-shadow 0.18s var(--ease);
+      position: relative;
     }
+    .row:hover {
+      background: var(--glass-fill);
+      transform: translateY(-1px);
+      box-shadow: var(--glass-top), var(--lift-1);
+      border-bottom-color: transparent;
+    }
+    /* clickable rows */
+    a.row { text-decoration: none; color: inherit; cursor: pointer; }
 
-    .kit-row:hover { background: var(--bg-hover); }
-
-    /* Open call row is visually receded */
-    .kit-row.call {
-      opacity: 0.6;
-    }
-    .kit-row.call:hover {
-      opacity: 0.85;
-      background: var(--bg-hover);
-    }
-    .kit-row.call .kit-title {
-      color: var(--muted);
-    }
-
-    .kit-id {
+    .row-id {
       font-size: 11px;
       font-weight: 500;
       color: var(--accent);
@@ -336,127 +380,176 @@
       user-select: none;
     }
 
-    .kit-body {}
-
-    .kit-title {
+    .row-title {
       font-size: 15px;
       font-weight: 700;
       color: var(--text);
       margin-bottom: 7px;
       line-height: 1.3;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
+    a.row:hover .row-title { color: var(--accent); }
 
-    .kit-desc {
+    .row-desc {
       font-size: 12.5px;
       color: var(--muted);
       line-height: 1.65;
       margin-bottom: 10px;
-      max-width: 540px;
+      max-width: 560px;
     }
+    .row-desc em { font-style: normal; color: var(--text); }
 
-    .kit-tags {
-      display: flex;
-      gap: 0;
-      flex-wrap: wrap;
-    }
+    .row-tags { display: flex; flex-wrap: wrap; gap: 0; }
+    .row-tag { font-size: 11px; color: var(--dim); }
+    .row-tag + .row-tag::before { content: ' · '; color: var(--accent); }
 
-    .kit-tag {
-      font-size: 11px;
-      color: var(--dim);
-    }
-    .kit-tag + .kit-tag::before { content: ' · '; color: var(--accent); }
-
-    .kit-badge {
+    /* status / action pill (glass) */
+    .pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: 11px;
       font-weight: 500;
-      color: var(--success);
-      border: 1px solid rgba(48,209,88,0.3);
-      padding: 2px 8px;
-      border-radius: 2px;
       letter-spacing: 0.04em;
+      padding: 3px 9px;
+      border-radius: var(--r);
+      white-space: nowrap;
       align-self: start;
       margin-top: 3px;
-      white-space: nowrap;
+      background: var(--glass-fill);
+      box-shadow: var(--glass-top), 0 1px 2px rgba(0,0,0,0.25);
     }
-    /* green status dot on live badges (matches library) */
-    .kit-badge:not(.open)::before {
+    .pill.live {
+      color: var(--success);
+      border: 1px solid rgba(48,209,88,0.3);
+    }
+    .pill.live::before {
       content: '';
       width: 6px; height: 6px;
       border-radius: 50%;
       background: var(--success);
       box-shadow: 0 0 6px var(--success);
     }
-
-    .kit-badge.open {
+    .pill.link {
+      color: var(--muted);
+      border: 1px solid var(--border-mid);
+    }
+    a.row:hover .pill.link { color: var(--text); border-color: var(--accent-dim); }
+    .pill.soft {
       color: var(--dim);
-      border-color: var(--border);
+      border: 1px solid var(--border);
     }
 
-    /* === SUBSCRIBE === */
-    .subscribe {
-      padding: 40px 0 0;
+    /* breadth line */
+    .breadth {
+      font-size: 12px;
+      color: var(--dim);
+      line-height: 1.8;
+      margin-top: 26px;
+      padding-top: 18px;
       border-top: 1px solid var(--border);
     }
+    .breadth::before { content: '// also in the workshop: '; color: var(--accent); }
+    .breadth b { color: var(--muted); font-weight: 500; }
 
-    .subscribe-label {
-      font-size: 11px;
-      color: var(--dim);
-      margin-bottom: 16px;
-      letter-spacing: 0.02em;
+    /* === LIBRARY (demoted funnel) === */
+    .library { padding-top: 52px; padding-bottom: 96px; }
+
+    .lib-card {
+      background: var(--glass-fill);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--r);
+      padding: 26px 26px 24px;
+      box-shadow: var(--glass-top), var(--lift-1);
     }
+
+    .lib-lede {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 540px;
+      margin-bottom: 22px;
+    }
+    .lib-lede strong { color: var(--text); font-weight: 500; }
 
     .subscribe-form {
       display: flex;
       gap: 8px;
-      max-width: 440px;
-      margin-bottom: 10px;
+      max-width: 460px;
+      margin-bottom: 12px;
     }
 
     .email-input {
       flex: 1;
-      background: var(--bg-raised);
-      border: 1px solid var(--border);
+      background: var(--bg-sunk);
+      border: 1px solid var(--border-mid);
       border-radius: var(--r);
       color: var(--text);
       font-family: var(--mono);
       font-size: 13px;
-      padding: 8px 14px;
+      padding: 9px 14px;
       outline: none;
-      transition: border-color 0.15s;
+      box-shadow: var(--sunk);
+      transition: border-color 0.15s, box-shadow 0.15s;
       min-width: 0;
     }
     .email-input::placeholder { color: var(--dim); }
-    .email-input:focus { border-color: var(--accent-dim); }
-
-    .subscribe-note {
-      font-size: 11px;
-      color: var(--dim);
-      line-height: 1.5;
+    .email-input:focus {
+      border-color: var(--accent-dim);
+      box-shadow: var(--sunk), 0 0 0 3px rgba(255,90,31,0.12);
     }
+
+    .subscribe-note { font-size: 11px; color: var(--dim); line-height: 1.5; }
+
+    .lib-request {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .lib-request::before { content: '// request a tool: '; color: var(--accent); }
+    .lib-request a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: var(--accent-dim);
+    }
+    .lib-request a:hover { color: var(--accent); }
 
     .welcome-back { display: none; }
 
     /* === FOOTER === */
     .footer {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
-      padding: 20px 28px;
+      padding: 22px 28px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       border-top: 1px solid var(--border);
     }
-
-    .footer-links {
-      display: flex;
-      gap: 20px;
+    .footer-left { display: flex; flex-direction: column; gap: 6px; }
+    .footer-avail {
+      font-size: 12px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
     }
-
+    .footer-avail::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+    }
+    .footer-links { display: flex; gap: 20px; }
     .footer-links a {
       font-size: 12px;
       color: var(--dim);
@@ -465,34 +558,32 @@
       text-decoration-color: transparent;
       transition: color 0.12s, text-decoration-color 0.12s;
     }
-    .footer-links a:hover {
-      color: var(--muted);
-      text-decoration-color: var(--dim);
-    }
-
-    .footer-copy {
-      font-size: 12px;
-      color: var(--dim);
-    }
+    .footer-links a:hover { color: var(--muted); text-decoration-color: var(--dim); }
+    .footer-copy { font-size: 12px; color: var(--dim); }
     .footer-copy::before { content: '// '; }
+
+    /* === MOTION SAFETY === */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .row:hover, .btn-primary:hover, .btn-secondary:hover { transform: none; }
+    }
 
     /* === RESPONSIVE === */
     @media (max-width: 600px) {
       .nav-links a:not(.nav-accent) { display: none; }
-
-      .hero { padding: 84px 20px 56px; }
+      .hero { padding: 84px 20px 48px; }
       .hero-sub { max-width: 100%; }
-
-      .kits { padding-left: 20px; padding-right: 20px; padding-bottom: 72px; }
-
-      .kit-row {
-        grid-template-columns: 44px 1fr 52px;
-        gap: 0 10px;
-        padding-left: 8px;
-        padding-right: 8px;
+      .hero-actions { gap: 12px; }
+      .section { padding-left: 20px; padding-right: 20px; }
+      .library { padding-bottom: 72px; }
+      .lib-card { padding: 22px 18px 20px; }
+      .row {
+        grid-template-columns: 48px 1fr;
+        gap: 0 12px;
+        padding: 18px 8px;
         margin: 0 -8px;
       }
-
+      .pill { grid-column: 2; justify-self: start; margin-top: 4px; }
       .footer { flex-direction: column; align-items: flex-start; padding: 20px; }
     }
   </style>
@@ -504,9 +595,10 @@
   <div class="nav-inner">
     <a href="/" class="nav-brand"><span class="prompt">$ </span>casey-mcdougal</a>
     <div class="nav-links">
+      <a href="#work">work</a>
+      <a href="#library">library</a>
       <a href="https://github.com/caseymcdougal" target="_blank" rel="noopener">github</a>
-      <a href="https://twitter.com/caseymcdougal" target="_blank" rel="noopener">x</a>
-      <a href="#kits" class="nav-accent">get free tools ↓</a>
+      <a href="mailto:caseysandersmcdougal@gmail.com" class="nav-accent">hire me →</a>
     </div>
   </div>
 </nav>
@@ -514,83 +606,160 @@
 <!-- HERO -->
 <section class="hero" aria-label="Introduction">
   <div class="hero-inner">
-    <div class="hero-label">18 y/o · Tennessee · building in public</div>
+    <div class="hero-label">18 · Tennessee · building in public</div>
     <h1>
-      Two free MCP tools.<br>
-      <span class="line-hot">&gt;&nbsp;give Poke real hands.<span class="cursor"></span></span>
+      I build AI tools, MCP servers,<br>
+      <span class="line-hot">&gt;&nbsp;and the web around them.<span class="cursor"></span></span>
     </h1>
     <p class="hero-sub">
-      Drop-in MCP servers that let Poke run your Mac and manage your Google Ads, straight from a text.
-      Built with Claude Code + Codex. Free, no upsell, nothing held back.
+      MCP servers that give AI agents real hands. <strong>Client sites that load fast and rank.</strong>
+      Roblox sims with real players. I take things from idea to live, solo, with Claude Code and Codex.
+      Open to freelance and collabs.
     </p>
     <div class="hero-actions">
-      <a href="#kits" class="btn-primary">unlock the library →</a>
+      <a href="#work" class="btn-primary">view the work ↓</a>
+      <a href="mailto:caseysandersmcdougal@gmail.com" class="btn-secondary">hire me →</a>
       <a href="https://github.com/caseymcdougal" target="_blank" rel="noopener" class="link-ghost">github →</a>
     </div>
   </div>
 </section>
 
-<!-- FREE KITS -->
-<section class="kits" id="kits" aria-label="Free kits library">
-
-  <div class="kits-header">
-    <div class="section-label">// free mcp servers · a library, not a launch</div>
-    <p class="kits-sub">One email unlocks every tool. Current and future. No upsell.</p>
+<!-- SELECTED WORK -->
+<section class="section work" id="work" aria-label="Selected work">
+  <div class="section-head">
+    <div class="section-label">selected work</div>
+    <p class="section-sub">A sampling of what I ship. Tools, products, and sites, all built and shipped end-to-end.</p>
   </div>
 
-  <div class="kit-list">
+  <div class="group-label">MCP / AI tools</div>
 
-    <!-- kit_01 -->
-    <div class="kit-row">
-      <div class="kit-id">tool_01</div>
-      <div class="kit-body">
-        <div class="kit-title">Google Ads MCP for Poke</div>
-        <div class="kit-desc">Manage Google Ads by texting Poke. Link your account once, then ask it to pull metrics, surface wasted spend, pause campaigns, or block junk search terms. Every change is confirm-gated.</div>
-        <div class="kit-tags">
-          <span class="kit-tag">Poke MCP</span>
-          <span class="kit-tag">Google Ads API</span>
-          <span class="kit-tag">hosted</span>
-          <span class="kit-tag">$0</span>
-        </div>
+  <!-- work_01 -->
+  <a class="row" href="https://google-ads-mcp-production-d7ae.up.railway.app" target="_blank" rel="noopener">
+    <div class="row-id">work_01</div>
+    <div>
+      <div class="row-title">Google Ads MCP</div>
+      <div class="row-desc">Manage Google Ads by text. Link an account once, then pull metrics, surface wasted spend, pause campaigns, or block junk search terms. <em>Every change is confirm-gated.</em> Centrally hosted, free.</div>
+      <div class="row-tags">
+        <span class="row-tag">Poke MCP</span>
+        <span class="row-tag">Google Ads API</span>
+        <span class="row-tag">OAuth</span>
+        <span class="row-tag">hosted</span>
       </div>
-      <div class="kit-badge">live</div>
     </div>
+    <span class="pill live">live</span>
+  </a>
 
-    <!-- kit_02 -->
-    <div class="kit-row">
-      <div class="kit-id">tool_02</div>
-      <div class="kit-body">
-        <div class="kit-title">Poke Mac Bridge</div>
-        <div class="kit-desc">Give Poke a body on your Mac. 17 tools: run commands, edit files, screenshot, control apps, kick off background builds, all from your phone. Bearer-secured, audit-logged, self-hosted.</div>
-        <div class="kit-tags">
-          <span class="kit-tag">Poke MCP</span>
-          <span class="kit-tag">17 tools</span>
-          <span class="kit-tag">self-host</span>
-          <span class="kit-tag">macOS</span>
-        </div>
+  <!-- work_02 -->
+  <a class="row" href="https://github.com/caseymcdougal/poke-mac-bridge" target="_blank" rel="noopener">
+    <div class="row-id">work_02</div>
+    <div>
+      <div class="row-title">Mac Bridge</div>
+      <div class="row-desc">Gives an AI agent a body on my Mac: 17 tools to run commands, edit files, screenshot, drive apps, and kick off background builds, all from a text. <em>Bearer-secured, audit-logged, self-hosted.</em></div>
+      <div class="row-tags">
+        <span class="row-tag">MCP</span>
+        <span class="row-tag">17 tools</span>
+        <span class="row-tag">TypeScript</span>
+        <span class="row-tag">macOS</span>
       </div>
-      <div class="kit-badge">live</div>
     </div>
+    <span class="pill link">repo →</span>
+  </a>
 
-    <!-- kit_03 open call -->
-    <div class="kit-row call">
-      <div class="kit-id">tool_03</div>
-      <div class="kit-body">
-        <div class="kit-title">What should I build next?</div>
-        <div class="kit-desc">The library grows from real builder problems. Reply on X with the MCP you wish existed. Most-requested becomes the next tool.</div>
-        <div class="kit-tags">
-          <span class="kit-tag">request on X</span>
-          <span class="kit-tag">@caseymcdougal</span>
-        </div>
+  <!-- work_03 -->
+  <div class="row">
+    <div class="row-id">work_03</div>
+    <div>
+      <div class="row-title">MCP bridges · Plaid · Obsidian · Bash</div>
+      <div class="row-desc">Three more SSE MCP servers wiring bank data, my Obsidian vault, and shell access into AI agents over cloudflared tunnels. Running 24/7 on LaunchAgents, bearer-gated.</div>
+      <div class="row-tags">
+        <span class="row-tag">SSE</span>
+        <span class="row-tag">cloudflared</span>
+        <span class="row-tag">Node</span>
+        <span class="row-tag">self-host</span>
       </div>
-      <div class="kit-badge open">open call</div>
     </div>
-
+    <span class="pill soft">running</span>
   </div>
 
-  <!-- Subscribe -->
-  <div class="subscribe" id="subscribe-card">
-    <div class="subscribe-label">// unlock the library</div>
+  <div class="group-label">Web / sites</div>
+
+  <!-- web_01 -->
+  <a class="row" href="https://scottmcdougallpc.com" target="_blank" rel="noopener">
+    <div class="row-id">web_01</div>
+    <div>
+      <div class="row-title">Scott McDougal, LPC</div>
+      <div class="row-desc">Therapy practice site: clean, fast, and SEO'd, with email routing wired up. Built to load instantly and read trustworthy.</div>
+      <div class="row-tags">
+        <span class="row-tag">static</span>
+        <span class="row-tag">SEO</span>
+        <span class="row-tag">email routing</span>
+      </div>
+    </div>
+    <span class="pill live">live</span>
+  </a>
+
+  <!-- web_02 -->
+  <a class="row" href="https://thearmfoundation.com" target="_blank" rel="noopener">
+    <div class="row-id">web_02</div>
+    <div>
+      <div class="row-title">ARM Foundation</div>
+      <div class="row-desc">Nonprofit site on Cloudflare Workers: static, fast, and search-optimized, with a dedicated book page driving its SEO.</div>
+      <div class="row-tags">
+        <span class="row-tag">Cloudflare Workers</span>
+        <span class="row-tag">static</span>
+        <span class="row-tag">SEO</span>
+      </div>
+    </div>
+    <span class="pill live">live</span>
+  </a>
+
+  <!-- web_03 -->
+  <a class="row" href="https://tripflow.caseymcdougal.dev" target="_blank" rel="noopener">
+    <div class="row-id">web_03</div>
+    <div>
+      <div class="row-title">Trip Flow</div>
+      <div class="row-desc">Intake SaaS for a psychedelic-therapy practice: a multi-turn chat that triages new clients, then hands off by email. Conversational where a form would stall.</div>
+      <div class="row-tags">
+        <span class="row-tag">Next.js</span>
+        <span class="row-tag">chat triage</span>
+        <span class="row-tag">Resend</span>
+        <span class="row-tag">in progress</span>
+      </div>
+    </div>
+    <span class="pill link">demo →</span>
+  </a>
+
+  <!-- web_04 -->
+  <a class="row" href="https://clearlyaware-demo.surge.sh" target="_blank" rel="noopener">
+    <div class="row-id">web_04</div>
+    <div>
+      <div class="row-title">Clearly Aware Therapy</div>
+      <div class="row-desc">Squarespace to a custom rebuild: editorial typography, faster loads, and a calmer layout. Demo of the in-progress redesign.</div>
+      <div class="row-tags">
+        <span class="row-tag">rebuild</span>
+        <span class="row-tag">editorial type</span>
+        <span class="row-tag">in progress</span>
+      </div>
+    </div>
+    <span class="pill link">demo →</span>
+  </a>
+
+  <p class="breadth">
+    <b>Meteor Miner</b>, a Roblox mining sim with returning players · <b>Amigo</b>, a React Native + Supabase learning app · and a stack of automations I run my own life on.
+  </p>
+</section>
+
+<!-- THE LIBRARY (free funnel) -->
+<section class="section library" id="library" aria-label="Free MCP library">
+  <div class="section-head">
+    <div class="section-label">the free library</div>
+    <p class="section-sub">Some of the tools above are yours, free.</p>
+  </div>
+
+  <div class="lib-card" id="subscribe-card">
+    <p class="lib-lede">
+      The MCP servers I publish go here first. <strong>One email unlocks every tool, current and future</strong>, with setup instructions you can follow tonight. No upsell, no spam.
+    </p>
     <form class="subscribe-form" id="newsletter-form" novalidate>
       <input
         type="email"
@@ -610,16 +779,23 @@
         <a href="library.html" style="color:var(--muted);text-decoration:underline;text-underline-offset:3px;margin-left:6px;">open the library →</a>
       </p>
     </div>
-  </div>
 
+    <p class="lib-request">
+      reply on X with the MCP you wish existed. Most-requested ships next.
+      <a href="https://twitter.com/caseymcdougal" target="_blank" rel="noopener">@caseymcdougal →</a>
+    </p>
+  </div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-links">
-    <a href="https://twitter.com/caseymcdougal" target="_blank" rel="noopener">x / twitter</a>
-    <a href="https://github.com/caseymcdougal" target="_blank" rel="noopener">github</a>
-    <a href="mailto:caseysandersmcdougal@gmail.com">email</a>
+  <div class="footer-left">
+    <span class="footer-avail">available for freelance + collabs</span>
+    <div class="footer-links">
+      <a href="https://twitter.com/caseymcdougal" target="_blank" rel="noopener">x / twitter</a>
+      <a href="https://github.com/caseymcdougal" target="_blank" rel="noopener">github</a>
+      <a href="mailto:caseysandersmcdougal@gmail.com">email</a>
+    </div>
   </div>
   <div class="footer-copy">2026 casey mcdougal</div>
 </footer>

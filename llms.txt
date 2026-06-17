@@ -1,25 +1,34 @@
 # Casey McDougal
 
-> 18 y/o builder from Tennessee shipping free MCP servers for Poke and AI tools with Claude Code + Codex. Give your AI assistant real-world hands. Nothing held back.
+> 18 y/o indie builder from Tennessee. Ships MCP servers, AI tools, fast web products, and Roblox games end-to-end with Claude Code and Codex. Portfolio plus a free MCP library. Open to freelance.
 
 ## About
 
-Casey McDougal is an 18-year-old indie developer building in public. He ships MCP (Model Context Protocol) servers, AI tools, and Roblox games using Claude Code and Codex. His site hosts a free MCP library: one email unlocks every tool, no upsell.
+Casey McDougal is an 18-year-old indie developer building in public. He takes products from idea to live solo: Model Context Protocol (MCP) servers that give AI agents real-world hands, client websites built for speed and SEO, conversational intake flows, and Roblox games with real players. His tooling stack is Claude Code and Codex. He is open to freelance work and collaborations.
 
-The library is positioned as a library, not a launch. New MCP servers are added over time and subscribers get them first.
+## Selected Work
+
+- **Google Ads MCP**: A centrally-hosted MCP server to manage Google Ads by text. Pull metrics, surface wasted spend, pause campaigns, block junk search terms. Every change is confirm-gated. Built for Poke. Live. Tags: MCP, Google Ads API, OAuth, hosted.
+- **Mac Bridge**: A local MCP server giving an AI agent a body on your Mac, 17 tools to run commands, edit files, screenshot, drive apps, and run background builds. Bearer-secured, audit-logged, self-hosted. Public repo. Tags: MCP, TypeScript, macOS, self-host.
+- **MCP bridges (Plaid, Obsidian, Bash)**: Three more SSE MCP servers wiring bank data, an Obsidian vault, and shell access into AI agents over cloudflared tunnels, running 24/7 on LaunchAgents. Tags: SSE, cloudflared, Node.
+- **Scott McDougal, LPC**: A fast, SEO'd therapy practice site with email routing. Live. Tags: static, SEO.
+- **ARM Foundation**: A nonprofit site on Cloudflare Workers, static and search-optimized. Live. Tags: Cloudflare Workers, static, SEO.
+- **Trip Flow**: Intake SaaS for a psychedelic-therapy practice, a multi-turn chat that triages new clients and hands off by email. Demo, in progress. Tags: Next.js, chat, Resend.
+- **Clearly Aware Therapy**: A Squarespace-to-custom rebuild with editorial typography and faster loads. In progress. Tags: rebuild, editorial.
+
+Also in progress: Meteor Miner (a Roblox mining sim with returning players) and Amigo (a React Native and Supabase learning app).
 
 ## Free MCP Library
 
-Subscribe at caseymcdougal.dev to unlock all tools. Free forever.
+Some of the MCP servers above are free. Subscribe at caseymcdougal.dev to unlock every tool, current and future, with setup instructions. Free forever, no upsell.
 
-- **tool_01 · Google Ads MCP for Poke**: A centrally-hosted MCP server that lets you manage Google Ads by texting Poke. Read tools pull campaign metrics, search terms, and negative keywords. Mutating tools (pause/enable, set budget, add/remove negatives) are all confirm-gated. Link your account once via OAuth and get a personal /sse URL to paste into Poke. Tags: Poke, MCP, Google Ads API, OAuth, hosted.
-
-- **tool_02 · Poke Mac Bridge**: A local MCP server that gives Poke a body on your Mac. 17 tools across five groups: core (run_command, healthcheck), files & git, system & app control (clipboard, app control, notifications, screen capture), and background jobs with no 60-second cap. Bearer-secured with the token stripped from child process env, every state change appended to an audit log, localhost-only behind a cloudflared tunnel. Self-host: clone the public repo, run setup.sh. Tags: Poke, MCP, macOS, self-host, automation.
+- **tool_01 · Google Ads MCP**: Centrally-hosted MCP server for managing Google Ads by texting Poke. Read tools pull campaign metrics, search terms, and negative keywords. Mutating tools (pause/enable, set budget, add/remove negatives) are confirm-gated. Link an account once via OAuth and get a personal /sse URL to paste into Poke.
+- **tool_02 · Mac Bridge**: Local MCP server that gives Poke a body on your Mac. 17 tools across core (run_command, healthcheck), files and git, system and app control, and background jobs with no 60-second cap. Bearer-secured with the token stripped from child process env, every state change appended to an audit log, localhost-only behind a cloudflared tunnel. Self-host: clone the public repo, run setup.sh.
 
 ## Links
 
 - Website: https://caseymcdougal.dev
 - GitHub: https://github.com/caseymcdougal
-- Poke Mac Bridge repo: https://github.com/caseymcdougal/poke-mac-bridge
+- Mac Bridge repo: https://github.com/caseymcdougal/poke-mac-bridge
 - X (Twitter): https://twitter.com/caseymcdougal
 - Email: caseysandersmcdougal@gmail.com

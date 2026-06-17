@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Poke Recipe Preview & Tester — Casey McDougal</title>
+  <title>Recipe Lab — MCP automation tester · Casey McDougal</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -11,16 +13,26 @@
     :root {
       --bg: #0d0d0d;
       --bg-raised: #1a1a1a;
+      --bg-sunk: #080808;
       --bg-hover: rgba(255,255,255,0.03);
       --text: #e0e0e0;
       --muted: #888;
       --dim: #555;
       --accent: #ff5a1f;
-      --accent-dim: rgba(255,90,31,0.15);
+      --accent-dim: rgba(255,90,31,0.28);
       --success: #30d158;
       --border: rgba(255,255,255,0.08);
-      --mono: 'JetBrains Mono', monospace;
+      --border-mid: rgba(255,255,255,0.12);
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
       --r: 4px;
+
+      /* === DEPTH SYSTEM — whisper-subtle liquid glass === */
+      --glass-fill: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+      --glass-top:  inset 0 1px 0 rgba(255,255,255,0.10);
+      --lift-1:     0 1px 2px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.28);
+      --lift-2:     0 2px 5px rgba(0,0,0,0.45), 0 14px 32px rgba(0,0,0,0.36);
+      --sunk:       inset 0 1px 2px rgba(0,0,0,0.5), inset 0 -1px 0 rgba(255,255,255,0.03);
+      --ease:       cubic-bezier(.22,.61,.36,1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,7 +45,7 @@
       overflow-x: hidden;
     }
 
-    /* CRT Grain & Scanlines */
+    /* CRT Grain */
     body::before {
       content: '';
       position: fixed;
@@ -44,6 +56,7 @@
       background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     }
 
+    /* === NAV (frosted glass) === */
     nav {
       height: 50px;
       border-bottom: 1px solid var(--border);
@@ -51,7 +64,10 @@
       align-items: center;
       padding: 0 20px;
       justify-content: space-between;
-      background: var(--bg);
+      background: rgba(13,13,13,0.72);
+      backdrop-filter: blur(14px) saturate(1.3);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3);
+      box-shadow: var(--glass-top), 0 1px 12px rgba(0,0,0,0.3);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -70,20 +86,24 @@
       gap: 1px;
       background: var(--border);
       min-height: calc(100vh - 50px);
+      position: relative;
     }
 
     .panel { background: var(--bg); padding: 20px; overflow-y: auto; }
     .panel-header { font-size: 11px; color: var(--dim); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center; }
     .panel-header span { color: var(--accent); }
 
-    /* Left Sidebar: Automation & CRON */
+    /* Left Sidebar: Automation & CRON (glass cards) */
     .automation-card {
-      background: var(--bg-raised);
-      border: 1px solid var(--border);
+      background: var(--glass-fill);
+      border: 1px solid var(--border-mid);
       padding: 15px;
       border-radius: var(--r);
       margin-bottom: 15px;
+      box-shadow: var(--glass-top), var(--lift-1);
+      transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
     }
+    .automation-card:hover { transform: translateY(-1px); box-shadow: var(--glass-top), var(--lift-2); }
     .automation-card .title { font-weight: 600; font-size: 13px; margin-bottom: 5px; }
     .automation-card .schedule { font-size: 11px; color: var(--accent); margin-bottom: 10px; }
     .automation-card .status { font-size: 10px; color: var(--dim); display: flex; align-items: center; gap: 5px; }
@@ -91,10 +111,11 @@
 
     /* Center: Preview Bubble Feed */
     .preview-feed {
-      background: #080808;
+      background: var(--bg-sunk);
       display: flex;
       flex-direction: column;
       gap: 20px;
+      box-shadow: var(--sunk);
     }
     .bubble {
       max-width: 80%;
@@ -102,17 +123,19 @@
       border-radius: 12px;
       font-size: 13px;
       position: relative;
+      box-shadow: var(--glass-top), var(--lift-1);
     }
     .bubble.user {
       align-self: flex-end;
-      background: var(--accent);
-      color: #000;
+      background: linear-gradient(180deg, #ff6e38 0%, #ff5a1f 55%, #f04f10 100%);
+      color: #1c1411;
       border-bottom-right-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.18);
     }
     .bubble.poke {
       align-self: flex-start;
-      background: var(--bg-raised);
-      border: 1px solid var(--border);
+      background: var(--glass-fill);
+      border: 1px solid var(--border-mid);
       border-bottom-left-radius: 2px;
     }
     .bubble .ts { font-size: 9px; color: var(--dim); position: absolute; bottom: -15px; right: 5px; }
@@ -129,43 +152,63 @@
     .icon-warn { color: #ffcc00; }
     .icon-check { color: var(--success); }
 
+    /* === BUTTONS (glass) === */
+    .btn-primary,
     .btn-export {
-      width: 100%;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(180deg, #ff6e38 0%, #ff5a1f 55%, #f04f10 100%);
+      color: #1c1411;
+      border: 1px solid rgba(0,0,0,0.18);
       font-family: var(--mono);
       font-weight: 700;
       font-size: 12px;
       border-radius: var(--r);
       cursor: pointer;
-      margin-top: 20px;
-      transition: opacity 0.2s;
+      box-shadow: var(--glass-top), var(--lift-1);
+      transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease), filter 0.16s var(--ease);
     }
-    .btn-export:hover { opacity: 0.9; }
+    .btn-primary { padding: 11px 22px; }
+    .btn-export { width: 100%; padding: 11px; margin-top: 20px; }
+    .btn-primary:hover,
+    .btn-export:hover { transform: translateY(-1px); box-shadow: var(--glass-top), var(--lift-2); filter: brightness(1.05); }
+    .btn-primary:active,
+    .btn-export:active { transform: translateY(0); box-shadow: var(--glass-top), var(--lift-1); filter: brightness(0.97); }
 
     /* Interactive onboarding simulation */
     .onboarding-overlay {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
+      inset: 0;
+      background: rgba(0,0,0,0.7);
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: opacity 0.25s var(--ease);
     }
+    .onboarding-overlay.hidden { opacity: 0; pointer-events: none; }
     .onboarding-card {
       width: 400px;
-      background: var(--bg-raised);
-      border: 1px solid var(--accent);
+      max-width: calc(100% - 40px);
+      background: var(--glass-fill);
+      background-color: var(--bg-raised);
+      border: 1px solid var(--accent-dim);
       padding: 30px;
       border-radius: var(--r);
       text-align: center;
+      box-shadow: var(--glass-top), var(--lift-2);
     }
     .onboarding-card h2 { margin-bottom: 15px; font-size: 18px; color: var(--accent); }
     .onboarding-card p { font-size: 13px; color: var(--muted); margin-bottom: 25px; line-height: 1.6; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .automation-card:hover, .btn-primary:hover, .btn-export:hover { transform: none; }
+    }
 
     @media (max-width: 900px) {
       main { grid-template-columns: 1fr; }
@@ -176,11 +219,10 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand">$ poke-recipe-tester</a>
+  <a href="/" class="nav-brand">$ recipe-lab</a>
   <div class="nav-links">
     <a href="/">back to home</a>
-    <a href="#">docs</a>
-    <a href="#">github</a>
+    <a href="https://github.com/caseymcdougal" target="_blank" rel="noopener">github</a>
   </div>
 </nav>
 
@@ -188,7 +230,7 @@
   <!-- Automations / CRON -->
   <aside class="panel">
     <div class="panel-header">Active Triggers <span>(3)</span></div>
-    
+
     <div class="automation-card">
       <div class="title">Morning Briefing</div>
       <div class="schedule">cron: 0 8 * * *</div>
@@ -201,7 +243,7 @@
       <div class="status"><span class="status-dot"></span> listening...</div>
     </div>
 
-    <div class="automation-card" style="opacity: 0.5;">
+    <div class="automation-card" style="opacity: 0.55;">
       <div class="title">Weekly Spend Audit</div>
       <div class="schedule">cron: 0 0 * * 0</div>
       <div class="status">paused</div>
@@ -211,7 +253,7 @@
   <!-- Bubble Feed Preview -->
   <section class="panel preview-feed">
     <div class="panel-header">Live Simulation <span>[LIVE]</span></div>
-    
+
     <div class="bubble poke">
       Initializing recipe environment...
       <div class="ts">20:24:56</div>
@@ -242,7 +284,7 @@
   <!-- Linter / Optimizer -->
   <aside class="panel">
     <div class="panel-header">Recipe Optimizer <span>(2 issues)</span></div>
-    
+
     <div class="linter-item">
       <div class="linter-title"><span class="icon-check">✓</span> Script Valid</div>
       <div class="linter-desc">Syntax check passed for automation.ts</div>
@@ -258,17 +300,17 @@
       <div class="linter-desc">Tool 'run_command' requested but not used in evaluation logic.</div>
     </div>
 
-    <button class="btn-export" onclick="alert('Exported to Poke Kitchen!')">EXPORT TO KITCHEN</button>
+    <button class="btn-export" onclick="alert('Recipe exported.')">EXPORT RECIPE</button>
   </aside>
-</main>
 
-<div class="onboarding-overlay" id="onboarding">
-  <div class="onboarding-card">
-    <h2>Welcome to the Lab</h2>
-    <p>This is where your Poke Recipes are stress-tested before they go live. Connect your local MCP bridge to simulate real-world triggers.</p>
-    <button class="btn-primary" onclick="document.getElementById('onboarding').style.display='none'">START TESTING</button>
+  <div class="onboarding-overlay" id="onboarding">
+    <div class="onboarding-card">
+      <h2>Welcome to the Lab</h2>
+      <p>This is where automation recipes get stress-tested before they go live. Connect your local MCP bridge to simulate real-world triggers.</p>
+      <button class="btn-primary" onclick="document.getElementById('onboarding').classList.add('hidden')">START TESTING</button>
+    </div>
   </div>
-</div>
+</main>
 
 </body>
 </html>

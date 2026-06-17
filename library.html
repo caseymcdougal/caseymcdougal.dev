@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Library · caseymcdougal.dev</title>
-  <meta name="description" content="The private MCP library for subscribers. Two free Poke MCP servers you can connect tonight.">
+  <meta name="description" content="The private MCP library for subscribers. Free MCP servers you can connect to your AI agent tonight.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +28,13 @@
       --border-mid: rgba(255,255,255,0.11);
       --mono:       'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
       --r:          4px;
+
+      /* === DEPTH SYSTEM — whisper-subtle liquid glass. Depth from light, not roundness. === */
+      --glass-fill:  linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
+      --glass-top:   inset 0 1px 0 rgba(255,255,255,0.10);
+      --lift-1:      0 1px 2px rgba(0,0,0,0.34), 0 4px 12px rgba(0,0,0,0.20);
+      --lift-2:      0 2px 5px rgba(0,0,0,0.40), 0 14px 32px rgba(0,0,0,0.30);
+      --ease:        cubic-bezier(.22,.61,.36,1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -111,13 +118,14 @@
       max-width: 580px;
     }
 
-    /* === TOOL BLOCK === */
+    /* === TOOL BLOCK (raised glass) === */
     .tool {
       background: var(--bg-raised);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-mid);
       border-radius: var(--r);
       padding: 30px 30px 26px;
       margin-bottom: 26px;
+      box-shadow: var(--glass-top), var(--lift-1);
     }
 
     .tool-head {
@@ -137,9 +145,11 @@
       gap: 6px;
       color: var(--success);
       border: 1px solid rgba(48,209,88,0.3);
-      border-radius: 2px;
-      padding: 2px 8px;
+      border-radius: var(--r);
+      padding: 3px 9px;
       letter-spacing: 0.04em;
+      background: var(--glass-fill);
+      box-shadow: var(--glass-top), 0 1px 2px rgba(0,0,0,0.25);
     }
     .status::before {
       content: '';
@@ -214,18 +224,21 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--accent);
-      color: #201d1d;
+      background: linear-gradient(180deg, #ff6e38 0%, #ff5a1f 55%, #f04f10 100%);
+      color: #1c1411;
       font-family: var(--mono);
       font-size: 13px;
       font-weight: 600;
       padding: 9px 18px;
       border-radius: var(--r);
+      border: 1px solid rgba(0,0,0,0.18);
       text-decoration: none;
-      transition: opacity 0.12s;
       white-space: nowrap;
+      box-shadow: var(--glass-top), var(--lift-1);
+      transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease), filter 0.16s var(--ease);
     }
-    .btn:hover { opacity: 0.82; }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--glass-top), var(--lift-2); filter: brightness(1.05); }
+    .btn:active { transform: translateY(0); box-shadow: var(--glass-top), var(--lift-1); filter: brightness(0.97); }
     .btn-note { font-size: 11px; color: var(--dim); line-height: 1.5; }
 
     /* Meta */
@@ -249,9 +262,15 @@
       font-size: 12.5px;
       color: var(--muted);
       line-height: 1.7;
+      box-shadow: var(--glass-top), var(--lift-1);
     }
     .note strong { color: var(--text); font-weight: 700; }
     .note::before { content: '// heads up'; display: block; color: var(--accent); font-size: 11px; margin-bottom: 8px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .btn:hover { transform: none; }
+    }
 
     @media (max-width: 600px) {
       main { padding: 40px 20px 80px; }
@@ -269,7 +288,7 @@
     <header class="hero">
       <div class="eyebrow">the library · subscribers only</div>
       <h1>You're in. Two MCP servers, <em>nothing held back</em>.</h1>
-      <p class="lede">Both free, both give Poke real-world hands. Connect Google Ads in a single OAuth, or self-host the Mac Bridge and drive your machine from a text. New tools land here first.</p>
+      <p class="lede">Both free, both give your AI agent real-world hands. Connect Google Ads in a single OAuth, or self-host the Mac Bridge and drive your machine from a text. New tools land here first.</p>
     </header>
 
     <!-- tool_01 — Google Ads MCP -->
@@ -278,7 +297,7 @@
         <span class="tool-id">tool_01</span>
         <span class="status">live</span>
       </div>
-      <h2>Google Ads MCP for Poke</h2>
+      <h2>Google Ads MCP</h2>
       <p class="tool-intro">A centrally-hosted MCP server for managing Google Ads by text. Link your account once, then ask Poke to pull numbers, find wasted spend, pause a campaign, or block a junk search term. <em>Every change asks before it acts.</em></p>
 
       <div class="inside-label">what's inside</div>
@@ -334,7 +353,7 @@
         <span class="tool-id">tool_02</span>
         <span class="status">live</span>
       </div>
-      <h2>Poke Mac Bridge</h2>
+      <h2>Mac Bridge</h2>
       <p class="tool-intro">A local MCP server that gives Poke a body on your Mac. 17 tools to run commands, edit files, screenshot, control apps, and kick off background builds, all from your phone. <em>Your machine becomes an extension of Poke's brain.</em></p>
 
       <div class="inside-label">what's inside</div>
