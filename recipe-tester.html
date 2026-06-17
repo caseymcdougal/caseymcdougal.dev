@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poke Recipe Preview & Tester — Casey McDougal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --bg-raised: #1a1a1a;
+      --bg-hover: rgba(255,255,255,0.03);
+      --text: #e0e0e0;
+      --muted: #888;
+      --dim: #555;
+      --accent: #ff5a1f;
+      --accent-dim: rgba(255,90,31,0.15);
+      --success: #30d158;
+      --border: rgba(255,255,255,0.08);
+      --mono: 'JetBrains Mono', monospace;
+      --r: 4px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 14px;
+      overflow-x: hidden;
+    }
+
+    /* CRT Grain & Scanlines */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    }
+
+    nav {
+      height: 50px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      justify-content: space-between;
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-brand { color: var(--accent); font-weight: 700; text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 350px 1fr 300px;
+      gap: 1px;
+      background: var(--border);
+      min-height: calc(100vh - 50px);
+    }
+
+    .panel { background: var(--bg); padding: 20px; overflow-y: auto; }
+    .panel-header { font-size: 11px; color: var(--dim); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center; }
+    .panel-header span { color: var(--accent); }
+
+    /* Left Sidebar: Automation & CRON */
+    .automation-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: var(--r);
+      margin-bottom: 15px;
+    }
+    .automation-card .title { font-weight: 600; font-size: 13px; margin-bottom: 5px; }
+    .automation-card .schedule { font-size: 11px; color: var(--accent); margin-bottom: 10px; }
+    .automation-card .status { font-size: 10px; color: var(--dim); display: flex; align-items: center; gap: 5px; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 5px var(--success); }
+
+    /* Center: Preview Bubble Feed */
+    .preview-feed {
+      background: #080808;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      position: relative;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: var(--accent);
+      color: #000;
+      border-bottom-right-radius: 2px;
+    }
+    .bubble.poke {
+      align-self: flex-start;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 2px;
+    }
+    .bubble .ts { font-size: 9px; color: var(--dim); position: absolute; bottom: -15px; right: 5px; }
+    .bubble.poke .ts { left: 5px; right: auto; }
+
+    /* Right Sidebar: Optimizer & Linter */
+    .linter-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .linter-item:last-child { border: none; }
+    .linter-title { font-size: 12px; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .linter-desc { font-size: 11px; color: var(--muted); }
+    .icon-warn { color: #ffcc00; }
+    .icon-check { color: var(--success); }
+
+    .btn-export {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 10px;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 12px;
+      border-radius: var(--r);
+      cursor: pointer;
+      margin-top: 20px;
+      transition: opacity 0.2s;
+    }
+    .btn-export:hover { opacity: 0.9; }
+
+    /* Interactive onboarding simulation */
+    .onboarding-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .onboarding-card {
+      width: 400px;
+      background: var(--bg-raised);
+      border: 1px solid var(--accent);
+      padding: 30px;
+      border-radius: var(--r);
+      text-align: center;
+    }
+    .onboarding-card h2 { margin-bottom: 15px; font-size: 18px; color: var(--accent); }
+    .onboarding-card p { font-size: 13px; color: var(--muted); margin-bottom: 25px; line-height: 1.6; }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .panel:not(.preview-feed) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">$ poke-recipe-tester</a>
+  <div class="nav-links">
+    <a href="/">back to home</a>
+    <a href="#">docs</a>
+    <a href="#">github</a>
+  </div>
+</nav>
+
+<main>
+  <!-- Automations / CRON -->
+  <aside class="panel">
+    <div class="panel-header">Active Triggers <span>(3)</span></div>
+    
+    <div class="automation-card">
+      <div class="title">Morning Briefing</div>
+      <div class="schedule">cron: 0 8 * * *</div>
+      <div class="status"><span class="status-dot"></span> active / next: 08:00 AM</div>
+    </div>
+
+    <div class="automation-card">
+      <div class="title">Slack Inbound Filter</div>
+      <div class="schedule">ingest: slack_webhook</div>
+      <div class="status"><span class="status-dot"></span> listening...</div>
+    </div>
+
+    <div class="automation-card" style="opacity: 0.5;">
+      <div class="title">Weekly Spend Audit</div>
+      <div class="schedule">cron: 0 0 * * 0</div>
+      <div class="status">paused</div>
+    </div>
+  </aside>
+
+  <!-- Bubble Feed Preview -->
+  <section class="panel preview-feed">
+    <div class="panel-header">Live Simulation <span>[LIVE]</span></div>
+    
+    <div class="bubble poke">
+      Initializing recipe environment...
+      <div class="ts">20:24:56</div>
+    </div>
+
+    <div class="bubble user">
+      When I get a Slack message about "urgent budget", check the Google Ads dashboard and text me the current daily spend.
+      <div class="ts">20:25:01</div>
+    </div>
+
+    <div class="bubble poke">
+      Recipe "Budget Alert" created. I'll watch the Slack ingest. When triggered, I'll use the Google Ads MCP to pull the spend for today and relay it to you.
+      <div class="ts">20:25:03</div>
+    </div>
+
+    <div class="bubble poke">
+      <span style="color: var(--accent)">[EVENT]</span> Inbound Slack payload received.
+      <br>Querying Google Ads API...
+      <div class="ts">20:26:12</div>
+    </div>
+
+    <div class="bubble poke">
+      Current daily spend for "Search-Pro-Campaign" is $412.50. You're at 82% of your daily limit.
+      <div class="ts">20:26:15</div>
+    </div>
+  </section>
+
+  <!-- Linter / Optimizer -->
+  <aside class="panel">
+    <div class="panel-header">Recipe Optimizer <span>(2 issues)</span></div>
+    
+    <div class="linter-item">
+      <div class="linter-title"><span class="icon-check">✓</span> Script Valid</div>
+      <div class="linter-desc">Syntax check passed for automation.ts</div>
+    </div>
+
+    <div class="linter-item">
+      <div class="linter-title"><span class="icon-warn">!</span> Missing State Handling</div>
+      <div class="linter-desc">Import readState/writeState to avoid double-firing on the same event.</div>
+    </div>
+
+    <div class="linter-item">
+      <div class="linter-title"><span class="icon-warn">!</span> Wide Scope</div>
+      <div class="linter-desc">Tool 'run_command' requested but not used in evaluation logic.</div>
+    </div>
+
+    <button class="btn-export" onclick="alert('Exported to Poke Kitchen!')">EXPORT TO KITCHEN</button>
+  </aside>
+</main>
+
+<div class="onboarding-overlay" id="onboarding">
+  <div class="onboarding-card">
+    <h2>Welcome to the Lab</h2>
+    <p>This is where your Poke Recipes are stress-tested before they go live. Connect your local MCP bridge to simulate real-world triggers.</p>
+    <button class="btn-primary" onclick="document.getElementById('onboarding').style.display='none'">START TESTING</button>
+  </div>
+</div>
+
+</body>
+</html>
