@@ -6,7 +6,7 @@
   <title>Casey McDougal — Conversational AI Engineer &amp; Interface Builder</title>
   <meta name="description" content="Tennessee-based software engineer leading engineering on a confidential conversational AI product and publishing free, dependency-free interface components.">
   <link rel="canonical" href="https://caseymcdougal.dev/">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=4">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://caseymcdougal.dev/">
@@ -242,61 +242,70 @@
     .preview-copy p { margin: 0; color: var(--muted); font-size: 14px; }
 
     .cm-liquid-button {
-      --cm-glass-ink: var(--surface);
-      --cm-glass-border: color-mix(in oklch, var(--surface) 34%, transparent);
+      --cm-button-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --cm-button-tint: oklch(0.2 0.015 60 / 0.55);
+      position: relative;
+      isolation: isolate;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 18px;
-      border: 1px solid var(--cm-glass-border);
+      gap: 11px;
+      overflow: hidden;
+      appearance: none;
+      padding: 13px 18px 13px 20px;
+      border: 1px solid color-mix(in oklch, var(--surface) 36%, transparent);
       border-radius: 999px;
-      background: linear-gradient(180deg, color-mix(in oklch, var(--surface) 24%, transparent), color-mix(in oklch, var(--surface) 10%, transparent));
-      color: var(--cm-glass-ink);
+      background: linear-gradient(180deg, color-mix(in oklch, var(--surface) 25%, transparent), color-mix(in oklch, var(--surface) 9%, transparent)), var(--cm-button-tint);
+      color: var(--surface);
       font-weight: 650;
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 42%, transparent), 0 10px 30px color-mix(in oklch, var(--fg) 44%, transparent);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 48%, transparent), 0 10px 30px color-mix(in oklch, var(--fg) 44%, transparent);
       backdrop-filter: blur(14px) saturate(1.25);
       -webkit-backdrop-filter: blur(14px) saturate(1.25);
-      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      transition: transform 250ms var(--cm-button-ease), box-shadow 250ms var(--cm-button-ease);
     }
-    .cm-liquid-button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 54%, transparent), 0 16px 34px color-mix(in oklch, var(--fg) 52%, transparent); }
-    .cm-liquid-button:active { transform: translateY(0); }
+    .cm-liquid-button::before { content: ''; position: absolute; inset: -80% auto -80% -45%; z-index: -1; width: 34%; background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--surface) 46%, transparent), transparent); transform: translateX(-170%) rotate(16deg); transition: transform 650ms var(--cm-button-ease); }
+    .cm-liquid-button__icon { width: 16px; height: 16px; overflow: visible; }
+    .cm-liquid-button__icon path { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transform-box: fill-box; transition: transform 350ms var(--cm-button-ease); }
+    .cm-liquid-button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 60%, transparent), 0 18px 38px color-mix(in oklch, var(--fg) 54%, transparent); }
+    .cm-liquid-button:hover::before { transform: translateX(620%) rotate(16deg); }
+    .cm-liquid-button:hover .cm-liquid-button__shaft { transform: translateX(2px); }
+    .cm-liquid-button:hover .cm-liquid-button__tip-top { transform: translate(2px, -1px) rotate(5deg); }
+    .cm-liquid-button:hover .cm-liquid-button__tip-bottom { transform: translate(2px, 1px) rotate(-5deg); }
+    .cm-liquid-button:active { transform: translateY(0) scale(0.975); }
 
     .cm-frost-nav {
-      width: min(100%, 300px);
+      --cm-nav-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --cm-nav-tint: oklch(0.2 0.015 60 / 0.64);
+      width: min(100%, 320px);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 10px 12px 10px 16px;
+      gap: 14px;
+      padding: 8px 8px 8px 14px;
       border: 1px solid color-mix(in oklch, var(--surface) 30%, transparent);
-      border-radius: 14px;
+      border-radius: 16px;
       color: var(--surface);
-      background: color-mix(in oklch, var(--surface) 13%, transparent);
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 36%, transparent), 0 16px 36px color-mix(in oklch, var(--fg) 46%, transparent);
-      backdrop-filter: blur(16px) saturate(1.2);
-      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      background: linear-gradient(color-mix(in oklch, var(--surface) 12%, transparent), color-mix(in oklch, var(--surface) 12%, transparent)), var(--cm-nav-tint);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 38%, transparent), 0 16px 36px color-mix(in oklch, var(--fg) 46%, transparent);
+      backdrop-filter: blur(18px) saturate(1.3);
+      -webkit-backdrop-filter: blur(18px) saturate(1.3);
     }
-    .cm-frost-nav strong { font-family: var(--font-display); font-size: 17px; }
-    .cm-frost-nav div { display: flex; gap: 12px; }
-    .cm-frost-nav a { color: color-mix(in oklch, var(--surface) 72%, transparent); font-size: 12px; }
-    .cm-frost-nav a:hover { color: var(--surface); }
+    .cm-frost-nav__brand { color: inherit; font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+    .cm-frost-nav__links { position: relative; display: flex; padding: 2px; border-radius: 10px; background: color-mix(in oklch, var(--fg) 14%, transparent); }
+    .cm-frost-nav__pill { position: absolute; inset-block: 2px; left: 0; width: var(--cm-pill-width, 0); border: 1px solid color-mix(in oklch, var(--surface) 22%, transparent); border-radius: 8px; background: color-mix(in oklch, var(--surface) 15%, transparent); transform: translateX(var(--cm-pill-x, 0)); transition: width 250ms var(--cm-nav-ease), transform 250ms var(--cm-nav-ease); }
+    .cm-frost-nav__links a { position: relative; z-index: 1; padding: 7px 9px; border-radius: 8px; color: color-mix(in oklch, var(--surface) 64%, transparent); font-size: 12px; transition: color 150ms ease; }
+    .cm-frost-nav__links a:hover, .cm-frost-nav__links a:focus-visible, .cm-frost-nav__links a[aria-current="page"] { color: var(--surface); }
 
-    .cm-glass-card {
-      display: block;
-      width: min(100%, 270px);
-      padding: 24px;
-      border: 1px solid color-mix(in oklch, var(--surface) 28%, transparent);
-      border-radius: 18px;
-      color: var(--surface);
-      background: linear-gradient(145deg, color-mix(in oklch, var(--surface) 20%, transparent), color-mix(in oklch, var(--surface) 7%, transparent));
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 38%, transparent), 0 18px 40px color-mix(in oklch, var(--fg) 50%, transparent);
-      backdrop-filter: blur(18px) saturate(1.2);
-      -webkit-backdrop-filter: blur(18px) saturate(1.2);
-      transition: transform 180ms ease, box-shadow 180ms ease;
-    }
-    .cm-glass-card:hover { transform: translateY(-4px) rotate(-0.4deg); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 48%, transparent), 0 26px 48px color-mix(in oklch, var(--fg) 56%, transparent); }
-    .cm-glass-card span { display: block; margin-bottom: 36px; color: color-mix(in oklch, var(--surface) 68%, transparent); font-family: var(--font-mono); font-size: 11px; }
-    .cm-glass-card strong { display: block; font-family: var(--font-display); font-size: 24px; line-height: 1.1; }
+    .cm-glass-card-wrap { --cm-tilt-x: 0deg; --cm-tilt-y: 0deg; --cm-glare-x: 50%; --cm-glare-y: 50%; --cm-card-tint: oklch(0.2 0.015 60 / 0.58); width: min(100%, 270px); perspective: 1000px; touch-action: pan-y; }
+    .cm-glass-card { position: relative; display: block; overflow: hidden; padding: 24px; border: 1px solid color-mix(in oklch, var(--surface) 28%, transparent); border-radius: 18px; color: var(--surface); background: linear-gradient(145deg, color-mix(in oklch, var(--surface) 21%, transparent), color-mix(in oklch, var(--surface) 7%, transparent)), var(--cm-card-tint); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 40%, transparent), 0 18px 40px color-mix(in oklch, var(--fg) 50%, transparent); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); transform: rotateX(var(--cm-tilt-x)) rotateY(var(--cm-tilt-y)); transform-style: preserve-3d; transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+    .cm-glass-card-wrap.is-active .cm-glass-card { transition-duration: 120ms, 250ms; }
+    .cm-glass-card:hover { box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 52%, transparent), 0 28px 54px color-mix(in oklch, var(--fg) 58%, transparent); }
+    .cm-glass-card__glare { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(circle at var(--cm-glare-x) var(--cm-glare-y), color-mix(in oklch, var(--surface) 34%, transparent), transparent 44%); mix-blend-mode: screen; transition: opacity 300ms ease; }
+    .cm-glass-card-wrap.is-active .cm-glass-card__glare { opacity: 0.72; }
+    .cm-glass-card__meta, .cm-glass-card__title, .cm-glass-card__arrow { position: relative; z-index: 1; display: block; transform: translateZ(22px); }
+    .cm-glass-card__meta { margin-bottom: 36px; color: color-mix(in oklch, var(--surface) 68%, transparent); font-family: var(--font-mono); font-size: 11px; }
+    .cm-glass-card__title { font-family: var(--font-display); font-size: 24px; line-height: 1.1; }
+    .cm-glass-card__arrow { width: max-content; margin-top: 18px; color: color-mix(in oklch, var(--surface) 68%, transparent); font-size: 12px; transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1); }
+    .cm-glass-card:hover .cm-glass-card__arrow { transform: translate3d(3px, 0, 22px); }
 
     .library-cta { text-align: center; }
     .library-cta-inner { max-width: 720px; }
@@ -347,7 +356,8 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
-      .component-preview:hover, .cm-liquid-button:hover, .cm-glass-card:hover { transform: none; }
+      .component-preview:hover, .cm-liquid-button:hover, .cm-glass-card, .cm-glass-card:hover { transform: none; }
+      .cm-glass-card__glare { display: none; }
     }
   </style>
 </head>
@@ -405,7 +415,14 @@
         <div class="grid-3 component-grid">
           <article class="component-preview">
             <div class="preview-stage">
-              <button class="cm-liquid-button" type="button">Open the details <span aria-hidden="true">↗</span></button>
+              <button class="cm-liquid-button" type="button">
+                <span>Open the details</span>
+                <svg class="cm-liquid-button__icon" viewBox="0 0 16 16" aria-hidden="true">
+                  <path class="cm-liquid-button__shaft" d="M2.5 8h10"/>
+                  <path class="cm-liquid-button__tip-top" d="m9 4.5 3.5 3.5"/>
+                  <path class="cm-liquid-button__tip-bottom" d="m12.5 8-3.5 3.5"/>
+                </svg>
+              </button>
             </div>
             <div class="preview-copy">
               <h3>Liquid Glass Button</h3>
@@ -416,26 +433,34 @@
           <article class="component-preview">
             <div class="preview-stage">
               <nav class="cm-frost-nav" aria-label="Frosted navigation preview">
-                <strong>Fieldnotes</strong>
-                <div><a href="#components">Work</a><a href="#components">Notes</a></div>
+                <a class="cm-frost-nav__brand" href="#components">Fieldnotes</a>
+                <div class="cm-frost-nav__links">
+                  <span class="cm-frost-nav__pill" aria-hidden="true"></span>
+                  <a href="#components" aria-current="page">Work</a>
+                  <a href="#components">Notes</a>
+                </div>
               </nav>
             </div>
             <div class="preview-copy">
               <h3>Frosted Navigation</h3>
-              <p>A compact sticky bar with readable transparency and a solid fallback when blur is unavailable.</p>
+              <p>A compact sticky bar with a measured sliding indicator and a solid blur fallback.</p>
             </div>
           </article>
 
           <article class="component-preview">
             <div class="preview-stage">
-              <a class="cm-glass-card" href="#library-signup">
-                <span>INTERFACE NOTE · 01</span>
-                <strong>Depth should clarify what can move.</strong>
-              </a>
+              <div class="cm-glass-card-wrap">
+                <a class="cm-glass-card" href="#library-signup">
+                  <span class="cm-glass-card__glare" aria-hidden="true"></span>
+                  <span class="cm-glass-card__meta">INTERFACE NOTE · 01</span>
+                  <strong class="cm-glass-card__title">Depth should clarify what can move.</strong>
+                  <span class="cm-glass-card__arrow">Explore the source →</span>
+                </a>
+              </div>
             </div>
             <div class="preview-copy">
               <h3>Tactile Glass Card</h3>
-              <p>A quiet content surface that can stay static or become a clearly interactive link.</p>
+              <p>A quiet content surface with pointer tilt, responsive glare, and scroll-friendly touch behavior.</p>
             </div>
           </article>
         </div>
@@ -444,7 +469,7 @@
 
     <section class="section library-cta" id="library-signup" data-od-id="library-signup" aria-labelledby="library-title">
       <div class="container library-cta-inner">
-        <p class="eyebrow">Free · Vanilla HTML &amp; CSS</p>
+        <p class="eyebrow">Free · Vanilla HTML, CSS &amp; JS</p>
         <h2 id="library-title">Take the Components With You.</h2>
         <p class="lead">One email unlocks the live demos, usage notes, and copy-ready source. New components will join the collection as they’re worth sharing.</p>
 
@@ -488,6 +513,72 @@
   </footer>
 
   <script>
+    (function () {
+      document.querySelectorAll('.cm-frost-nav').forEach(function (nav) {
+        var group = nav.querySelector('.cm-frost-nav__links');
+        if (!group) return;
+        var links = Array.from(group.querySelectorAll('a'));
+        var current = group.querySelector('[aria-current="page"]') || links[0];
+        if (!current) return;
+
+        function movePill(link) {
+          group.style.setProperty('--cm-pill-x', link.offsetLeft + 'px');
+          group.style.setProperty('--cm-pill-width', link.offsetWidth + 'px');
+        }
+
+        links.forEach(function (link) {
+          link.addEventListener('pointerenter', function () { movePill(link); });
+          link.addEventListener('focus', function () { movePill(link); });
+        });
+        group.addEventListener('pointerleave', function () { movePill(current); });
+        nav.addEventListener('focusout', function (event) {
+          var next = event.relatedTarget;
+          if (!(next instanceof Node) || !nav.contains(next)) movePill(current);
+        });
+        if ('ResizeObserver' in window) {
+          new ResizeObserver(function () { movePill(current); }).observe(group);
+        } else {
+          window.addEventListener('resize', function () { movePill(current); });
+        }
+        requestAnimationFrame(function () { movePill(current); });
+      });
+
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
+        var frame;
+
+        function resetTilt() {
+          cancelAnimationFrame(frame);
+          wrap.classList.remove('is-active');
+          wrap.style.setProperty('--cm-tilt-x', '0deg');
+          wrap.style.setProperty('--cm-tilt-y', '0deg');
+        }
+
+        wrap.addEventListener('pointermove', function (event) {
+          if (reducedMotion.matches || event.pointerType === 'touch') return;
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(function () {
+            var rect = wrap.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            var x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+            var y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+            wrap.classList.add('is-active');
+            wrap.style.setProperty('--cm-tilt-x', ((0.5 - y) * 12).toFixed(2) + 'deg');
+            wrap.style.setProperty('--cm-tilt-y', ((x - 0.5) * 12).toFixed(2) + 'deg');
+            wrap.style.setProperty('--cm-glare-x', (x * 100).toFixed(1) + '%');
+            wrap.style.setProperty('--cm-glare-y', (y * 100).toFixed(1) + '%');
+          });
+        });
+        wrap.addEventListener('pointerleave', resetTilt);
+        wrap.addEventListener('pointercancel', resetTilt);
+        wrap.addEventListener('focusout', function (event) {
+          var next = event.relatedTarget;
+          if (!(next instanceof Node) || !wrap.contains(next)) resetTilt();
+        });
+      });
+    })();
+
     (function () {
       var UNLOCK_KEY = 'cm_components_unlocked_v1';
       var LEGACY_KEY = 'cmd_subscribed_v1';

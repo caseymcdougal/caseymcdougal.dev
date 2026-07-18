@@ -6,7 +6,7 @@
   <title>The Component Library · Casey McDougal</title>
   <meta name="description" content="A free collection of dependency-free interface components by Casey McDougal.">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=4">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
 
   <style>
     :root {
@@ -161,31 +161,55 @@
     .state-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
 
     .cm-liquid-button {
-      --cm-glass-text: oklch(0.98 0.01 85);
-      --cm-glass-edge: color-mix(in oklch, var(--cm-glass-text) 34%, transparent);
+      --cm-button-text: oklch(0.98 0.01 85);
+      --cm-button-tint: oklch(0.2 0.015 60 / 0.55);
+      --cm-button-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      isolation: isolate;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 18px;
-      border: 1px solid var(--cm-glass-edge);
+      gap: 11px;
+      overflow: hidden;
+      appearance: none;
+      cursor: pointer;
+      padding: 13px 18px 13px 20px;
+      border: 1px solid color-mix(in oklch, var(--cm-button-text) 36%, transparent);
       border-radius: 999px;
-      background: linear-gradient(180deg, color-mix(in oklch, var(--cm-glass-text) 24%, transparent), color-mix(in oklch, var(--cm-glass-text) 10%, transparent));
-      color: var(--cm-glass-text);
+      background: linear-gradient(180deg, color-mix(in oklch, var(--cm-button-text) 25%, transparent), color-mix(in oklch, var(--cm-button-text) 9%, transparent)), var(--cm-button-tint);
+      color: var(--cm-button-text);
       font: 650 15px/1.2 system-ui, sans-serif;
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 42%, transparent), 0 10px 30px oklch(0.08 0.01 60 / 0.44);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-button-text) 48%, transparent), inset 0 -1px 0 color-mix(in oklch, black 20%, transparent), 0 10px 30px oklch(0.08 0.01 60 / 0.44);
       backdrop-filter: blur(14px) saturate(1.25);
       -webkit-backdrop-filter: blur(14px) saturate(1.25);
-      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      transition: transform 250ms var(--cm-button-ease), box-shadow 250ms var(--cm-button-ease), background 250ms var(--cm-button-ease);
     }
-    .cm-liquid-button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 54%, transparent), 0 16px 34px oklch(0.08 0.01 60 / 0.52); }
-    .cm-liquid-button:active { transform: translateY(0); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 32%, transparent), 0 5px 16px oklch(0.08 0.01 60 / 0.42); }
-    .cm-liquid-button:focus-visible { outline: 2px solid var(--cm-glass-text); outline-offset: 4px; }
+    .cm-liquid-button::before {
+      content: '';
+      position: absolute;
+      inset: -80% auto -80% -45%;
+      z-index: -1;
+      width: 34%;
+      background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--cm-button-text) 46%, transparent), transparent);
+      transform: translateX(-170%) rotate(16deg);
+      transition: transform 650ms var(--cm-button-ease);
+    }
+    .cm-liquid-button__icon { width: 16px; height: 16px; overflow: visible; }
+    .cm-liquid-button__icon path { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transform-box: fill-box; transition: transform 350ms var(--cm-button-ease); }
+    .cm-liquid-button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-button-text) 60%, transparent), inset 0 -1px 0 color-mix(in oklch, black 16%, transparent), 0 18px 38px oklch(0.08 0.01 60 / 0.54); }
+    .cm-liquid-button:hover::before { transform: translateX(620%) rotate(16deg); }
+    .cm-liquid-button:hover .cm-liquid-button__shaft { transform: translateX(2px); }
+    .cm-liquid-button:hover .cm-liquid-button__tip-top { transform: translate(2px, -1px) rotate(5deg); }
+    .cm-liquid-button:hover .cm-liquid-button__tip-bottom { transform: translate(2px, 1px) rotate(-5deg); }
+    .cm-liquid-button:active, .cm-liquid-button--pressed { transform: translateY(0) scale(0.975); box-shadow: inset 0 2px 4px color-mix(in oklch, black 18%, transparent), 0 5px 16px oklch(0.08 0.01 60 / 0.42); }
+    .cm-liquid-button:focus-visible { outline: 2px solid var(--cm-button-text); outline-offset: 4px; }
     .cm-liquid-button:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
-    .cm-liquid-button--pressed { transform: translateY(0); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 32%, transparent), 0 5px 16px oklch(0.08 0.01 60 / 0.42); }
+    .cm-liquid-button:disabled::before { display: none; }
 
     .cm-frost-nav {
       --cm-nav-text: oklch(0.98 0.01 85);
-      --cm-nav-muted: color-mix(in oklch, var(--cm-nav-text) 68%, transparent);
+      --cm-nav-muted: color-mix(in oklch, var(--cm-nav-text) 64%, transparent);
+      --cm-nav-tint: oklch(0.2 0.015 60 / 0.64);
+      --cm-nav-ease: cubic-bezier(0.22, 1, 0.36, 1);
       position: sticky;
       top: 16px;
       width: min(100%, 720px);
@@ -193,48 +217,70 @@
       align-items: center;
       justify-content: space-between;
       gap: 24px;
-      padding: 12px 14px 12px 18px;
+      padding: 10px 10px 10px 18px;
       border: 1px solid color-mix(in oklch, var(--cm-nav-text) 30%, transparent);
-      border-radius: 14px;
+      border-radius: 16px;
       color: var(--cm-nav-text);
-      background: color-mix(in oklch, var(--cm-nav-text) 13%, transparent);
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-nav-text) 36%, transparent), 0 16px 36px oklch(0.08 0.01 60 / 0.46);
-      backdrop-filter: blur(16px) saturate(1.2);
-      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      background: linear-gradient(color-mix(in oklch, var(--cm-nav-text) 12%, transparent), color-mix(in oklch, var(--cm-nav-text) 12%, transparent)), var(--cm-nav-tint);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-nav-text) 38%, transparent), 0 16px 36px oklch(0.08 0.01 60 / 0.46);
+      backdrop-filter: blur(18px) saturate(1.3);
+      -webkit-backdrop-filter: blur(18px) saturate(1.3);
     }
     .cm-frost-nav__brand { color: inherit; font: 700 16px/1.2 system-ui, sans-serif; }
-    .cm-frost-nav__links { display: flex; align-items: center; gap: 18px; }
-    .cm-frost-nav__links a { color: var(--cm-nav-muted); font: 500 13px/1.2 system-ui, sans-serif; text-decoration: none; }
-    .cm-frost-nav__links a:hover { color: var(--cm-nav-text); }
-    .cm-frost-nav__links a:focus-visible { outline: 2px solid var(--cm-nav-text); outline-offset: 4px; border-radius: 4px; }
+    .cm-frost-nav__links { position: relative; display: flex; align-items: center; padding: 2px; border-radius: 11px; background: color-mix(in oklch, black 12%, transparent); }
+    .cm-frost-nav__pill { position: absolute; inset-block: 2px; left: 0; width: var(--cm-pill-width, 0); border: 1px solid color-mix(in oklch, var(--cm-nav-text) 22%, transparent); border-radius: 9px; background: color-mix(in oklch, var(--cm-nav-text) 15%, transparent); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-nav-text) 24%, transparent); transform: translateX(var(--cm-pill-x, 0)); transition: width 250ms var(--cm-nav-ease), transform 250ms var(--cm-nav-ease); }
+    .cm-frost-nav__links a { position: relative; z-index: 1; padding: 8px 12px; border-radius: 9px; color: var(--cm-nav-muted); font: 550 13px/1.2 system-ui, sans-serif; text-decoration: none; transition: color 150ms ease; }
+    .cm-frost-nav__links a:hover, .cm-frost-nav__links a:focus-visible, .cm-frost-nav__links a[aria-current="page"] { color: var(--cm-nav-text); }
+    .cm-frost-nav__links a:focus-visible { outline: 2px solid var(--cm-nav-text); outline-offset: -2px; }
 
+    .cm-glass-card-wrap {
+      --cm-tilt-x: 0deg;
+      --cm-tilt-y: 0deg;
+      --cm-glare-x: 50%;
+      --cm-glare-y: 50%;
+      width: min(100%, 340px);
+      perspective: 1000px;
+      touch-action: pan-y;
+    }
     .cm-glass-card {
       --cm-card-text: oklch(0.98 0.01 85);
       --cm-card-muted: color-mix(in oklch, var(--cm-card-text) 68%, transparent);
+      --cm-card-tint: oklch(0.2 0.015 60 / 0.58);
+      --cm-card-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
       display: block;
-      width: min(100%, 340px);
+      overflow: hidden;
       padding: 28px;
       border: 1px solid color-mix(in oklch, var(--cm-card-text) 28%, transparent);
       border-radius: 18px;
       color: var(--cm-card-text);
-      background: linear-gradient(145deg, color-mix(in oklch, var(--cm-card-text) 20%, transparent), color-mix(in oklch, var(--cm-card-text) 7%, transparent));
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-card-text) 38%, transparent), 0 18px 40px oklch(0.08 0.01 60 / 0.5);
+      background: linear-gradient(145deg, color-mix(in oklch, var(--cm-card-text) 21%, transparent), color-mix(in oklch, var(--cm-card-text) 7%, transparent)), var(--cm-card-tint);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-card-text) 40%, transparent), 0 18px 40px oklch(0.08 0.01 60 / 0.5);
       backdrop-filter: blur(18px) saturate(1.2);
       -webkit-backdrop-filter: blur(18px) saturate(1.2);
       text-decoration: none;
-      transition: transform 180ms ease, box-shadow 180ms ease;
+      transform: rotateX(var(--cm-tilt-x)) rotateY(var(--cm-tilt-y));
+      transform-style: preserve-3d;
+      transition: transform 700ms var(--cm-card-ease), box-shadow 250ms var(--cm-card-ease);
+      will-change: transform;
     }
-    .cm-glass-card:hover { transform: translateY(-4px) rotate(-0.4deg); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-card-text) 48%, transparent), 0 26px 48px oklch(0.08 0.01 60 / 0.56); }
-    .cm-glass-card:active { transform: translateY(-1px); }
+    .cm-glass-card-wrap.is-active .cm-glass-card { transition-duration: 120ms, 250ms; }
+    .cm-glass-card:hover { box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-card-text) 52%, transparent), 0 28px 54px oklch(0.08 0.01 60 / 0.58); }
+    .cm-glass-card:active { scale: 0.985; }
     .cm-glass-card:focus-visible { outline: 2px solid var(--cm-card-text); outline-offset: 5px; }
+    .cm-glass-card__glare { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(circle at var(--cm-glare-x) var(--cm-glare-y), color-mix(in oklch, var(--cm-card-text) 34%, transparent), transparent 44%); mix-blend-mode: screen; transition: opacity 300ms ease; }
+    .cm-glass-card-wrap.is-active .cm-glass-card__glare { opacity: 0.72; }
+    .cm-glass-card__meta, .cm-glass-card__title, .cm-glass-card__arrow { position: relative; z-index: 1; transform: translateZ(22px); }
     .cm-glass-card__meta { display: block; margin-bottom: 56px; color: var(--cm-card-muted); font: 500 11px/1.3 ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
     .cm-glass-card__title { display: block; max-width: 12ch; font: 600 28px/1.08 Georgia, serif; }
-    .cm-glass-card__arrow { display: block; margin-top: 20px; color: var(--cm-card-muted); font: 500 13px/1.2 system-ui, sans-serif; }
+    .cm-glass-card__arrow { display: block; width: max-content; margin-top: 20px; color: var(--cm-card-muted); font: 500 13px/1.2 system-ui, sans-serif; transition: color 150ms ease, transform 350ms var(--cm-card-ease); }
+    .cm-glass-card:hover .cm-glass-card__arrow { color: var(--cm-card-text); transform: translate3d(3px, 0, 22px); }
 
     .source-area { margin-top: var(--gap-lg); }
     .source-title { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
     .source-title h3 { font-size: 21px; }
     .source-grid { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 16px; }
+    .code-panel--wide { grid-column: 1 / -1; }
     .code-panel { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
     .code-head { min-height: 46px; padding: 8px 10px 8px 16px; border-bottom: 1px solid var(--border); }
     .code-head span { color: var(--muted); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; }
@@ -288,14 +334,15 @@
       .usage-note { grid-column: 1; margin-top: 12px; }
       .demo-stage { min-height: 340px; padding: 32px 18px; }
       .cm-frost-nav { gap: 14px; padding-left: 14px; }
-      .cm-frost-nav__links { gap: 10px; }
-      .cm-frost-nav__links a:first-child { display: none; }
+      .cm-frost-nav__links a:last-child { display: none; }
       .pagefoot .row-between { align-items: flex-start; flex-direction: column; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
-      .cm-liquid-button:hover, .cm-glass-card:hover { transform: none; }
+      .cm-liquid-button:hover { transform: none; }
+      .cm-glass-card, .cm-glass-card:hover { transform: none; }
+      .cm-glass-card__glare { display: none; }
     }
   </style>
 </head>
@@ -322,7 +369,7 @@
         <div class="hero-note meta" aria-label="Library attributes">
           <span>No framework</span>
           <span>No build step</span>
-          <span>Accessible states included</span>
+          <span>Motion tuned with transitions.dev</span>
         </div>
       </div>
     </section>
@@ -333,7 +380,7 @@
           <span class="component-number">01 / 03</span>
           <div>
             <h2 id="liquid-title">Liquid Glass Button</h2>
-            <p class="component-intro">A compact call to action with enough depth to feel tactile without turning into a novelty effect.</p>
+            <p class="component-intro">A compact call to action with a specular sweep and directional arrow motion tuned from transitions.dev patterns.</p>
           </div>
           <div class="usage-note"><strong>Use it for:</strong> one important action over imagery, video, or a dark atmospheric surface. Keep ordinary secondary actions flat.</div>
         </div>
@@ -341,9 +388,16 @@
         <div class="demo-stage">
           <span class="demo-label">LIVE STATES · HOVER, PRESS, TAB</span>
           <div class="state-row">
-            <button class="cm-liquid-button" type="button">Open details <span aria-hidden="true">↗</span></button>
-            <button class="cm-liquid-button cm-liquid-button--pressed" type="button">Pressed</button>
-            <button class="cm-liquid-button" type="button" disabled>Unavailable</button>
+            <button class="cm-liquid-button" type="button">
+              <span>Open details</span>
+              <svg class="cm-liquid-button__icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path class="cm-liquid-button__shaft" d="M2.5 8h10"/>
+                <path class="cm-liquid-button__tip-top" d="m9 4.5 3.5 3.5"/>
+                <path class="cm-liquid-button__tip-bottom" d="m12.5 8-3.5 3.5"/>
+              </svg>
+            </button>
+            <button class="cm-liquid-button cm-liquid-button--pressed" type="button"><span>Pressed</span></button>
+            <button class="cm-liquid-button" type="button" disabled><span>Unavailable</span></button>
           </div>
         </div>
 
@@ -353,57 +407,99 @@
             <div class="code-panel">
               <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="liquid-html">Copy</button></div>
               <pre><code id="liquid-html">&lt;button class=&quot;cm-liquid-button&quot; type=&quot;button&quot;&gt;
-  Open details
-  &lt;span aria-hidden=&quot;true&quot;&gt;↗&lt;/span&gt;
+  &lt;span&gt;Open details&lt;/span&gt;
+  &lt;svg class=&quot;cm-liquid-button__icon&quot;
+    viewBox=&quot;0 0 16 16&quot; aria-hidden=&quot;true&quot;&gt;
+    &lt;path class=&quot;cm-liquid-button__shaft&quot; d=&quot;M2.5 8h10&quot;/&gt;
+    &lt;path class=&quot;cm-liquid-button__tip-top&quot; d=&quot;m9 4.5 3.5 3.5&quot;/&gt;
+    &lt;path class=&quot;cm-liquid-button__tip-bottom&quot; d=&quot;m12.5 8-3.5 3.5&quot;/&gt;
+  &lt;/svg&gt;
 &lt;/button&gt;</code></pre>
             </div>
             <div class="code-panel">
               <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="liquid-css">Copy</button></div>
               <pre><code id="liquid-css">.cm-liquid-button {
-  --cm-glass-text: oklch(0.98 0.01 85);
-  --cm-glass-edge: color-mix(in oklch,
-    var(--cm-glass-text) 34%, transparent);
+  --cm-button-text: oklch(0.98 0.01 85);
+  --cm-button-tint: oklch(0.2 0.015 60 / 0.55);
+  --cm-button-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
-  border: 1px solid var(--cm-glass-edge);
+  gap: 11px;
+  overflow: hidden;
+  appearance: none;
+  cursor: pointer;
+  padding: 13px 18px 13px 20px;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-button-text) 36%, transparent);
   border-radius: 999px;
   background: linear-gradient(180deg,
-    color-mix(in oklch, var(--cm-glass-text) 24%, transparent),
-    color-mix(in oklch, var(--cm-glass-text) 10%, transparent));
-  color: var(--cm-glass-text);
+    color-mix(in oklch, var(--cm-button-text) 25%, transparent),
+    color-mix(in oklch, var(--cm-button-text) 9%, transparent)),
+    var(--cm-button-tint);
+  color: var(--cm-button-text);
   font: 650 15px/1.2 system-ui, sans-serif;
   box-shadow:
     inset 0 1px 0 color-mix(in oklch,
-      var(--cm-glass-text) 42%, transparent),
+      var(--cm-button-text) 48%, transparent),
     0 10px 30px oklch(0.08 0.01 60 / 0.44);
   backdrop-filter: blur(14px) saturate(1.25);
   -webkit-backdrop-filter: blur(14px) saturate(1.25);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 250ms var(--cm-button-ease),
+    box-shadow 250ms var(--cm-button-ease);
 }
-
+.cm-liquid-button::before {
+  content: '';
+  position: absolute;
+  inset: -80% auto -80% -45%;
+  z-index: -1;
+  width: 34%;
+  background: linear-gradient(90deg, transparent,
+    color-mix(in oklch, var(--cm-button-text) 46%, transparent),
+    transparent);
+  transform: translateX(-170%) rotate(16deg);
+  transition: transform 650ms var(--cm-button-ease);
+}
+.cm-liquid-button__icon { width: 16px; height: 16px; overflow: visible; }
+.cm-liquid-button__icon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transition: transform 350ms var(--cm-button-ease);
+}
 .cm-liquid-button:hover {
   transform: translateY(-2px);
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch,
-      var(--cm-glass-text) 54%, transparent),
-    0 16px 34px oklch(0.08 0.01 60 / 0.52);
+  box-shadow: inset 0 1px 0 color-mix(in oklch,
+    var(--cm-button-text) 60%, transparent),
+    0 18px 38px oklch(0.08 0.01 60 / 0.54);
 }
-
-.cm-liquid-button:active { transform: translateY(0); }
+.cm-liquid-button:hover::before {
+  transform: translateX(620%) rotate(16deg);
+}
+.cm-liquid-button:hover .cm-liquid-button__shaft { transform: translateX(2px); }
+.cm-liquid-button:hover .cm-liquid-button__tip-top { transform: translate(2px, -1px) rotate(5deg); }
+.cm-liquid-button:hover .cm-liquid-button__tip-bottom { transform: translate(2px, 1px) rotate(-5deg); }
+.cm-liquid-button:active { transform: translateY(0) scale(0.975); }
 .cm-liquid-button:focus-visible {
-  outline: 2px solid var(--cm-glass-text);
+  outline: 2px solid var(--cm-button-text);
   outline-offset: 4px;
 }
-.cm-liquid-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-  transform: none;
+.cm-liquid-button:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+.cm-liquid-button:disabled::before { display: none; }
+
+@supports not ((backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))) {
+  .cm-liquid-button { background: var(--cm-button-tint); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cm-liquid-button { transition: none; }
+  .cm-liquid-button,
+  .cm-liquid-button::before,
+  .cm-liquid-button__icon path { transition: none; }
   .cm-liquid-button:hover { transform: none; }
 }</code></pre>
             </div>
@@ -418,7 +514,7 @@
           <span class="component-number">02 / 03</span>
           <div>
             <h2 id="nav-title">Frosted Navigation</h2>
-            <p class="component-intro">A focused navigation bar that stays readable over content and becomes solid when blur is unavailable.</p>
+            <p class="component-intro">A focused navigation bar with a measured sliding indicator that stays readable over content and becomes solid when blur is unavailable.</p>
           </div>
           <div class="usage-note"><strong>Use it for:</strong> short navigation with a clear brand and two to four destinations. On small screens, hide lower-priority links instead of adding a fragile menu.</div>
         </div>
@@ -428,7 +524,8 @@
           <nav class="cm-frost-nav" aria-label="Frosted navigation demo">
             <a class="cm-frost-nav__brand" href="#frosted-nav">Fieldnotes</a>
             <div class="cm-frost-nav__links">
-              <a href="#frosted-nav">Work</a>
+              <span class="cm-frost-nav__pill" aria-hidden="true"></span>
+              <a href="#frosted-nav" aria-current="page">Work</a>
               <a href="#frosted-nav">Notes</a>
               <a href="#frosted-nav">About</a>
             </div>
@@ -436,14 +533,15 @@
         </div>
 
         <div class="source-area">
-          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS + JS</span></div>
           <div class="source-grid">
             <div class="code-panel">
               <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="nav-html">Copy</button></div>
               <pre><code id="nav-html">&lt;nav class=&quot;cm-frost-nav&quot; aria-label=&quot;Primary&quot;&gt;
   &lt;a class=&quot;cm-frost-nav__brand&quot; href=&quot;/&quot;&gt;Fieldnotes&lt;/a&gt;
   &lt;div class=&quot;cm-frost-nav__links&quot;&gt;
-    &lt;a href=&quot;/work&quot;&gt;Work&lt;/a&gt;
+    &lt;span class=&quot;cm-frost-nav__pill&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+    &lt;a href=&quot;/work&quot; aria-current=&quot;page&quot;&gt;Work&lt;/a&gt;
     &lt;a href=&quot;/notes&quot;&gt;Notes&lt;/a&gt;
     &lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;
   &lt;/div&gt;
@@ -454,26 +552,30 @@
               <pre><code id="nav-css">.cm-frost-nav {
   --cm-nav-text: oklch(0.98 0.01 85);
   --cm-nav-muted: color-mix(in oklch,
-    var(--cm-nav-text) 68%, transparent);
+    var(--cm-nav-text) 64%, transparent);
+  --cm-nav-tint: oklch(0.2 0.015 60 / 0.64);
+  --cm-nav-ease: cubic-bezier(0.22, 1, 0.36, 1);
   position: sticky;
   top: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 12px 14px 12px 18px;
+  padding: 10px 10px 10px 18px;
   border: 1px solid color-mix(in oklch,
     var(--cm-nav-text) 30%, transparent);
-  border-radius: 14px;
+  border-radius: 16px;
   color: var(--cm-nav-text);
-  background: color-mix(in oklch,
-    var(--cm-nav-text) 13%, transparent);
+  background: linear-gradient(
+    color-mix(in oklch, var(--cm-nav-text) 12%, transparent),
+    color-mix(in oklch, var(--cm-nav-text) 12%, transparent)),
+    var(--cm-nav-tint);
   box-shadow:
     inset 0 1px 0 color-mix(in oklch,
       var(--cm-nav-text) 36%, transparent),
     0 16px 36px oklch(0.08 0.01 60 / 0.46);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
 }
 
 .cm-frost-nav__brand {
@@ -481,25 +583,89 @@
   font: 700 16px/1.2 system-ui, sans-serif;
   text-decoration: none;
 }
-.cm-frost-nav__links { display: flex; gap: 18px; }
-.cm-frost-nav__links a {
-  color: var(--cm-nav-muted);
-  font: 500 13px/1.2 system-ui, sans-serif;
-  text-decoration: none;
+.cm-frost-nav__links {
+  position: relative;
+  display: flex;
+  padding: 2px;
+  border-radius: 11px;
+  background: color-mix(in oklch, black 12%, transparent);
 }
-.cm-frost-nav__links a:hover { color: var(--cm-nav-text); }
+.cm-frost-nav__pill {
+  position: absolute;
+  inset-block: 2px;
+  left: 0;
+  width: var(--cm-pill-width, 0);
+  border: 1px solid color-mix(in oklch,
+    var(--cm-nav-text) 22%, transparent);
+  border-radius: 9px;
+  background: color-mix(in oklch,
+    var(--cm-nav-text) 15%, transparent);
+  transform: translateX(var(--cm-pill-x, 0));
+  transition: width 250ms var(--cm-nav-ease),
+    transform 250ms var(--cm-nav-ease);
+}
+.cm-frost-nav__links a {
+  position: relative;
+  z-index: 1;
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: var(--cm-nav-muted);
+  font: 550 13px/1.2 system-ui, sans-serif;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.cm-frost-nav__links a:hover,
+.cm-frost-nav__links a:focus-visible,
+.cm-frost-nav__links a[aria-current=&quot;page&quot;] {
+  color: var(--cm-nav-text);
+}
 .cm-frost-nav__links a:focus-visible {
   outline: 2px solid var(--cm-nav-text);
-  outline-offset: 4px;
+  outline-offset: -2px;
 }
 
-@supports not (backdrop-filter: blur(1px)) {
+@supports not ((backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))) {
   .cm-frost-nav { background: oklch(0.22 0.01 60); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .cm-frost-nav__pill,
+  .cm-frost-nav__links a { transition: none; }
+}
+
 @media (max-width: 520px) {
-  .cm-frost-nav__links a:first-child { display: none; }
+  .cm-frost-nav__links a:last-child { display: none; }
 }</code></pre>
+            </div>
+            <div class="code-panel code-panel--wide">
+              <div class="code-head row-between"><span>JavaScript</span><button class="copy-button" type="button" data-copy-target="nav-js">Copy</button></div>
+              <pre><code id="nav-js">document.querySelectorAll('.cm-frost-nav').forEach(function (nav) {
+  var group = nav.querySelector('.cm-frost-nav__links');
+  var links = Array.from(group.querySelectorAll('a'));
+  var current = group.querySelector('[aria-current=&quot;page&quot;]') || links[0];
+
+  function movePill(link) {
+    group.style.setProperty('--cm-pill-x', link.offsetLeft + 'px');
+    group.style.setProperty('--cm-pill-width', link.offsetWidth + 'px');
+  }
+
+  links.forEach(function (link) {
+    link.addEventListener('pointerenter', function () { movePill(link); });
+    link.addEventListener('focus', function () { movePill(link); });
+  });
+  group.addEventListener('pointerleave', function () { movePill(current); });
+  nav.addEventListener('focusout', function (event) {
+    var next = event.relatedTarget;
+    if (!(next instanceof Node) || !nav.contains(next)) movePill(current);
+  });
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(function () { movePill(current); }).observe(group);
+  } else {
+    window.addEventListener('resize', function () { movePill(current); });
+  }
+  requestAnimationFrame(function () { movePill(current); });
+});</code></pre>
             </div>
           </div>
         </div>
@@ -512,45 +678,59 @@
           <span class="component-number">03 / 03</span>
           <div>
             <h2 id="card-title">Tactile Glass Card</h2>
-            <p class="component-intro">A content surface whose depth makes interaction legible rather than merely decorative.</p>
+            <p class="component-intro">A content surface with pointer-responsive tilt and glare whose depth makes interaction legible rather than merely decorative.</p>
           </div>
           <div class="usage-note"><strong>Use it for:</strong> a single linked story, project, or next step. Replace the anchor with an article when the card is not interactive, and remove the hover transform.</div>
         </div>
 
         <div class="demo-stage">
-          <span class="demo-label">LINKED CARD · KEYBOARD FOCUS INCLUDED</span>
-          <a class="cm-glass-card" href="#glass-card">
-            <span class="cm-glass-card__meta">Interface Note · 01</span>
-            <strong class="cm-glass-card__title">Depth should clarify what can move.</strong>
-            <span class="cm-glass-card__arrow">Read the note →</span>
-          </a>
+          <span class="demo-label">POINTER TILT · KEYBOARD + REDUCED MOTION INCLUDED</span>
+          <div class="cm-glass-card-wrap">
+            <a class="cm-glass-card" href="#glass-card">
+              <span class="cm-glass-card__glare" aria-hidden="true"></span>
+              <span class="cm-glass-card__meta">Interface Note · 01</span>
+              <strong class="cm-glass-card__title">Depth should clarify what can move.</strong>
+              <span class="cm-glass-card__arrow">Read the note →</span>
+            </a>
+          </div>
         </div>
 
         <div class="source-area">
-          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS + JS</span></div>
           <div class="source-grid">
             <div class="code-panel">
               <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="card-html">Copy</button></div>
-              <pre><code id="card-html">&lt;a class=&quot;cm-glass-card&quot; href=&quot;/notes/depth&quot;&gt;
-  &lt;span class=&quot;cm-glass-card__meta&quot;&gt;
-    Interface Note · 01
-  &lt;/span&gt;
-  &lt;strong class=&quot;cm-glass-card__title&quot;&gt;
-    Depth should clarify what can move.
-  &lt;/strong&gt;
-  &lt;span class=&quot;cm-glass-card__arrow&quot;&gt;
-    Read the note →
-  &lt;/span&gt;
-&lt;/a&gt;</code></pre>
+              <pre><code id="card-html">&lt;div class=&quot;cm-glass-card-wrap&quot;&gt;
+  &lt;a class=&quot;cm-glass-card&quot; href=&quot;/notes/depth&quot;&gt;
+    &lt;span class=&quot;cm-glass-card__glare&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+    &lt;span class=&quot;cm-glass-card__meta&quot;&gt;Interface Note · 01&lt;/span&gt;
+    &lt;strong class=&quot;cm-glass-card__title&quot;&gt;
+      Depth should clarify what can move.
+    &lt;/strong&gt;
+    &lt;span class=&quot;cm-glass-card__arrow&quot;&gt;Read the note →&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</code></pre>
             </div>
             <div class="code-panel">
               <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="card-css">Copy</button></div>
-              <pre><code id="card-css">.cm-glass-card {
+              <pre><code id="card-css">.cm-glass-card-wrap {
+  --cm-tilt-x: 0deg;
+  --cm-tilt-y: 0deg;
+  --cm-glare-x: 50%;
+  --cm-glare-y: 50%;
+  width: min(100%, 340px);
+  perspective: 1000px;
+  touch-action: pan-y;
+}
+.cm-glass-card {
   --cm-card-text: oklch(0.98 0.01 85);
   --cm-card-muted: color-mix(in oklch,
     var(--cm-card-text) 68%, transparent);
+  --cm-card-tint: oklch(0.2 0.015 60 / 0.58);
+  --cm-card-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
   display: block;
-  width: min(100%, 340px);
+  overflow: hidden;
   padding: 28px;
   border: 1px solid color-mix(in oklch,
     var(--cm-card-text) 28%, transparent);
@@ -558,7 +738,8 @@
   color: var(--cm-card-text);
   background: linear-gradient(145deg,
     color-mix(in oklch, var(--cm-card-text) 20%, transparent),
-    color-mix(in oklch, var(--cm-card-text) 7%, transparent));
+    color-mix(in oklch, var(--cm-card-text) 7%, transparent)),
+    var(--cm-card-tint);
   box-shadow:
     inset 0 1px 0 color-mix(in oklch,
       var(--cm-card-text) 38%, transparent),
@@ -566,20 +747,45 @@
   backdrop-filter: blur(18px) saturate(1.2);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
   text-decoration: none;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transform: rotateX(var(--cm-tilt-x)) rotateY(var(--cm-tilt-y));
+  transform-style: preserve-3d;
+  transition: transform 700ms var(--cm-card-ease),
+    box-shadow 250ms var(--cm-card-ease);
+  will-change: transform;
 }
-
+.cm-glass-card-wrap.is-active .cm-glass-card {
+  transition-duration: 120ms, 250ms;
+}
 .cm-glass-card:hover {
-  transform: translateY(-4px) rotate(-0.4deg);
   box-shadow:
     inset 0 1px 0 color-mix(in oklch,
       var(--cm-card-text) 48%, transparent),
-    0 26px 48px oklch(0.08 0.01 60 / 0.56);
+    0 28px 54px oklch(0.08 0.01 60 / 0.58);
 }
-.cm-glass-card:active { transform: translateY(-1px); }
+.cm-glass-card:active { scale: 0.985; }
 .cm-glass-card:focus-visible {
   outline: 2px solid var(--cm-card-text);
   outline-offset: 5px;
+}
+.cm-glass-card__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at
+    var(--cm-glare-x) var(--cm-glare-y),
+    color-mix(in oklch, var(--cm-card-text) 34%, transparent),
+    transparent 44%);
+  mix-blend-mode: screen;
+  transition: opacity 300ms ease;
+}
+.cm-glass-card-wrap.is-active .cm-glass-card__glare { opacity: 0.72; }
+.cm-glass-card__meta,
+.cm-glass-card__title,
+.cm-glass-card__arrow {
+  position: relative;
+  z-index: 1;
+  transform: translateZ(22px);
 }
 .cm-glass-card__meta {
   display: block;
@@ -596,15 +802,65 @@
 }
 .cm-glass-card__arrow {
   display: block;
+  width: max-content;
   margin-top: 20px;
   color: var(--cm-card-muted);
   font: 500 13px/1.2 system-ui, sans-serif;
+  transition: color 150ms ease, transform 350ms var(--cm-card-ease);
+}
+.cm-glass-card:hover .cm-glass-card__arrow {
+  color: var(--cm-card-text);
+  transform: translate3d(3px, 0, 22px);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))) {
+  .cm-glass-card { background: var(--cm-card-tint); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cm-glass-card { transition: none; }
+  .cm-glass-card,
   .cm-glass-card:hover { transform: none; }
+  .cm-glass-card__glare { display: none; }
 }</code></pre>
+            </div>
+            <div class="code-panel code-panel--wide">
+              <div class="code-head row-between"><span>JavaScript</span><button class="copy-button" type="button" data-copy-target="card-js">Copy</button></div>
+              <pre><code id="card-js">var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
+  var frame;
+
+  function reset() {
+    cancelAnimationFrame(frame);
+    wrap.classList.remove('is-active');
+    wrap.style.setProperty('--cm-tilt-x', '0deg');
+    wrap.style.setProperty('--cm-tilt-y', '0deg');
+  }
+
+  wrap.addEventListener('pointermove', function (event) {
+    if (reducedMotion.matches || event.pointerType === 'touch') return;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(function () {
+      var rect = wrap.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      var y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+      wrap.classList.add('is-active');
+      wrap.style.setProperty('--cm-tilt-x', ((0.5 - y) * 12).toFixed(2) + 'deg');
+      wrap.style.setProperty('--cm-tilt-y', ((x - 0.5) * 12).toFixed(2) + 'deg');
+      wrap.style.setProperty('--cm-glare-x', (x * 100).toFixed(1) + '%');
+      wrap.style.setProperty('--cm-glare-y', (y * 100).toFixed(1) + '%');
+    });
+  });
+  wrap.addEventListener('pointerleave', reset);
+  wrap.addEventListener('pointercancel', reset);
+  wrap.addEventListener('focusout', function (event) {
+    var next = event.relatedTarget;
+    if (!(next instanceof Node) || !wrap.contains(next)) reset();
+  });
+});</code></pre>
             </div>
           </div>
         </div>
@@ -631,6 +887,72 @@
   <p id="copy-status" class="meta" role="status" aria-live="polite" style="position:fixed;left:-9999px;"></p>
 
   <script>
+    (function () {
+      document.querySelectorAll('.cm-frost-nav').forEach(function (nav) {
+        var group = nav.querySelector('.cm-frost-nav__links');
+        if (!group) return;
+        var links = Array.from(group.querySelectorAll('a'));
+        var current = group.querySelector('[aria-current="page"]') || links[0];
+        if (!current) return;
+
+        function movePill(link) {
+          group.style.setProperty('--cm-pill-x', link.offsetLeft + 'px');
+          group.style.setProperty('--cm-pill-width', link.offsetWidth + 'px');
+        }
+
+        links.forEach(function (link) {
+          link.addEventListener('pointerenter', function () { movePill(link); });
+          link.addEventListener('focus', function () { movePill(link); });
+        });
+        group.addEventListener('pointerleave', function () { movePill(current); });
+        nav.addEventListener('focusout', function (event) {
+          var next = event.relatedTarget;
+          if (!(next instanceof Node) || !nav.contains(next)) movePill(current);
+        });
+        if ('ResizeObserver' in window) {
+          new ResizeObserver(function () { movePill(current); }).observe(group);
+        } else {
+          window.addEventListener('resize', function () { movePill(current); });
+        }
+        requestAnimationFrame(function () { movePill(current); });
+      });
+
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
+        var frame;
+
+        function resetTilt() {
+          cancelAnimationFrame(frame);
+          wrap.classList.remove('is-active');
+          wrap.style.setProperty('--cm-tilt-x', '0deg');
+          wrap.style.setProperty('--cm-tilt-y', '0deg');
+        }
+
+        wrap.addEventListener('pointermove', function (event) {
+          if (reducedMotion.matches || event.pointerType === 'touch') return;
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(function () {
+            var rect = wrap.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            var x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+            var y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+            wrap.classList.add('is-active');
+            wrap.style.setProperty('--cm-tilt-x', ((0.5 - y) * 12).toFixed(2) + 'deg');
+            wrap.style.setProperty('--cm-tilt-y', ((x - 0.5) * 12).toFixed(2) + 'deg');
+            wrap.style.setProperty('--cm-glare-x', (x * 100).toFixed(1) + '%');
+            wrap.style.setProperty('--cm-glare-y', (y * 100).toFixed(1) + '%');
+          });
+        });
+        wrap.addEventListener('pointerleave', resetTilt);
+        wrap.addEventListener('pointercancel', resetTilt);
+        wrap.addEventListener('focusout', function (event) {
+          var next = event.relatedTarget;
+          if (!(next instanceof Node) || !wrap.contains(next)) resetTilt();
+        });
+      });
+    })();
+
     (function () {
       var status = document.getElementById('copy-status');
       var resetTimer;
