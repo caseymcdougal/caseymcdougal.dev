@@ -1,83 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 · Casey McDougal</title>
-  <meta name="robots" content="noindex" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Not Found · Casey McDougal</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4">
   <style>
     :root {
-      --bg: #201d1d;
-      --text: #fdfcfc;
-      --muted: #9a9898;
-      --dim: #6f6c6c;
-      --accent: #ff5a1f;
-      --r: 4px;
-      --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --bg: #faf7f2;
+      --surface: #fffdfa;
+      --fg: #1c1a17;
+      --muted: #8a817a;
+      --border: #ded7ce;
+      --accent: #c0512f;
+      --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+      --font-body: 'Söhne', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
     body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      margin: 0;
+      padding: 32px;
       background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      color: var(--fg);
+      font-family: var(--font-body);
       text-align: center;
-      padding: 2rem;
       -webkit-font-smoothing: antialiased;
     }
-    /* CRT grain + scanlines — same system as the rest of the site */
-    body::before {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.035;
-      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.9  0 0 0 0 0.8  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-    }
-    body::after {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px);
-    }
-    .wrap { position: relative; z-index: 1; }
-    .cmd { font-size: 13px; color: var(--dim); margin-bottom: 1.5rem; }
-    .cmd::before { content: '$ '; color: var(--accent); }
-    .num {
-      font-size: clamp(4rem, 14vw, 7rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      color: var(--accent);
-      line-height: 1;
-      margin-bottom: 1.25rem;
-    }
-    h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.6rem; }
-    p { color: var(--muted); font-size: 0.85rem; margin-bottom: 2.25rem; }
+    main { width: min(100%, 620px); }
+    .meta { margin: 0 0 22px; color: var(--accent); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { margin: 0; font-family: var(--font-display); font-size: clamp(52px, 10vw, 88px); font-weight: 500; line-height: 0.98; letter-spacing: -0.045em; text-wrap: balance; }
+    p { max-width: 46ch; margin: 24px auto 32px; color: var(--muted); font-size: 18px; line-height: 1.6; text-wrap: pretty; }
     a {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(180deg, #ff6e38 0%, #ff5a1f 55%, #f04f10 100%);
-      color: #1c1411;
-      border: 1px solid rgba(0,0,0,0.18);
-      font-family: var(--mono); font-weight: 600; font-size: 13px;
-      padding: 9px 18px; border-radius: var(--r);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      background: var(--accent);
+      color: var(--surface);
+      font-size: 14px;
+      font-weight: 650;
       text-decoration: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 1px 2px rgba(0,0,0,0.34), 0 4px 12px rgba(0,0,0,0.20);
-      transition: transform 0.16s cubic-bezier(.22,.61,.36,1), box-shadow 0.16s, filter 0.16s;
     }
-    a:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 2px 5px rgba(0,0,0,0.40), 0 14px 32px rgba(0,0,0,0.30); }
-    a:active { transform: translateY(0); filter: brightness(0.97); }
-    @media (prefers-reduced-motion: reduce) { a, a:hover { transition: none; transform: none; } }
+    a:hover { background: color-mix(in oklch, var(--accent) 88%, var(--fg)); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="cmd">cd /that-page &amp;&amp; ls</div>
-    <div class="num">404</div>
-    <h1>No such file or directory.</h1>
-    <p>That page doesn't exist. The homepage does.</p>
-    <a href="/">cd ~/ →</a>
-  </div>
+  <main data-od-id="not-found">
+    <p class="meta">404 · A Quiet Dead End</p>
+    <h1>This Page Isn’t Here.</h1>
+    <p>The link may be old, or the idea may have moved somewhere better. The homepage is still exactly where it should be.</p>
+    <a href="/">Return home</a>
+  </main>
 </body>
 </html>

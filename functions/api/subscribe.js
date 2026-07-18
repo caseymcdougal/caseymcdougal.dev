@@ -42,7 +42,7 @@ export async function onRequestPost({ request, env }) {
         send_welcome_email: true,
         utm_source: "caseymcdougal.dev",
         utm_medium: "organic",
-        utm_campaign: "library",
+        utm_campaign: "ui_component_library",
         referring_site: "https://caseymcdougal.dev",
       }),
     }

@@ -1,424 +1,681 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Library · caseymcdougal.dev</title>
-  <meta name="description" content="The private MCP library for subscribers. Free MCP servers you can connect to your AI agent tonight.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Component Library · Casey McDougal</title>
+  <meta name="description" content="A free collection of dependency-free interface components by Casey McDougal.">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=4">
+
   <style>
-    /* === DESIGN TOKENS — opencode-ai system, orange accent (matches index) === */
     :root {
-      --bg:         #201d1d;
-      --bg-raised:  #2b2727;
-      --bg-sunk:    #1a1818;
-      --bg-hover:   rgba(255,255,255,0.025);
-      --text:       #fdfcfc;
-      --muted:      #9a9898;
-      --dim:        #6f6c6c;
-      --accent:     #ff5a1f;
-      --accent-dim: rgba(255,90,31,0.28);
-      --accent-glow:rgba(255,90,31,0.07);
-      --success:    #30d158;
-      --border:     rgba(255,255,255,0.07);
-      --border-mid: rgba(255,255,255,0.11);
-      --mono:       'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-      --r:          4px;
+      --bg: #faf7f2;
+      --surface: #fffdfa;
+      --fg: #1c1a17;
+      --muted: #8a817a;
+      --border: #ded7ce;
+      --accent: #c0512f;
 
-      /* === DEPTH SYSTEM — whisper-subtle liquid glass. Depth from light, not roundness. === */
-      --glass-fill:  linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012));
-      --glass-top:   inset 0 1px 0 rgba(255,255,255,0.10);
-      --lift-1:      0 1px 2px rgba(0,0,0,0.34), 0 4px 12px rgba(0,0,0,0.20);
-      --lift-2:      0 2px 5px rgba(0,0,0,0.40), 0 14px 32px rgba(0,0,0,0.30);
-      --ease:        cubic-bezier(.22,.61,.36,1);
+      --accent-soft: color-mix(in oklch, var(--accent) 12%, transparent);
+      --fg-soft: color-mix(in oklch, var(--fg) 6%, transparent);
+      --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+      --font-body: 'Söhne', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --fs-h1: clamp(48px, 7vw, 82px);
+      --fs-h2: clamp(34px, 4vw, 52px);
+      --fs-h3: 26px;
+      --gap-sm: 12px;
+      --gap-md: 20px;
+      --gap-lg: 32px;
+      --gap-xl: 56px;
+      --gap-2xl: 96px;
+      --container: 1080px;
+      --gutter: 32px;
+      --radius: 12px;
+      --radius-lg: 16px;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 78px; -webkit-text-size-adjust: 100%; }
     body {
-      font-family: var(--mono);
+      margin: 0;
       background: var(--bg);
-      color: var(--text);
+      color: var(--fg);
+      font-family: var(--font-body);
       font-size: 16px;
-      line-height: 1.5;
-      overflow-x: hidden;
-      min-height: 100vh;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+    svg { display: block; }
+    p { text-wrap: pretty; }
+    h1, h2, h3 { text-wrap: balance; }
+    ::selection { background: var(--accent-soft); }
 
-    /* CRT grain — same as index */
-    body::before {
-      content: '';
+    .skip-link {
       position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 0.9  0 0 0 0 0.8  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--fg);
+      color: var(--surface);
+      transform: translateY(-160%);
     }
-    /* Scanlines — same as index */
-    body::after {
+    .skip-link:focus { transform: translateY(0); }
+    .container { width: min(100%, var(--container)); margin-inline: auto; padding-inline: var(--gutter); }
+    .section { padding-block: clamp(64px, 9vw, 108px); }
+    .section + .section { border-top: 1px solid var(--border); }
+    .row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--gap-md); }
+
+    h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 500; }
+    h1 { font-size: var(--fs-h1); line-height: 0.98; letter-spacing: -0.045em; }
+    h2 { font-size: var(--fs-h2); line-height: 1.05; letter-spacing: -0.03em; }
+    h3 { font-size: var(--fs-h3); line-height: 1.15; letter-spacing: -0.02em; }
+    .lead { max-width: 60ch; margin: 0; color: var(--muted); font-size: 19px; line-height: 1.6; }
+    .eyebrow {
+      margin: 0 0 var(--gap-md);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .meta { color: var(--muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; }
+
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .topnav-inner { min-height: 64px; }
+    .logo { font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+    .topnav nav { display: flex; gap: clamp(16px, 3vw, 32px); }
+    .topnav nav a { color: var(--muted); font-size: 14px; }
+    .topnav nav a:hover { color: var(--fg); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .hero { padding-block: clamp(100px, 15vw, 180px); }
+    .hero-inner { max-width: 880px; }
+    .hero h1 { max-width: 12ch; }
+    .hero .lead { margin-top: 28px; }
+    .hero-note { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 36px; }
+    .hero-note span::before { content: '— '; }
+
+    .component-entry { scroll-margin-top: 80px; }
+    .component-head {
+      display: grid;
+      grid-template-columns: 80px minmax(0, 1fr) minmax(220px, 0.7fr);
+      gap: var(--gap-lg);
+      align-items: start;
+      margin-bottom: var(--gap-xl);
+    }
+    .component-number { padding-top: 8px; color: var(--accent); font-family: var(--font-mono); font-size: 12px; }
+    .component-intro { margin: 12px 0 0; color: var(--muted); font-size: 16px; }
+    .usage-note { border-top: 1px solid var(--fg); padding-top: 14px; color: var(--muted); font-size: 14px; }
+    .usage-note strong { color: var(--fg); }
+
+    .demo-stage {
+      position: relative;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 48px;
+      border-radius: var(--radius-lg);
+      background: var(--fg);
+      isolation: isolate;
+    }
+    .demo-stage::before {
       content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.06) 2px,
-        rgba(0,0,0,0.06) 3px
-      );
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      top: -90px;
+      right: -50px;
+      z-index: -1;
+      border-radius: 50%;
+      background: var(--accent);
+      filter: blur(18px);
+      opacity: 0.9;
     }
+    .demo-stage::after {
+      content: '';
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      bottom: -210px;
+      left: -90px;
+      z-index: -1;
+      border-radius: 50%;
+      background: var(--surface);
+      filter: blur(36px);
+      opacity: 0.42;
+    }
+    .demo-label { position: absolute; top: 20px; left: 22px; color: color-mix(in oklch, var(--surface) 64%, transparent); font-family: var(--font-mono); font-size: 11px; }
+    .state-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
 
-    main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 56px 28px 110px; }
-
-    /* === BACK LINK === */
-    .back-link {
+    .cm-liquid-button {
+      --cm-glass-text: oklch(0.98 0.01 85);
+      --cm-glass-edge: color-mix(in oklch, var(--cm-glass-text) 34%, transparent);
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: 13px;
-      color: var(--dim);
-      text-decoration: none;
-      transition: color 0.12s;
+      gap: 10px;
+      padding: 12px 18px;
+      border: 1px solid var(--cm-glass-edge);
+      border-radius: 999px;
+      background: linear-gradient(180deg, color-mix(in oklch, var(--cm-glass-text) 24%, transparent), color-mix(in oklch, var(--cm-glass-text) 10%, transparent));
+      color: var(--cm-glass-text);
+      font: 650 15px/1.2 system-ui, sans-serif;
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 42%, transparent), 0 10px 30px oklch(0.08 0.01 60 / 0.44);
+      backdrop-filter: blur(14px) saturate(1.25);
+      -webkit-backdrop-filter: blur(14px) saturate(1.25);
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
     }
-    .back-link:hover { color: var(--muted); }
-    .back-link::before { content: '$ cd'; color: var(--accent); }
+    .cm-liquid-button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 54%, transparent), 0 16px 34px oklch(0.08 0.01 60 / 0.52); }
+    .cm-liquid-button:active { transform: translateY(0); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 32%, transparent), 0 5px 16px oklch(0.08 0.01 60 / 0.42); }
+    .cm-liquid-button:focus-visible { outline: 2px solid var(--cm-glass-text); outline-offset: 4px; }
+    .cm-liquid-button:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+    .cm-liquid-button--pressed { transform: translateY(0); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-glass-text) 32%, transparent), 0 5px 16px oklch(0.08 0.01 60 / 0.42); }
 
-    /* === HERO === */
-    header.hero { margin-top: 40px; margin-bottom: 52px; }
-
-    .eyebrow {
-      font-size: 11px;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-      margin-bottom: 18px;
-    }
-    .eyebrow::before { content: '// '; }
-
-    h1 {
-      font-size: clamp(28px, 5vw, 42px);
-      font-weight: 700;
-      line-height: 1.14;
-      letter-spacing: -0.015em;
-      margin-bottom: 16px;
-    }
-    h1 em { font-style: normal; color: var(--accent); }
-
-    .lede {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.75;
-      max-width: 580px;
-    }
-
-    /* === TOOL BLOCK (raised glass) === */
-    .tool {
-      background: var(--bg-raised);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--r);
-      padding: 30px 30px 26px;
-      margin-bottom: 26px;
-      box-shadow: var(--glass-top), var(--lift-1);
-    }
-
-    .tool-head {
+    .cm-frost-nav {
+      --cm-nav-text: oklch(0.98 0.01 85);
+      --cm-nav-muted: color-mix(in oklch, var(--cm-nav-text) 68%, transparent);
+      position: sticky;
+      top: 16px;
+      width: min(100%, 720px);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      font-size: 11px;
-      letter-spacing: 0.04em;
-      margin-bottom: 18px;
+      gap: 24px;
+      padding: 12px 14px 12px 18px;
+      border: 1px solid color-mix(in oklch, var(--cm-nav-text) 30%, transparent);
+      border-radius: 14px;
+      color: var(--cm-nav-text);
+      background: color-mix(in oklch, var(--cm-nav-text) 13%, transparent);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-nav-text) 36%, transparent), 0 16px 36px oklch(0.08 0.01 60 / 0.46);
+      backdrop-filter: blur(16px) saturate(1.2);
+      -webkit-backdrop-filter: blur(16px) saturate(1.2);
     }
-    .tool-id { color: var(--accent); font-weight: 500; }
+    .cm-frost-nav__brand { color: inherit; font: 700 16px/1.2 system-ui, sans-serif; }
+    .cm-frost-nav__links { display: flex; align-items: center; gap: 18px; }
+    .cm-frost-nav__links a { color: var(--cm-nav-muted); font: 500 13px/1.2 system-ui, sans-serif; text-decoration: none; }
+    .cm-frost-nav__links a:hover { color: var(--cm-nav-text); }
+    .cm-frost-nav__links a:focus-visible { outline: 2px solid var(--cm-nav-text); outline-offset: 4px; border-radius: 4px; }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--success);
-      border: 1px solid rgba(48,209,88,0.3);
-      border-radius: var(--r);
-      padding: 3px 9px;
-      letter-spacing: 0.04em;
-      background: var(--glass-fill);
-      box-shadow: var(--glass-top), 0 1px 2px rgba(0,0,0,0.25);
+    .cm-glass-card {
+      --cm-card-text: oklch(0.98 0.01 85);
+      --cm-card-muted: color-mix(in oklch, var(--cm-card-text) 68%, transparent);
+      display: block;
+      width: min(100%, 340px);
+      padding: 28px;
+      border: 1px solid color-mix(in oklch, var(--cm-card-text) 28%, transparent);
+      border-radius: 18px;
+      color: var(--cm-card-text);
+      background: linear-gradient(145deg, color-mix(in oklch, var(--cm-card-text) 20%, transparent), color-mix(in oklch, var(--cm-card-text) 7%, transparent));
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-card-text) 38%, transparent), 0 18px 40px oklch(0.08 0.01 60 / 0.5);
+      backdrop-filter: blur(18px) saturate(1.2);
+      -webkit-backdrop-filter: blur(18px) saturate(1.2);
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 180ms ease;
     }
-    .status::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 6px var(--success);
-    }
+    .cm-glass-card:hover { transform: translateY(-4px) rotate(-0.4deg); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-card-text) 48%, transparent), 0 26px 48px oklch(0.08 0.01 60 / 0.56); }
+    .cm-glass-card:active { transform: translateY(-1px); }
+    .cm-glass-card:focus-visible { outline: 2px solid var(--cm-card-text); outline-offset: 5px; }
+    .cm-glass-card__meta { display: block; margin-bottom: 56px; color: var(--cm-card-muted); font: 500 11px/1.3 ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+    .cm-glass-card__title { display: block; max-width: 12ch; font: 600 28px/1.08 Georgia, serif; }
+    .cm-glass-card__arrow { display: block; margin-top: 20px; color: var(--cm-card-muted); font: 500 13px/1.2 system-ui, sans-serif; }
 
-    .tool h2 {
-      font-size: 21px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 12px;
-    }
-    .tool-intro {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 600px;
-    }
-    .tool-intro em { font-style: normal; color: var(--text); }
-
-    .inside-label {
-      font-size: 11px;
-      color: var(--dim);
-      letter-spacing: 0.04em;
-      margin-top: 26px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-    }
-    .inside-label::before { content: '// '; }
-
-    /* Pieces */
-    .piece {
-      display: grid;
-      grid-template-columns: 38px 1fr;
-      gap: 0 12px;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .piece:last-of-type { border-bottom: none; padding-bottom: 4px; }
-    .piece-num {
-      font-size: 11px;
-      color: var(--accent);
-      font-weight: 500;
-      padding-top: 2px;
-      user-select: none;
-    }
-    .piece-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; line-height: 1.35; }
-    .piece-detail { font-size: 12.5px; color: var(--muted); line-height: 1.72; }
-    .piece-detail code {
-      background: var(--bg-sunk);
+    .source-area { margin-top: var(--gap-lg); }
+    .source-title { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+    .source-title h3 { font-size: 21px; }
+    .source-grid { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 16px; }
+    .code-panel { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+    .code-head { min-height: 46px; padding: 8px 10px 8px 16px; border-bottom: 1px solid var(--border); }
+    .code-head span { color: var(--muted); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; }
+    .copy-button {
+      padding: 7px 10px;
       border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1px 5px;
-      font-size: 11.5px;
-      color: var(--text);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--fg);
+      font-size: 12px;
+      font-weight: 600;
     }
+    .copy-button:hover { border-color: var(--fg); background: var(--fg-soft); }
+    pre { max-height: 430px; margin: 0; overflow: auto; padding: 18px; tab-size: 2; }
+    code { color: var(--fg); font-family: var(--font-mono); font-size: 12px; line-height: 1.7; }
 
-    /* CTA */
-    .cta-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-    }
+    .closing { text-align: center; }
+    .closing-inner { max-width: 660px; }
+    .closing .lead { margin: 18px auto 30px; }
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: linear-gradient(180deg, #ff6e38 0%, #ff5a1f 55%, #f04f10 100%);
-      color: #1c1411;
-      font-family: var(--mono);
-      font-size: 13px;
-      font-weight: 600;
-      padding: 9px 18px;
-      border-radius: var(--r);
-      border: 1px solid rgba(0,0,0,0.18);
-      text-decoration: none;
-      white-space: nowrap;
-      box-shadow: var(--glass-top), var(--lift-1);
-      transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease), filter 0.16s var(--ease);
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: var(--surface);
+      font-size: 14px;
+      font-weight: 650;
     }
-    .btn:hover { transform: translateY(-1px); box-shadow: var(--glass-top), var(--lift-2); filter: brightness(1.05); }
-    .btn:active { transform: translateY(0); box-shadow: var(--glass-top), var(--lift-1); filter: brightness(0.97); }
-    .btn-note { font-size: 11px; color: var(--dim); line-height: 1.5; }
+    .btn:hover { background: color-mix(in oklch, var(--accent) 88%, var(--fg)); }
+    .pagefoot { padding-block: 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
 
-    /* Meta */
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      font-size: 11px;
-      color: var(--dim);
-      margin-top: 18px;
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .cm-liquid-button, .cm-frost-nav, .cm-glass-card { background: color-mix(in oklch, var(--surface) 22%, var(--fg)); }
     }
-    .meta span + span::before { content: ' · '; color: var(--accent); }
 
-    /* Footer note */
-    .note {
-      margin-top: 40px;
-      padding: 18px 20px;
-      border: 1px solid var(--accent-dim);
-      background: var(--accent-glow);
-      border-radius: var(--r);
-      font-size: 12.5px;
-      color: var(--muted);
-      line-height: 1.7;
-      box-shadow: var(--glass-top), var(--lift-1);
+    @media (max-width: 820px) {
+      .component-head { grid-template-columns: 54px 1fr; }
+      .usage-note { grid-column: 2; }
+      .source-grid { grid-template-columns: 1fr; }
     }
-    .note strong { color: var(--text); font-weight: 700; }
-    .note::before { content: '// heads up'; display: block; color: var(--accent); font-size: 11px; margin-bottom: 8px; }
-
+    @media (max-width: 640px) {
+      :root { --gutter: 20px; }
+      .topnav nav a:not(:last-child) { display: none; }
+      .hero { padding-block: 96px 104px; }
+      .component-head { grid-template-columns: 1fr; gap: 14px; }
+      .component-number { padding-top: 0; }
+      .usage-note { grid-column: 1; margin-top: 12px; }
+      .demo-stage { min-height: 340px; padding: 32px 18px; }
+      .cm-frost-nav { gap: 14px; padding-left: 14px; }
+      .cm-frost-nav__links { gap: 10px; }
+      .cm-frost-nav__links a:first-child { display: none; }
+      .pagefoot .row-between { align-items: flex-start; flex-direction: column; }
+    }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-      .btn:hover { transform: none; }
-    }
-
-    @media (max-width: 600px) {
-      main { padding: 40px 20px 80px; }
-      .tool { padding: 22px 18px 20px; }
-      .tool h2 { font-size: 18px; }
-      .piece { grid-template-columns: 30px 1fr; gap: 0 8px; }
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      .cm-liquid-button:hover, .cm-glass-card:hover { transform: none; }
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <main>
-    <a href="/" class="back-link">&nbsp;~/</a>
-
-    <header class="hero">
-      <div class="eyebrow">the library · subscribers only</div>
-      <h1>You're in. Two MCP servers, <em>nothing held back</em>.</h1>
-      <p class="lede">Both free, both give your AI agent real-world hands. Connect Google Ads in a single OAuth, or self-host the Mac Bridge and drive your machine from a text. New tools land here first.</p>
-    </header>
-
-    <!-- tool_01 — Google Ads MCP -->
-    <section class="tool">
-      <div class="tool-head">
-        <span class="tool-id">tool_01</span>
-        <span class="status">live</span>
-      </div>
-      <h2>Google Ads MCP</h2>
-      <p class="tool-intro">A centrally-hosted MCP server for managing Google Ads by text. Link your account once, then ask Poke to pull numbers, find wasted spend, pause a campaign, or block a junk search term. <em>Every change asks before it acts.</em></p>
-
-      <div class="inside-label">what's inside</div>
-
-      <div class="piece">
-        <span class="piece-num">[01]</span>
-        <div>
-          <div class="piece-title">Reporting, read-only</div>
-          <div class="piece-detail">Four read tools: <code>list_campaigns</code>, <code>get_campaign_metrics</code> (impressions, clicks, cost, conversions over the last 7 days), <code>get_search_terms</code> (sorted by spend, so wasteful keywords surface fast), and <code>list_negative_keywords</code>. Ask "how did my ads do this week" and Poke just answers.</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[02]</span>
-        <div>
-          <div class="piece-title">Campaign control, confirm-gated</div>
-          <div class="piece-detail">Four mutating tools: pause or enable a campaign, set a daily budget, add or remove a negative keyword. Each refuses to act unless called with <code>confirm: true</code>, so Poke always asks before it spends or changes anything. No budget blowout from a misread text.</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[03]</span>
-        <div>
-          <div class="piece-title">One OAuth, one private URL</div>
-          <div class="piece-detail">Hit connect, authorize Google Ads once, and the server prints a personal <code>/sse</code> URL. Paste it into Poke and you're live. Each URL is its own identity, tokens stored per user, zero cross-user leakage.</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[04]</span>
-        <div>
-          <div class="piece-title">Revoke whenever</div>
-          <div class="piece-detail">A <code>/disconnect</code> link deletes your token and kills any live session on the spot, then hands you a fresh URL. You hold the keys to your own ad account.</div>
-        </div>
-      </div>
-
-      <div class="cta-row">
-        <a href="https://google-ads-mcp-production-d7ae.up.railway.app/auth/google" target="_blank" rel="noopener" class="btn">connect google ads →</a>
-        <span class="btn-note">authorize once, paste the printed url into poke · hosted free · pending google verification</span>
-      </div>
-
-      <div class="meta">
-        <span>Poke MCP</span>
-        <span>Google Ads API</span>
-        <span>OAuth</span>
-        <span>hosted free</span>
-      </div>
-    </section>
-
-    <!-- tool_02 — Poke Mac Bridge -->
-    <section class="tool">
-      <div class="tool-head">
-        <span class="tool-id">tool_02</span>
-        <span class="status">live</span>
-      </div>
-      <h2>Mac Bridge</h2>
-      <p class="tool-intro">A local MCP server that gives Poke a body on your Mac. 17 tools to run commands, edit files, screenshot, control apps, and kick off background builds, all from your phone. <em>Your machine becomes an extension of Poke's brain.</em></p>
-
-      <div class="inside-label">what's inside</div>
-
-      <div class="piece">
-        <span class="piece-num">[01]</span>
-        <div>
-          <div class="piece-title">17 tools, five groups</div>
-          <div class="piece-detail">Core (<code>run_command</code>, <code>healthcheck</code>), files &amp; git (read, write, patch, <code>list_dir</code>, <code>git_status</code>), system &amp; app control (clipboard, open/quit/focus apps, desktop notify, <code>say</code>, screen capture, tail logs), and background jobs (start, status, output, kill).</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[02]</span>
-        <div>
-          <div class="piece-title">Run anything, cleanly</div>
-          <div class="piece-detail"><code>run_command</code> executes in a fresh <code>zsh -f</code> subshell with optional <code>cwd</code> and timeout. A non-zero exit comes back as normal output, not a tool error, so Poke can read a failing build and reason about it instead of giving up.</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[03]</span>
-        <div>
-          <div class="piece-title">Long jobs, no 60s cap</div>
-          <div class="piece-detail">Builds, installs, and dev servers run detached and return a <code>jobId</code> immediately. Poll status, tail output, or kill them later. No more "tool timed out" on a three-minute install.</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[04]</span>
-        <div>
-          <div class="piece-title">Built to hold a token safely</div>
-          <div class="piece-detail">The bearer token is stripped from every child process env, so a prompt-injected <code>echo $TOKEN</code> can't exfiltrate it. Every state-changing call is appended to an audit log. It listens on localhost only and reaches Poke through a cloudflared tunnel you control.</div>
-        </div>
-      </div>
-
-      <div class="piece">
-        <span class="piece-num">[05]</span>
-        <div>
-          <div class="piece-title">One command to install</div>
-          <div class="piece-detail"><code>./setup.sh</code> compiles the project and installs a LaunchAgent so the bridge auto-starts at login. Point a cloudflared tunnel at <code>localhost:3000</code>, paste the URL and token into Poke, done.</div>
-        </div>
-      </div>
-
-      <div class="cta-row">
-        <a href="https://github.com/caseymcdougal/poke-mac-bridge" target="_blank" rel="noopener" class="btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8 0 3.2a4.6 4.6 0 0 1 1.2 3.2c0 4.6-2.8 5.6-5.5 5.9.5.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/>
-          </svg>
-          grab the kit →
-        </a>
-        <span class="btn-note">public repo · self-host on your mac · one-command setup</span>
-      </div>
-
-      <div class="meta">
-        <span>Poke MCP</span>
-        <span>17 tools</span>
-        <span>macOS</span>
-        <span>self-host</span>
-      </div>
-    </section>
-
-    <div class="note">
-      <strong>Bookmark this page.</strong> New MCP servers land here as they ship, and subscribers get them first. Reply to the welcome email with the tool you wish existed, it might become tool_03.
+  <header class="topnav" data-od-id="topnav">
+    <div class="container row-between topnav-inner">
+      <a class="logo" href="/">Casey McDougal</a>
+      <nav aria-label="Library navigation">
+        <a href="#liquid-button">Button</a>
+        <a href="#frosted-nav">Navigation</a>
+        <a href="#glass-card">Card</a>
+      </nav>
     </div>
+  </header>
+
+  <main id="content">
+    <section class="section hero" data-od-id="library-hero" aria-labelledby="library-heading">
+      <div class="container hero-inner">
+        <p class="eyebrow">The Free Component Library · Volume 01</p>
+        <h1 id="library-heading">Useful Interface Details, Ready to Borrow.</h1>
+        <p class="lead">Three dependency-free components with live states, practical notes, and source you can paste into an ordinary HTML file.</p>
+        <div class="hero-note meta" aria-label="Library attributes">
+          <span>No framework</span>
+          <span>No build step</span>
+          <span>Accessible states included</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section component-entry" id="liquid-button" data-od-id="liquid-glass-button" aria-labelledby="liquid-title">
+      <div class="container">
+        <div class="component-head">
+          <span class="component-number">01 / 03</span>
+          <div>
+            <h2 id="liquid-title">Liquid Glass Button</h2>
+            <p class="component-intro">A compact call to action with enough depth to feel tactile without turning into a novelty effect.</p>
+          </div>
+          <div class="usage-note"><strong>Use it for:</strong> one important action over imagery, video, or a dark atmospheric surface. Keep ordinary secondary actions flat.</div>
+        </div>
+
+        <div class="demo-stage">
+          <span class="demo-label">LIVE STATES · HOVER, PRESS, TAB</span>
+          <div class="state-row">
+            <button class="cm-liquid-button" type="button">Open details <span aria-hidden="true">↗</span></button>
+            <button class="cm-liquid-button cm-liquid-button--pressed" type="button">Pressed</button>
+            <button class="cm-liquid-button" type="button" disabled>Unavailable</button>
+          </div>
+        </div>
+
+        <div class="source-area">
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-grid">
+            <div class="code-panel">
+              <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="liquid-html">Copy</button></div>
+              <pre><code id="liquid-html">&lt;button class=&quot;cm-liquid-button&quot; type=&quot;button&quot;&gt;
+  Open details
+  &lt;span aria-hidden=&quot;true&quot;&gt;↗&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="liquid-css">Copy</button></div>
+              <pre><code id="liquid-css">.cm-liquid-button {
+  --cm-glass-text: oklch(0.98 0.01 85);
+  --cm-glass-edge: color-mix(in oklch,
+    var(--cm-glass-text) 34%, transparent);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 1px solid var(--cm-glass-edge);
+  border-radius: 999px;
+  background: linear-gradient(180deg,
+    color-mix(in oklch, var(--cm-glass-text) 24%, transparent),
+    color-mix(in oklch, var(--cm-glass-text) 10%, transparent));
+  color: var(--cm-glass-text);
+  font: 650 15px/1.2 system-ui, sans-serif;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch,
+      var(--cm-glass-text) 42%, transparent),
+    0 10px 30px oklch(0.08 0.01 60 / 0.44);
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.cm-liquid-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch,
+      var(--cm-glass-text) 54%, transparent),
+    0 16px 34px oklch(0.08 0.01 60 / 0.52);
+}
+
+.cm-liquid-button:active { transform: translateY(0); }
+.cm-liquid-button:focus-visible {
+  outline: 2px solid var(--cm-glass-text);
+  outline-offset: 4px;
+}
+.cm-liquid-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-liquid-button { transition: none; }
+  .cm-liquid-button:hover { transform: none; }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section component-entry" id="frosted-nav" data-od-id="frosted-navigation" aria-labelledby="nav-title">
+      <div class="container">
+        <div class="component-head">
+          <span class="component-number">02 / 03</span>
+          <div>
+            <h2 id="nav-title">Frosted Navigation</h2>
+            <p class="component-intro">A focused navigation bar that stays readable over content and becomes solid when blur is unavailable.</p>
+          </div>
+          <div class="usage-note"><strong>Use it for:</strong> short navigation with a clear brand and two to four destinations. On small screens, hide lower-priority links instead of adding a fragile menu.</div>
+        </div>
+
+        <div class="demo-stage">
+          <span class="demo-label">RESPONSIVE · BLUR FALLBACK INCLUDED</span>
+          <nav class="cm-frost-nav" aria-label="Frosted navigation demo">
+            <a class="cm-frost-nav__brand" href="#frosted-nav">Fieldnotes</a>
+            <div class="cm-frost-nav__links">
+              <a href="#frosted-nav">Work</a>
+              <a href="#frosted-nav">Notes</a>
+              <a href="#frosted-nav">About</a>
+            </div>
+          </nav>
+        </div>
+
+        <div class="source-area">
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-grid">
+            <div class="code-panel">
+              <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="nav-html">Copy</button></div>
+              <pre><code id="nav-html">&lt;nav class=&quot;cm-frost-nav&quot; aria-label=&quot;Primary&quot;&gt;
+  &lt;a class=&quot;cm-frost-nav__brand&quot; href=&quot;/&quot;&gt;Fieldnotes&lt;/a&gt;
+  &lt;div class=&quot;cm-frost-nav__links&quot;&gt;
+    &lt;a href=&quot;/work&quot;&gt;Work&lt;/a&gt;
+    &lt;a href=&quot;/notes&quot;&gt;Notes&lt;/a&gt;
+    &lt;a href=&quot;/about&quot;&gt;About&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="nav-css">Copy</button></div>
+              <pre><code id="nav-css">.cm-frost-nav {
+  --cm-nav-text: oklch(0.98 0.01 85);
+  --cm-nav-muted: color-mix(in oklch,
+    var(--cm-nav-text) 68%, transparent);
+  position: sticky;
+  top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 14px 12px 18px;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-nav-text) 30%, transparent);
+  border-radius: 14px;
+  color: var(--cm-nav-text);
+  background: color-mix(in oklch,
+    var(--cm-nav-text) 13%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch,
+      var(--cm-nav-text) 36%, transparent),
+    0 16px 36px oklch(0.08 0.01 60 / 0.46);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.cm-frost-nav__brand {
+  color: inherit;
+  font: 700 16px/1.2 system-ui, sans-serif;
+  text-decoration: none;
+}
+.cm-frost-nav__links { display: flex; gap: 18px; }
+.cm-frost-nav__links a {
+  color: var(--cm-nav-muted);
+  font: 500 13px/1.2 system-ui, sans-serif;
+  text-decoration: none;
+}
+.cm-frost-nav__links a:hover { color: var(--cm-nav-text); }
+.cm-frost-nav__links a:focus-visible {
+  outline: 2px solid var(--cm-nav-text);
+  outline-offset: 4px;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .cm-frost-nav { background: oklch(0.22 0.01 60); }
+}
+
+@media (max-width: 520px) {
+  .cm-frost-nav__links a:first-child { display: none; }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section component-entry" id="glass-card" data-od-id="tactile-glass-card" aria-labelledby="card-title">
+      <div class="container">
+        <div class="component-head">
+          <span class="component-number">03 / 03</span>
+          <div>
+            <h2 id="card-title">Tactile Glass Card</h2>
+            <p class="component-intro">A content surface whose depth makes interaction legible rather than merely decorative.</p>
+          </div>
+          <div class="usage-note"><strong>Use it for:</strong> a single linked story, project, or next step. Replace the anchor with an article when the card is not interactive, and remove the hover transform.</div>
+        </div>
+
+        <div class="demo-stage">
+          <span class="demo-label">LINKED CARD · KEYBOARD FOCUS INCLUDED</span>
+          <a class="cm-glass-card" href="#glass-card">
+            <span class="cm-glass-card__meta">Interface Note · 01</span>
+            <strong class="cm-glass-card__title">Depth should clarify what can move.</strong>
+            <span class="cm-glass-card__arrow">Read the note →</span>
+          </a>
+        </div>
+
+        <div class="source-area">
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-grid">
+            <div class="code-panel">
+              <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="card-html">Copy</button></div>
+              <pre><code id="card-html">&lt;a class=&quot;cm-glass-card&quot; href=&quot;/notes/depth&quot;&gt;
+  &lt;span class=&quot;cm-glass-card__meta&quot;&gt;
+    Interface Note · 01
+  &lt;/span&gt;
+  &lt;strong class=&quot;cm-glass-card__title&quot;&gt;
+    Depth should clarify what can move.
+  &lt;/strong&gt;
+  &lt;span class=&quot;cm-glass-card__arrow&quot;&gt;
+    Read the note →
+  &lt;/span&gt;
+&lt;/a&gt;</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="card-css">Copy</button></div>
+              <pre><code id="card-css">.cm-glass-card {
+  --cm-card-text: oklch(0.98 0.01 85);
+  --cm-card-muted: color-mix(in oklch,
+    var(--cm-card-text) 68%, transparent);
+  display: block;
+  width: min(100%, 340px);
+  padding: 28px;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-card-text) 28%, transparent);
+  border-radius: 18px;
+  color: var(--cm-card-text);
+  background: linear-gradient(145deg,
+    color-mix(in oklch, var(--cm-card-text) 20%, transparent),
+    color-mix(in oklch, var(--cm-card-text) 7%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch,
+      var(--cm-card-text) 38%, transparent),
+    0 18px 40px oklch(0.08 0.01 60 / 0.5);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.cm-glass-card:hover {
+  transform: translateY(-4px) rotate(-0.4deg);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch,
+      var(--cm-card-text) 48%, transparent),
+    0 26px 48px oklch(0.08 0.01 60 / 0.56);
+}
+.cm-glass-card:active { transform: translateY(-1px); }
+.cm-glass-card:focus-visible {
+  outline: 2px solid var(--cm-card-text);
+  outline-offset: 5px;
+}
+.cm-glass-card__meta {
+  display: block;
+  margin-bottom: 56px;
+  color: var(--cm-card-muted);
+  font: 500 11px/1.3 ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cm-glass-card__title {
+  display: block;
+  max-width: 12ch;
+  font: 600 28px/1.08 Georgia, serif;
+}
+.cm-glass-card__arrow {
+  display: block;
+  margin-top: 20px;
+  color: var(--cm-card-muted);
+  font: 500 13px/1.2 system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-glass-card { transition: none; }
+  .cm-glass-card:hover { transform: none; }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section closing" data-od-id="library-closing" aria-labelledby="closing-title">
+      <div class="container closing-inner">
+        <p class="eyebrow">That’s Volume 01</p>
+        <h2 id="closing-title">More When They’re Worth Sharing.</h2>
+        <p class="lead">I’ll add components when I have something genuinely reusable—not to make the grid look fuller.</p>
+        <a class="btn" href="/">Back to Casey’s site</a>
+      </div>
+    </section>
   </main>
+
+  <footer class="pagefoot" data-od-id="footer">
+    <div class="container row-between">
+      <span>© 2026 Casey McDougal</span>
+      <span class="meta">Free to copy, adapt, and make your own.</span>
+    </div>
+  </footer>
+
+  <p id="copy-status" class="meta" role="status" aria-live="polite" style="position:fixed;left:-9999px;"></p>
+
+  <script>
+    (function () {
+      var status = document.getElementById('copy-status');
+      var resetTimer;
+
+      function fallbackCopy(text) {
+        var field = document.createElement('textarea');
+        field.value = text;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.opacity = '0';
+        document.body.appendChild(field);
+        field.select();
+        var copied = document.execCommand('copy');
+        document.body.removeChild(field);
+        return copied ? Promise.resolve() : Promise.reject(new Error('copy_failed'));
+      }
+
+      function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text);
+        }
+        return fallbackCopy(text);
+      }
+
+      document.addEventListener('click', function (event) {
+        var button = event.target.closest('[data-copy-target]');
+        if (!button) return;
+        var source = document.getElementById(button.getAttribute('data-copy-target'));
+        if (!source) return;
+
+        copyText(source.textContent)
+          .then(function () {
+            window.clearTimeout(resetTimer);
+            button.textContent = 'Copied';
+            status.textContent = 'Source copied to clipboard.';
+            resetTimer = window.setTimeout(function () {
+              button.textContent = 'Copy';
+              status.textContent = '';
+            }, 1800);
+          })
+          .catch(function () {
+            status.textContent = 'Copy failed. Select the code and copy it manually.';
+          });
+      });
+    })();
+  </script>
 </body>
 </html>
