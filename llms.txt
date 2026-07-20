@@ -14,11 +14,15 @@ The component library is a free collection of vanilla HTML and CSS interface det
 
 The first volume contains:
 
-- **Liquid Glass Button**: A tactile primary action with hover, press, keyboard-focus, disabled, and reduced-motion states.
+- **Liquid Glass Button**: A refractive glass pill with a live WebGL chromatic-metal orb and rotating gradient stroke, shipped as a single self-contained JS file with automatic fallbacks.
 - **Frosted Navigation**: A responsive sticky navigation bar with readable transparency and a solid fallback when backdrop blur is unavailable.
 - **Tactile Glass Card**: A linked or static content surface whose depth makes interaction clear.
 
-All three components are dependency-free and require no framework or build step.
+- **Glass Toggle**: A springy glass switch with a weighted thumb and an accessible role="switch" pattern.
+- **Glass Input**: A sunken glass text field with focus ring and an aria-invalid-driven error state.
+- **Glass Dialog**: A frosted modal built on the native dialog element with animated entry and blurred backdrop.
+
+All six components are dependency-free and require no framework or build step.
 
 ## Current Focus
 

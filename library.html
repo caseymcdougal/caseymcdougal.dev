@@ -7,6 +7,7 @@
   <meta name="description" content="A free collection of dependency-free interface components by Casey McDougal.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
+  <script src="components/cm-liquid-button.js" defer></script>
 
   <style>
     :root {
@@ -160,50 +161,123 @@
     .demo-label { position: absolute; top: 20px; left: 22px; color: color-mix(in oklch, var(--surface) 64%, transparent); font-family: var(--font-mono); font-size: 11px; }
     .state-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
 
-    .cm-liquid-button {
-      --cm-button-text: oklch(0.98 0.01 85);
-      --cm-button-tint: oklch(0.2 0.015 60 / 0.55);
-      --cm-button-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    /* the shader button ships its own styles; the stage just sets its text color */
+    .demo-stage .lgb { --lgb-text: oklch(0.98 0.01 85); }
+
+    .cm-glass-toggle {
+      --cm-toggle-text: oklch(0.98 0.01 85);
+      --cm-toggle-accent: oklch(0.55 0.14 40);
+      --cm-toggle-w: 64px;
+      --cm-toggle-h: 36px;
+      --cm-toggle-ease: cubic-bezier(0.3, 0.7, 0.4, 1.3);
       position: relative;
-      isolation: isolate;
-      display: inline-flex;
-      align-items: center;
-      gap: 11px;
-      overflow: hidden;
+      width: var(--cm-toggle-w);
+      height: var(--cm-toggle-h);
+      flex: none;
+      padding: 0;
       appearance: none;
       cursor: pointer;
-      padding: 13px 18px 13px 20px;
-      border: 1px solid color-mix(in oklch, var(--cm-button-text) 36%, transparent);
+      border: 1px solid color-mix(in oklch, var(--cm-toggle-text) 30%, transparent);
       border-radius: 999px;
-      background: linear-gradient(180deg, color-mix(in oklch, var(--cm-button-text) 25%, transparent), color-mix(in oklch, var(--cm-button-text) 9%, transparent)), var(--cm-button-tint);
-      color: var(--cm-button-text);
-      font: 650 15px/1.2 system-ui, sans-serif;
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-button-text) 48%, transparent), inset 0 -1px 0 color-mix(in oklch, black 20%, transparent), 0 10px 30px oklch(0.08 0.01 60 / 0.44);
-      backdrop-filter: blur(14px) saturate(1.25);
-      -webkit-backdrop-filter: blur(14px) saturate(1.25);
-      transition: transform 250ms var(--cm-button-ease), box-shadow 250ms var(--cm-button-ease), background 250ms var(--cm-button-ease);
+      background: linear-gradient(180deg, color-mix(in oklch, black 30%, transparent), color-mix(in oklch, var(--cm-toggle-text) 6%, transparent)), oklch(0.2 0.015 60 / 0.6);
+      box-shadow: inset 0 2px 6px color-mix(in oklch, black 40%, transparent), inset 0 -1px 0 color-mix(in oklch, var(--cm-toggle-text) 18%, transparent), 0 10px 24px oklch(0.08 0.01 60 / 0.4);
+      backdrop-filter: blur(12px) saturate(1.2);
+      -webkit-backdrop-filter: blur(12px) saturate(1.2);
+      transition: background 250ms ease, border-color 250ms ease;
     }
-    .cm-liquid-button::before {
+    .cm-glass-toggle::after {
       content: '';
       position: absolute;
-      inset: -80% auto -80% -45%;
-      z-index: -1;
-      width: 34%;
-      background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--cm-button-text) 46%, transparent), transparent);
-      transform: translateX(-170%) rotate(16deg);
-      transition: transform 650ms var(--cm-button-ease);
+      top: 3px;
+      left: 3px;
+      width: calc(var(--cm-toggle-h) - 8px);
+      height: calc(var(--cm-toggle-h) - 8px);
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffffff, #cfd3d8 78%, #b9bec5);
+      box-shadow: inset 0 1px 0 #fff, inset 0 -2px 3px rgba(0,0,0,0.22), 0 3px 8px rgba(0,0,0,0.45);
+      transition: transform 320ms var(--cm-toggle-ease), width 150ms ease;
     }
-    .cm-liquid-button__icon { width: 16px; height: 16px; overflow: visible; }
-    .cm-liquid-button__icon path { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transform-box: fill-box; transition: transform 350ms var(--cm-button-ease); }
-    .cm-liquid-button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-button-text) 60%, transparent), inset 0 -1px 0 color-mix(in oklch, black 16%, transparent), 0 18px 38px oklch(0.08 0.01 60 / 0.54); }
-    .cm-liquid-button:hover::before { transform: translateX(620%) rotate(16deg); }
-    .cm-liquid-button:hover .cm-liquid-button__shaft { transform: translateX(2px); }
-    .cm-liquid-button:hover .cm-liquid-button__tip-top { transform: translate(2px, -1px) rotate(5deg); }
-    .cm-liquid-button:hover .cm-liquid-button__tip-bottom { transform: translate(2px, 1px) rotate(-5deg); }
-    .cm-liquid-button:active, .cm-liquid-button--pressed { transform: translateY(0) scale(0.975); box-shadow: inset 0 2px 4px color-mix(in oklch, black 18%, transparent), 0 5px 16px oklch(0.08 0.01 60 / 0.42); }
-    .cm-liquid-button:focus-visible { outline: 2px solid var(--cm-button-text); outline-offset: 4px; }
-    .cm-liquid-button:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
-    .cm-liquid-button:disabled::before { display: none; }
+    .cm-glass-toggle[aria-checked="true"] {
+      border-color: color-mix(in oklch, var(--cm-toggle-accent) 70%, white);
+      background: linear-gradient(180deg, color-mix(in oklch, black 16%, transparent), color-mix(in oklch, var(--cm-toggle-text) 8%, transparent)), color-mix(in oklch, var(--cm-toggle-accent) 72%, oklch(0.2 0.015 60));
+    }
+    .cm-glass-toggle[aria-checked="true"]::after { transform: translateX(calc(var(--cm-toggle-w) - var(--cm-toggle-h) + 2px)); }
+    .cm-glass-toggle:active::after { width: calc(var(--cm-toggle-h) - 4px); }
+    .cm-glass-toggle:focus-visible { outline: 2px solid var(--cm-toggle-text); outline-offset: 4px; }
+    .cm-glass-toggle-row { display: flex; align-items: center; gap: 14px; color: oklch(0.98 0.01 85); font: 550 14px/1.2 system-ui, sans-serif; }
+
+    .cm-glass-field {
+      --cm-field-text: oklch(0.98 0.01 85);
+      --cm-field-muted: color-mix(in oklch, var(--cm-field-text) 55%, transparent);
+      --cm-field-danger: oklch(0.78 0.13 40);
+      display: grid;
+      gap: 8px;
+      width: min(100%, 300px);
+      color: var(--cm-field-text);
+    }
+    .cm-glass-field__label { font: 500 11px/1.3 ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cm-field-muted); }
+    .cm-glass-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1px solid color-mix(in oklch, var(--cm-field-text) 26%, transparent);
+      border-radius: 14px;
+      background: linear-gradient(180deg, color-mix(in oklch, black 26%, transparent), color-mix(in oklch, black 8%, transparent) 55%), oklch(0.2 0.015 60 / 0.55);
+      color: var(--cm-field-text);
+      font: 400 15px/1.4 system-ui, sans-serif;
+      box-shadow: inset 0 2px 6px color-mix(in oklch, black 38%, transparent), inset 0 -1px 0 color-mix(in oklch, var(--cm-field-text) 16%, transparent);
+      backdrop-filter: blur(12px) saturate(1.2);
+      -webkit-backdrop-filter: blur(12px) saturate(1.2);
+      transition: border-color 200ms ease, box-shadow 200ms ease;
+    }
+    .cm-glass-input::placeholder { color: var(--cm-field-muted); }
+    .cm-glass-input:focus {
+      outline: 0;
+      border-color: color-mix(in oklch, var(--cm-field-text) 62%, transparent);
+      box-shadow: inset 0 2px 6px color-mix(in oklch, black 38%, transparent), 0 0 0 3px color-mix(in oklch, var(--cm-field-text) 18%, transparent);
+    }
+    .cm-glass-input[aria-invalid="true"] {
+      border-color: var(--cm-field-danger);
+      box-shadow: inset 0 2px 6px color-mix(in oklch, black 38%, transparent), 0 0 0 3px color-mix(in oklch, var(--cm-field-danger) 24%, transparent);
+    }
+    .cm-glass-field__error { display: none; margin: 0; color: var(--cm-field-danger); font-size: 13px; }
+    .cm-glass-input[aria-invalid="true"] ~ .cm-glass-field__error { display: block; }
+
+    .cm-glass-dialog {
+      --cm-dialog-text: oklch(0.98 0.01 85);
+      --cm-dialog-muted: color-mix(in oklch, var(--cm-dialog-text) 62%, transparent);
+      width: min(92vw, 410px);
+      padding: 0;
+      border: 1px solid color-mix(in oklch, var(--cm-dialog-text) 30%, transparent);
+      border-radius: 20px;
+      color: var(--cm-dialog-text);
+      background: linear-gradient(165deg, color-mix(in oklch, var(--cm-dialog-text) 18%, transparent), color-mix(in oklch, var(--cm-dialog-text) 6%, transparent)), oklch(0.22 0.015 60 / 0.82);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-dialog-text) 38%, transparent), 0 30px 80px oklch(0.08 0.01 60 / 0.6);
+      backdrop-filter: blur(18px) saturate(1.25);
+      -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    }
+    .cm-glass-dialog::backdrop { background: oklch(0.1 0.01 60 / 0.45); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+    .cm-glass-dialog[open] { animation: cm-dialog-in 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+    .cm-glass-dialog[open]::backdrop { animation: cm-dialog-fade 320ms ease; }
+    @keyframes cm-dialog-in { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
+    @keyframes cm-dialog-fade { from { opacity: 0; } }
+    .cm-glass-dialog__body { padding: 28px; }
+    .cm-glass-dialog__title { margin: 0; font: 600 24px/1.15 Georgia, serif; }
+    .cm-glass-dialog__copy { margin: 10px 0 0; color: var(--cm-dialog-muted); font: 400 15px/1.55 system-ui, sans-serif; }
+    .cm-glass-dialog__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+    .cm-glass-dialog__button {
+      padding: 10px 16px;
+      border: 1px solid color-mix(in oklch, var(--cm-dialog-text) 30%, transparent);
+      border-radius: 12px;
+      background: color-mix(in oklch, var(--cm-dialog-text) 10%, transparent);
+      color: var(--cm-dialog-text);
+      font: 600 14px/1.2 system-ui, sans-serif;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+    .cm-glass-dialog__button:hover { background: color-mix(in oklch, var(--cm-dialog-text) 20%, transparent); }
+    .cm-glass-dialog__button--primary { border-color: transparent; background: var(--cm-dialog-text); color: oklch(0.24 0.015 60); }
+    .cm-glass-dialog__button--primary:hover { background: color-mix(in oklch, var(--cm-dialog-text) 86%, black); }
+    .cm-glass-dialog__button:focus-visible { outline: 2px solid var(--cm-dialog-text); outline-offset: 3px; }
+    body:has(.cm-glass-dialog[open]) { overflow: hidden; }
 
     .cm-frost-nav {
       --cm-nav-text: oklch(0.98 0.01 85);
@@ -317,7 +391,7 @@
     .pagefoot { padding-block: 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      .cm-liquid-button, .cm-frost-nav, .cm-glass-card { background: color-mix(in oklch, var(--surface) 22%, var(--fg)); }
+      .cm-frost-nav, .cm-glass-card, .cm-glass-toggle, .cm-glass-input, .cm-glass-dialog { background: color-mix(in oklch, var(--surface) 22%, var(--fg)); }
     }
 
     @media (max-width: 820px) {
@@ -340,9 +414,10 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
-      .cm-liquid-button:hover { transform: none; }
       .cm-glass-card, .cm-glass-card:hover { transform: none; }
       .cm-glass-card__glare { display: none; }
+      .cm-glass-toggle::after { transition: none; }
+      .cm-glass-dialog[open], .cm-glass-dialog[open]::backdrop { animation: none; }
     }
   </style>
 </head>
@@ -356,6 +431,9 @@
         <a href="#liquid-button">Button</a>
         <a href="#frosted-nav">Navigation</a>
         <a href="#glass-card">Card</a>
+        <a href="#glass-toggle">Toggle</a>
+        <a href="#glass-input">Input</a>
+        <a href="#glass-dialog">Dialog</a>
       </nav>
     </div>
   </header>
@@ -365,7 +443,7 @@
       <div class="container hero-inner">
         <p class="eyebrow">The Free Component Library · Volume 01</p>
         <h1 id="library-heading">Useful Interface Details, Ready to Borrow.</h1>
-        <p class="lead">Three dependency-free components with live states, practical notes, and source you can paste into an ordinary HTML file.</p>
+        <p class="lead">Six dependency-free components with live states, practical notes, and source you can paste into an ordinary HTML file.</p>
         <div class="hero-note meta" aria-label="Library attributes">
           <span>No framework</span>
           <span>No build step</span>
@@ -377,131 +455,53 @@
     <section class="section component-entry" id="liquid-button" data-od-id="liquid-glass-button" aria-labelledby="liquid-title">
       <div class="container">
         <div class="component-head">
-          <span class="component-number">01 / 03</span>
+          <span class="component-number">01 / 06</span>
           <div>
             <h2 id="liquid-title">Liquid Glass Button</h2>
-            <p class="component-intro">A compact call to action with a specular sweep and directional arrow motion tuned from transitions.dev patterns.</p>
+            <p class="component-intro">A refractive glass pill with a live WebGL chromatic-metal orb, a rotating gradient stroke, and an SVG lens that bends whatever sits behind it. One file, zero dependencies.</p>
           </div>
-          <div class="usage-note"><strong>Use it for:</strong> one important action over imagery, video, or a dark atmospheric surface. Keep ordinary secondary actions flat.</div>
+          <div class="usage-note"><strong>Use it for:</strong> the single action you want remembered. Chromium renders the full lens refraction; Safari and Firefox automatically get a frosted-glass fallback with the orb kept crisp.</div>
         </div>
 
         <div class="demo-stage">
-          <span class="demo-label">LIVE STATES · HOVER, PRESS, TAB</span>
+          <span class="demo-label">LIVE · WEBGL ORB + SVG LENS · HOVER, PRESS, TAB</span>
           <div class="state-row">
-            <button class="cm-liquid-button" type="button">
-              <span>Open details</span>
-              <svg class="cm-liquid-button__icon" viewBox="0 0 16 16" aria-hidden="true">
-                <path class="cm-liquid-button__shaft" d="M2.5 8h10"/>
-                <path class="cm-liquid-button__tip-top" d="m9 4.5 3.5 3.5"/>
-                <path class="cm-liquid-button__tip-bottom" d="m12.5 8-3.5 3.5"/>
-              </svg>
-            </button>
-            <button class="cm-liquid-button cm-liquid-button--pressed" type="button"><span>Pressed</span></button>
-            <button class="cm-liquid-button" type="button" disabled><span>Unavailable</span></button>
+            <button data-lgb type="button">Get started</button>
+            <button data-lgb data-lgb-preset="northern" type="button">Text me</button>
+            <button data-lgb type="button" disabled>Unavailable</button>
           </div>
         </div>
 
         <div class="source-area">
-          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + one JS file (self-injects its CSS)</span></div>
           <div class="source-grid">
             <div class="code-panel">
               <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="liquid-html">Copy</button></div>
-              <pre><code id="liquid-html">&lt;button class=&quot;cm-liquid-button&quot; type=&quot;button&quot;&gt;
-  &lt;span&gt;Open details&lt;/span&gt;
-  &lt;svg class=&quot;cm-liquid-button__icon&quot;
-    viewBox=&quot;0 0 16 16&quot; aria-hidden=&quot;true&quot;&gt;
-    &lt;path class=&quot;cm-liquid-button__shaft&quot; d=&quot;M2.5 8h10&quot;/&gt;
-    &lt;path class=&quot;cm-liquid-button__tip-top&quot; d=&quot;m9 4.5 3.5 3.5&quot;/&gt;
-    &lt;path class=&quot;cm-liquid-button__tip-bottom&quot; d=&quot;m12.5 8-3.5 3.5&quot;/&gt;
-  &lt;/svg&gt;
-&lt;/button&gt;</code></pre>
+              <pre><code id="liquid-html">&lt;script src="cm-liquid-button.js" defer&gt;&lt;/script&gt;
+
+&lt;button data-lgb&gt;Get started&lt;/button&gt;
+&lt;button data-lgb data-lgb-preset="northern"&gt;Text me&lt;/button&gt;
+
+&lt;!-- shader under the glass (original recipe) --&gt;
+&lt;button data-lgb data-lgb-crisp="false"&gt;Warped orb&lt;/button&gt;
+
+&lt;!-- full control from JS --&gt;
+&lt;script&gt;
+  CMLiquidButton.upgrade(document.querySelector('#cta'), {
+    gradient: ['#5c6168', '#f2f5f8', '#ffffff', '#545963'],
+    orbSettings: { speed: 0.5, rgbSplit: 0.03 },
+    glass: { refraction: 32, dispersion: 0.35 }
+  });
+&lt;/script&gt;
+
+&lt;!-- set label color per surface --&gt;
+&lt;style&gt;
+  .my-dark-hero .lgb { --lgb-text: #fff; }
+&lt;/style&gt;</code></pre>
             </div>
             <div class="code-panel">
-              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="liquid-css">Copy</button></div>
-              <pre><code id="liquid-css">.cm-liquid-button {
-  --cm-button-text: oklch(0.98 0.01 85);
-  --cm-button-tint: oklch(0.2 0.015 60 / 0.55);
-  --cm-button-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  overflow: hidden;
-  appearance: none;
-  cursor: pointer;
-  padding: 13px 18px 13px 20px;
-  border: 1px solid color-mix(in oklch,
-    var(--cm-button-text) 36%, transparent);
-  border-radius: 999px;
-  background: linear-gradient(180deg,
-    color-mix(in oklch, var(--cm-button-text) 25%, transparent),
-    color-mix(in oklch, var(--cm-button-text) 9%, transparent)),
-    var(--cm-button-tint);
-  color: var(--cm-button-text);
-  font: 650 15px/1.2 system-ui, sans-serif;
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch,
-      var(--cm-button-text) 48%, transparent),
-    0 10px 30px oklch(0.08 0.01 60 / 0.44);
-  backdrop-filter: blur(14px) saturate(1.25);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
-  transition: transform 250ms var(--cm-button-ease),
-    box-shadow 250ms var(--cm-button-ease);
-}
-.cm-liquid-button::before {
-  content: '';
-  position: absolute;
-  inset: -80% auto -80% -45%;
-  z-index: -1;
-  width: 34%;
-  background: linear-gradient(90deg, transparent,
-    color-mix(in oklch, var(--cm-button-text) 46%, transparent),
-    transparent);
-  transform: translateX(-170%) rotate(16deg);
-  transition: transform 650ms var(--cm-button-ease);
-}
-.cm-liquid-button__icon { width: 16px; height: 16px; overflow: visible; }
-.cm-liquid-button__icon path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transform-box: fill-box;
-  transition: transform 350ms var(--cm-button-ease);
-}
-.cm-liquid-button:hover {
-  transform: translateY(-2px);
-  box-shadow: inset 0 1px 0 color-mix(in oklch,
-    var(--cm-button-text) 60%, transparent),
-    0 18px 38px oklch(0.08 0.01 60 / 0.54);
-}
-.cm-liquid-button:hover::before {
-  transform: translateX(620%) rotate(16deg);
-}
-.cm-liquid-button:hover .cm-liquid-button__shaft { transform: translateX(2px); }
-.cm-liquid-button:hover .cm-liquid-button__tip-top { transform: translate(2px, -1px) rotate(5deg); }
-.cm-liquid-button:hover .cm-liquid-button__tip-bottom { transform: translate(2px, 1px) rotate(-5deg); }
-.cm-liquid-button:active { transform: translateY(0) scale(0.975); }
-.cm-liquid-button:focus-visible {
-  outline: 2px solid var(--cm-button-text);
-  outline-offset: 4px;
-}
-.cm-liquid-button:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
-.cm-liquid-button:disabled::before { display: none; }
-
-@supports not ((backdrop-filter: blur(1px)) or
-  (-webkit-backdrop-filter: blur(1px))) {
-  .cm-liquid-button { background: var(--cm-button-tint); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cm-liquid-button,
-  .cm-liquid-button::before,
-  .cm-liquid-button__icon path { transition: none; }
-  .cm-liquid-button:hover { transform: none; }
-}</code></pre>
+              <div class="code-head row-between"><span>cm-liquid-button.js</span><button class="copy-button" type="button" data-copy-target="liquid-js">Copy</button></div>
+              <pre><code id="liquid-js">Loading the source…</code></pre>
             </div>
           </div>
         </div>
@@ -511,7 +511,7 @@
     <section class="section component-entry" id="frosted-nav" data-od-id="frosted-navigation" aria-labelledby="nav-title">
       <div class="container">
         <div class="component-head">
-          <span class="component-number">02 / 03</span>
+          <span class="component-number">02 / 06</span>
           <div>
             <h2 id="nav-title">Frosted Navigation</h2>
             <p class="component-intro">A focused navigation bar with a measured sliding indicator that stays readable over content and becomes solid when blur is unavailable.</p>
@@ -675,7 +675,7 @@
     <section class="section component-entry" id="glass-card" data-od-id="tactile-glass-card" aria-labelledby="card-title">
       <div class="container">
         <div class="component-head">
-          <span class="component-number">03 / 03</span>
+          <span class="component-number">03 / 06</span>
           <div>
             <h2 id="card-title">Tactile Glass Card</h2>
             <p class="component-intro">A content surface with pointer-responsive tilt and glare whose depth makes interaction legible rather than merely decorative.</p>
@@ -867,6 +867,433 @@ document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
       </div>
     </section>
 
+    <section class="section component-entry" id="glass-toggle" data-od-id="glass-toggle" aria-labelledby="toggle-title">
+      <div class="container">
+        <div class="component-head">
+          <span class="component-number">04 / 06</span>
+          <div>
+            <h2 id="toggle-title">Glass Toggle</h2>
+            <p class="component-intro">A switch with real weight: a sunken glass track, a springy thumb that squashes under press, and a checked state that changes color honestly.</p>
+          </div>
+          <div class="usage-note"><strong>Use it for:</strong> a binary setting that applies immediately. If the choice needs a save button, use a checkbox instead.</div>
+        </div>
+
+        <div class="demo-stage">
+          <span class="demo-label">LIVE · CLICK, TAB + SPACE</span>
+          <div class="state-row" style="flex-direction: column; align-items: flex-start; gap: 22px;">
+            <div class="cm-glass-toggle-row">
+              <button class="cm-glass-toggle" type="button" role="switch" aria-checked="true" aria-label="Ambient sync"></button>
+              <span aria-hidden="true">Ambient sync</span>
+            </div>
+            <div class="cm-glass-toggle-row">
+              <button class="cm-glass-toggle" type="button" role="switch" aria-checked="false" aria-label="Weekly digest"></button>
+              <span aria-hidden="true">Weekly digest</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="source-area">
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS + JS</span></div>
+          <div class="source-grid">
+            <div class="code-panel">
+              <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="toggle-html">Copy</button></div>
+              <pre><code id="toggle-html">&lt;div class="cm-glass-toggle-row"&gt;
+  &lt;button class="cm-glass-toggle" type="button"
+    role="switch" aria-checked="true"
+    aria-label="Ambient sync"&gt;&lt;/button&gt;
+  &lt;span aria-hidden="true"&gt;Ambient sync&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="toggle-css">Copy</button></div>
+              <pre><code id="toggle-css">.cm-glass-toggle {
+  --cm-toggle-text: oklch(0.98 0.01 85);
+  --cm-toggle-accent: oklch(0.55 0.14 40);
+  --cm-toggle-w: 64px;
+  --cm-toggle-h: 36px;
+  /* overshoot easing = the spring */
+  --cm-toggle-ease: cubic-bezier(0.3, 0.7, 0.4, 1.3);
+  position: relative;
+  width: var(--cm-toggle-w);
+  height: var(--cm-toggle-h);
+  flex: none;
+  padding: 0;
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-toggle-text) 30%, transparent);
+  border-radius: 999px;
+  background: linear-gradient(180deg,
+    color-mix(in oklch, black 30%, transparent),
+    color-mix(in oklch, var(--cm-toggle-text) 6%, transparent)),
+    oklch(0.2 0.015 60 / 0.6);
+  box-shadow:
+    inset 0 2px 6px color-mix(in oklch, black 40%, transparent),
+    inset 0 -1px 0 color-mix(in oklch,
+      var(--cm-toggle-text) 18%, transparent),
+    0 10px 24px oklch(0.08 0.01 60 / 0.4);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  transition: background 250ms ease, border-color 250ms ease;
+}
+.cm-glass-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(var(--cm-toggle-h) - 8px);
+  height: calc(var(--cm-toggle-h) - 8px);
+  border-radius: 50%;
+  background: linear-gradient(180deg,
+    #ffffff, #cfd3d8 78%, #b9bec5);
+  box-shadow: inset 0 1px 0 #fff,
+    inset 0 -2px 3px rgba(0,0,0,0.22),
+    0 3px 8px rgba(0,0,0,0.45);
+  transition: transform 320ms var(--cm-toggle-ease),
+    width 150ms ease;
+}
+.cm-glass-toggle[aria-checked="true"] {
+  border-color: color-mix(in oklch,
+    var(--cm-toggle-accent) 70%, white);
+  background: linear-gradient(180deg,
+    color-mix(in oklch, black 16%, transparent),
+    color-mix(in oklch, var(--cm-toggle-text) 8%, transparent)),
+    color-mix(in oklch, var(--cm-toggle-accent) 72%,
+      oklch(0.2 0.015 60));
+}
+.cm-glass-toggle[aria-checked="true"]::after {
+  transform: translateX(
+    calc(var(--cm-toggle-w) - var(--cm-toggle-h) + 2px));
+}
+/* press squash: thumb widens while held */
+.cm-glass-toggle:active::after {
+  width: calc(var(--cm-toggle-h) - 4px);
+}
+.cm-glass-toggle:focus-visible {
+  outline: 2px solid var(--cm-toggle-text);
+  outline-offset: 4px;
+}
+.cm-glass-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: oklch(0.98 0.01 85);
+  font: 550 14px/1.2 system-ui, sans-serif;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))) {
+  .cm-glass-toggle { background: oklch(0.24 0.015 60); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-glass-toggle::after { transition: none; }
+}</code></pre>
+            </div>
+            <div class="code-panel code-panel--wide">
+              <div class="code-head row-between"><span>JavaScript</span><button class="copy-button" type="button" data-copy-target="toggle-js">Copy</button></div>
+              <pre><code id="toggle-js">document.querySelectorAll('.cm-glass-toggle').forEach(function (toggle) {
+  toggle.addEventListener('click', function () {
+    toggle.setAttribute('aria-checked',
+      toggle.getAttribute('aria-checked') !== 'true');
+  });
+});</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section component-entry" id="glass-input" data-od-id="glass-input" aria-labelledby="input-title">
+      <div class="container">
+        <div class="component-head">
+          <span class="component-number">05 / 06</span>
+          <div>
+            <h2 id="input-title">Glass Input</h2>
+            <p class="component-intro">A sunken glass field with a calm focus ring and an invalid state driven entirely by <code>aria-invalid</code> — accessibility and styling from the same attribute.</p>
+          </div>
+          <div class="usage-note"><strong>Use it for:</strong> one or two fields over a dark atmospheric surface. Long forms belong on a plain background where reading is cheap.</div>
+        </div>
+
+        <div class="demo-stage">
+          <span class="demo-label">LIVE · FOCUS RING + INVALID STATE</span>
+          <div class="state-row" style="flex-direction: column; gap: 26px;">
+            <div class="cm-glass-field">
+              <label class="cm-glass-field__label" for="demo-glass-input">Workspace name</label>
+              <input class="cm-glass-input" id="demo-glass-input" type="text" placeholder="northern-clearing">
+            </div>
+            <div class="cm-glass-field">
+              <label class="cm-glass-field__label" for="demo-glass-input-invalid">Email address</label>
+              <input class="cm-glass-input" id="demo-glass-input-invalid" type="email" value="casey@" aria-invalid="true" aria-describedby="demo-glass-input-error">
+              <p class="cm-glass-field__error" id="demo-glass-input-error">That email address does not look valid.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="source-area">
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS</span></div>
+          <div class="source-grid">
+            <div class="code-panel">
+              <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="input-html">Copy</button></div>
+              <pre><code id="input-html">&lt;div class="cm-glass-field"&gt;
+  &lt;label class="cm-glass-field__label" for="ws"&gt;
+    Workspace name
+  &lt;/label&gt;
+  &lt;input class="cm-glass-input" id="ws"
+    type="text" placeholder="northern-clearing"&gt;
+&lt;/div&gt;
+
+&lt;!-- invalid: set aria-invalid + describedby --&gt;
+&lt;div class="cm-glass-field"&gt;
+  &lt;label class="cm-glass-field__label" for="email"&gt;
+    Email address
+  &lt;/label&gt;
+  &lt;input class="cm-glass-input" id="email" type="email"
+    aria-invalid="true" aria-describedby="email-error"&gt;
+  &lt;p class="cm-glass-field__error" id="email-error"&gt;
+    That email address does not look valid.
+  &lt;/p&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="input-css">Copy</button></div>
+              <pre><code id="input-css">.cm-glass-field {
+  --cm-field-text: oklch(0.98 0.01 85);
+  --cm-field-muted: color-mix(in oklch,
+    var(--cm-field-text) 55%, transparent);
+  --cm-field-danger: oklch(0.78 0.13 40);
+  display: grid;
+  gap: 8px;
+  width: min(100%, 300px);
+  color: var(--cm-field-text);
+}
+.cm-glass-field__label {
+  font: 500 11px/1.3 ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cm-field-muted);
+}
+.cm-glass-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-field-text) 26%, transparent);
+  border-radius: 14px;
+  background: linear-gradient(180deg,
+    color-mix(in oklch, black 26%, transparent),
+    color-mix(in oklch, black 8%, transparent) 55%),
+    oklch(0.2 0.015 60 / 0.55);
+  color: var(--cm-field-text);
+  font: 400 15px/1.4 system-ui, sans-serif;
+  box-shadow:
+    inset 0 2px 6px color-mix(in oklch, black 38%, transparent),
+    inset 0 -1px 0 color-mix(in oklch,
+      var(--cm-field-text) 16%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.cm-glass-input::placeholder { color: var(--cm-field-muted); }
+.cm-glass-input:focus {
+  outline: 0;
+  border-color: color-mix(in oklch,
+    var(--cm-field-text) 62%, transparent);
+  box-shadow:
+    inset 0 2px 6px color-mix(in oklch, black 38%, transparent),
+    0 0 0 3px color-mix(in oklch,
+      var(--cm-field-text) 18%, transparent);
+}
+.cm-glass-input[aria-invalid="true"] {
+  border-color: var(--cm-field-danger);
+  box-shadow:
+    inset 0 2px 6px color-mix(in oklch, black 38%, transparent),
+    0 0 0 3px color-mix(in oklch,
+      var(--cm-field-danger) 24%, transparent);
+}
+.cm-glass-field__error {
+  display: none;
+  margin: 0;
+  color: var(--cm-field-danger);
+  font-size: 13px;
+}
+.cm-glass-input[aria-invalid="true"] ~ .cm-glass-field__error {
+  display: block;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or
+  (-webkit-backdrop-filter: blur(1px))) {
+  .cm-glass-input { background: oklch(0.24 0.015 60); }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section component-entry" id="glass-dialog" data-od-id="glass-dialog" aria-labelledby="dialog-title">
+      <div class="container">
+        <div class="component-head">
+          <span class="component-number">06 / 06</span>
+          <div>
+            <h2 id="dialog-title">Glass Dialog</h2>
+            <p class="component-intro">A frosted modal built on the native <code>&lt;dialog&gt;</code> element — focus trap, Escape, inert background, and backdrop come from the platform, not from a library.</p>
+          </div>
+          <div class="usage-note"><strong>Use it for:</strong> one decision that must be answered before continuing. Anything a user can ignore should be a toast or an inline note, not a modal.</div>
+        </div>
+
+        <div class="demo-stage">
+          <span class="demo-label">LIVE · NATIVE &lt;dialog&gt; · ESCAPE + OUTSIDE CLICK CLOSE</span>
+          <button data-lgb type="button" data-dialog-open="demo-dialog">Open the dialog</button>
+        </div>
+
+        <dialog class="cm-glass-dialog" id="demo-dialog" aria-labelledby="demo-dialog-title">
+          <div class="cm-glass-dialog__body">
+            <h3 class="cm-glass-dialog__title" id="demo-dialog-title">Clear this draft?</h3>
+            <p class="cm-glass-dialog__copy">The draft goes away permanently. Anything already published stays exactly where it is.</p>
+            <form method="dialog" class="cm-glass-dialog__actions">
+              <button class="cm-glass-dialog__button" value="cancel">Keep it</button>
+              <button class="cm-glass-dialog__button cm-glass-dialog__button--primary" value="confirm">Clear draft</button>
+            </form>
+          </div>
+        </dialog>
+
+        <div class="source-area">
+          <div class="source-title"><h3>Copy the Source</h3><span class="meta">HTML + CSS + JS</span></div>
+          <div class="source-grid">
+            <div class="code-panel">
+              <div class="code-head row-between"><span>HTML</span><button class="copy-button" type="button" data-copy-target="dialog-html">Copy</button></div>
+              <pre><code id="dialog-html">&lt;button type="button" data-dialog-open="confirm-dialog"&gt;
+  Open the dialog
+&lt;/button&gt;
+
+&lt;dialog class="cm-glass-dialog" id="confirm-dialog"
+  aria-labelledby="confirm-title"&gt;
+  &lt;div class="cm-glass-dialog__body"&gt;
+    &lt;h2 class="cm-glass-dialog__title" id="confirm-title"&gt;
+      Clear this draft?
+    &lt;/h2&gt;
+    &lt;p class="cm-glass-dialog__copy"&gt;
+      The draft goes away permanently.
+    &lt;/p&gt;
+    &lt;!-- method="dialog" buttons close natively --&gt;
+    &lt;form method="dialog" class="cm-glass-dialog__actions"&gt;
+      &lt;button class="cm-glass-dialog__button"
+        value="cancel"&gt;Keep it&lt;/button&gt;
+      &lt;button class="cm-glass-dialog__button
+        cm-glass-dialog__button--primary"
+        value="confirm"&gt;Clear draft&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;</code></pre>
+            </div>
+            <div class="code-panel">
+              <div class="code-head row-between"><span>CSS</span><button class="copy-button" type="button" data-copy-target="dialog-css">Copy</button></div>
+              <pre><code id="dialog-css">.cm-glass-dialog {
+  --cm-dialog-text: oklch(0.98 0.01 85);
+  --cm-dialog-muted: color-mix(in oklch,
+    var(--cm-dialog-text) 62%, transparent);
+  width: min(92vw, 410px);
+  padding: 0;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-dialog-text) 30%, transparent);
+  border-radius: 20px;
+  color: var(--cm-dialog-text);
+  background: linear-gradient(165deg,
+    color-mix(in oklch, var(--cm-dialog-text) 18%, transparent),
+    color-mix(in oklch, var(--cm-dialog-text) 6%, transparent)),
+    oklch(0.22 0.015 60 / 0.82);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch,
+      var(--cm-dialog-text) 38%, transparent),
+    0 30px 80px oklch(0.08 0.01 60 / 0.6);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+}
+.cm-glass-dialog::backdrop {
+  background: oklch(0.1 0.01 60 / 0.45);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+.cm-glass-dialog[open] {
+  animation: cm-dialog-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cm-glass-dialog[open]::backdrop {
+  animation: cm-dialog-fade 320ms ease;
+}
+@keyframes cm-dialog-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+}
+@keyframes cm-dialog-fade { from { opacity: 0; } }
+.cm-glass-dialog__body { padding: 28px; }
+.cm-glass-dialog__title {
+  margin: 0;
+  font: 600 24px/1.15 Georgia, serif;
+}
+.cm-glass-dialog__copy {
+  margin: 10px 0 0;
+  color: var(--cm-dialog-muted);
+  font: 400 15px/1.55 system-ui, sans-serif;
+}
+.cm-glass-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+.cm-glass-dialog__button {
+  padding: 10px 16px;
+  border: 1px solid color-mix(in oklch,
+    var(--cm-dialog-text) 30%, transparent);
+  border-radius: 12px;
+  background: color-mix(in oklch,
+    var(--cm-dialog-text) 10%, transparent);
+  color: var(--cm-dialog-text);
+  font: 600 14px/1.2 system-ui, sans-serif;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.cm-glass-dialog__button:hover {
+  background: color-mix(in oklch,
+    var(--cm-dialog-text) 20%, transparent);
+}
+.cm-glass-dialog__button--primary {
+  border-color: transparent;
+  background: var(--cm-dialog-text);
+  color: oklch(0.24 0.015 60);
+}
+.cm-glass-dialog__button--primary:hover {
+  background: color-mix(in oklch,
+    var(--cm-dialog-text) 86%, black);
+}
+.cm-glass-dialog__button:focus-visible {
+  outline: 2px solid var(--cm-dialog-text);
+  outline-offset: 3px;
+}
+/* scroll lock, no JS */
+body:has(.cm-glass-dialog[open]) { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-glass-dialog[open],
+  .cm-glass-dialog[open]::backdrop { animation: none; }
+}</code></pre>
+            </div>
+            <div class="code-panel code-panel--wide">
+              <div class="code-head row-between"><span>JavaScript</span><button class="copy-button" type="button" data-copy-target="dialog-js">Copy</button></div>
+              <pre><code id="dialog-js">document.querySelectorAll('[data-dialog-open]').forEach(function (opener) {
+  var dialog = document.getElementById(opener.getAttribute('data-dialog-open'));
+  if (!dialog) return;
+  opener.addEventListener('click', function () { dialog.showModal(); });
+  // clicks on ::backdrop dispatch to the dialog element itself; the inner
+  // body div covers the whole panel, so target === dialog means "outside"
+  dialog.addEventListener('click', function (event) {
+    if (event.target === dialog) dialog.close();
+  });
+});</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section closing" data-od-id="library-closing" aria-labelledby="closing-title">
       <div class="container closing-inner">
         <p class="eyebrow">That’s Volume 01</p>
@@ -951,6 +1378,30 @@ document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
           if (!(next instanceof Node) || !wrap.contains(next)) resetTilt();
         });
       });
+      document.querySelectorAll('.cm-glass-toggle').forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+          toggle.setAttribute('aria-checked', toggle.getAttribute('aria-checked') !== 'true');
+        });
+      });
+
+      document.querySelectorAll('[data-dialog-open]').forEach(function (opener) {
+        var dialog = document.getElementById(opener.getAttribute('data-dialog-open'));
+        if (!dialog) return;
+        opener.addEventListener('click', function () { dialog.showModal(); });
+        dialog.addEventListener('click', function (event) {
+          if (event.target === dialog) dialog.close();
+        });
+      });
+
+      var liquidSource = document.getElementById('liquid-js');
+      if (liquidSource) {
+        fetch('components/cm-liquid-button.js')
+          .then(function (response) { return response.text(); })
+          .then(function (text) { liquidSource.textContent = text; })
+          .catch(function () {
+            liquidSource.textContent = '// Could not load the source here — grab it at caseymcdougal.dev/components/cm-liquid-button.js';
+          });
+      }
     })();
 
     (function () {
