@@ -295,6 +295,7 @@
 'uniform float uStretch;\n' +
 'uniform float uRgbSplit;\n' +
 'uniform float uEvolution;\n' +
+'uniform float uOffset;\n' +
 '\n' +
 '// WebGL1: no variable uniform-array indexing — constant loop, accumulate mix\n' +
 'vec3 ramp(float t) {\n' +
@@ -325,10 +326,11 @@
 '\n' +
 '// split is applied in band-phase space (fraction of one band period)\n' +
 'float bandv(float c, float split, float t) {\n' +
-'  float f = fract(c * uRepeats + split + 0.12 * sin(t * 0.7));\n' +
+'  float f = fract(c * uRepeats + split + uOffset + 0.12 * sin(t * 0.7));\n' +
 '  float tri = abs(f * 2.0 - 1.0);\n' +
-'  // steep edges: quick light/dark alternation reads as polished metal\n' +
-'  return smoothstep(0.22, 0.78, tri);\n' +
+'  // soft, wide edges: bands melt into each other like blurry reflections\n' +
+'  // on polished chrome (steep edges read as graphic stripes, not liquid)\n' +
+'  return smoothstep(0.06, 0.94, tri);\n' +
 '}\n' +
 '\n' +
 'void main() {\n' +
@@ -392,7 +394,7 @@
     var uRes = U('uRes'), uTime = U('uTime'), uStops = U('uStops'),
         uStopCount = U('uStopCount'), uScale = U('uScale'), uRepeats = U('uRepeats'),
         uAngle = U('uAngle'), uStretch = U('uStretch'), uRgbSplit = U('uRgbSplit'),
-        uEvolution = U('uEvolution');
+        uEvolution = U('uEvolution'), uOffset = U('uOffset');
 
     var flat = new Float32Array(MAX_STOPS * 3);
     stops.slice(0, MAX_STOPS).forEach(function (c, i) {
@@ -401,10 +403,15 @@
     });
 
     function size() {
-      // 2x supersample — see header note
+      // 2x supersample — see header note. Cap the backing store: past ~320px
+      // the ribbons are already smooth, and cost grows quadratically (a huge
+      // button otherwise drags the SVG lens filter down with it).
       var dpr = 2 * Math.max(window.devicePixelRatio || 1, 1);
       var w = Math.max(1, Math.round(canvas.clientWidth * dpr));
       var h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+      var capScale = Math.min(1, 320 / Math.max(w, h));
+      w = Math.round(w * capScale);
+      h = Math.round(h * capScale);
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -414,16 +421,25 @@
 
     function draw(ms) {
       size();
+      // tranmautritam's recipe: the shader is animated by ping-ponging the
+      // parameters themselves between two states (eased auto-reverse):
+      //   Depth 125%->200% · RGB split 10%->15% · Scale 100%->200%
+      //   Angle -180->0 · Offset 0%->-100%
+      // k is the eased 0..1..0 loop phase; each uniform lerps its range.
+      var phase = (ms % s.animCycle) / s.animCycle;
+      var pp = phase < 0.5 ? phase * 2 : 2 - phase * 2;
+      var k = pp * pp * (3 - 2 * pp); // smoothstep ease both ways
       gl.uniform3fv(uStops, flat);
       gl.uniform1f(uStopCount, Math.min(stops.length, MAX_STOPS));
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, (ms / 1000) * s.speed);
-      gl.uniform1f(uScale, s.scale);
+      gl.uniform1f(uScale, s.scale / (1 + k));                       // zoom 100% -> 200% (fewer, fatter ribbons)
       gl.uniform1f(uRepeats, s.repeats);
-      gl.uniform1f(uAngle, s.angle);
+      gl.uniform1f(uAngle, s.angle + (k - 1) * Math.PI);             // -180deg -> 0
       gl.uniform1f(uStretch, s.stretch);
-      gl.uniform1f(uRgbSplit, s.rgbSplit);
-      gl.uniform1f(uEvolution, s.evolution);
+      gl.uniform1f(uRgbSplit, s.rgbSplit * (1 + 0.5 * k));           // 10% -> 15%
+      gl.uniform1f(uEvolution, s.evolution * (1.25 + 0.75 * k));     // depth 125% -> 200%
+      gl.uniform1f(uOffset, -k);                                     // 0% -> -100% (one period)
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
@@ -432,7 +448,17 @@
 
     draw(performance.now()); // never blank: one frame immediately
     if (!reduced) {
-      var loop = function (ms) { draw(ms); requestAnimationFrame(loop); };
+      // don't burn frames while offscreen or in a hidden tab
+      var visible = true;
+      if (typeof IntersectionObserver !== 'undefined') {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+        }).observe(canvas);
+      }
+      var loop = function (ms) {
+        if (visible && !document.hidden) draw(ms);
+        requestAnimationFrame(loop);
+      };
       requestAnimationFrame(loop);
     }
 
@@ -476,8 +502,9 @@
     var stops = o.gradient || PRESETS[o.preset];
     var g = assign({ refraction: 32, frost: 1.5, dispersion: 0.35, depth: 0.5, light: 0.5 }, o.glass);
     var orbSettings = assign({
-      scale: 1, repeats: 4, angle: 0.6, stretch: 1.4,
-      speed: 0.5, evolution: 0.8, rgbSplit: 0.03
+      scale: 1, repeats: 2.2, angle: 0.6, stretch: 1.4,
+      speed: 0.5, evolution: 0.8, rgbSplit: 0.01,
+      animCycle: 9000 // ms for one there-and-back of the parameter animation
     }, o.orbSettings);
 
     var useSvgGlass = svgBackdropOK && !o.forceFallback;
