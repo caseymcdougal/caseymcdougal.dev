@@ -195,14 +195,16 @@
       border-radius: 50%;
       background: linear-gradient(180deg, #ffffff, #cfd3d8 78%, #b9bec5);
       box-shadow: inset 0 1px 0 #fff, inset 0 -2px 3px rgba(0,0,0,0.22), 0 3px 8px rgba(0,0,0,0.45);
-      transition: transform 320ms var(--cm-toggle-ease), width 150ms ease;
+      transition: transform 320ms var(--cm-toggle-ease), width 320ms var(--cm-toggle-ease);
     }
     .cm-glass-toggle[aria-checked="true"] {
       border-color: color-mix(in oklch, var(--cm-toggle-accent) 70%, white);
       background: linear-gradient(180deg, color-mix(in oklch, black 16%, transparent), color-mix(in oklch, var(--cm-toggle-text) 8%, transparent)), color-mix(in oklch, var(--cm-toggle-accent) 72%, oklch(0.2 0.015 60));
     }
     .cm-glass-toggle[aria-checked="true"]::after { transform: translateX(calc(var(--cm-toggle-w) - var(--cm-toggle-h) + 2px)); }
-    .cm-glass-toggle:active::after { width: calc(var(--cm-toggle-h) - 4px); }
+    .cm-glass-toggle:active::after { width: calc(var(--cm-toggle-h) - 2px); }
+    /* pressed while checked: pin the thumb's right edge so the stretch grows inward instead of spilling past the track */
+    .cm-glass-toggle[aria-checked="true"]:active::after { transform: translateX(calc(var(--cm-toggle-w) - var(--cm-toggle-h) - 4px)); }
     .cm-glass-toggle:focus-visible { outline: 2px solid var(--cm-toggle-text); outline-offset: 4px; }
     .cm-glass-toggle-row { display: flex; align-items: center; gap: 14px; color: oklch(0.98 0.01 85); font: 550 14px/1.2 system-ui, sans-serif; }
 
@@ -245,20 +247,52 @@
     .cm-glass-dialog {
       --cm-dialog-text: oklch(0.98 0.01 85);
       --cm-dialog-muted: color-mix(in oklch, var(--cm-dialog-text) 62%, transparent);
+      --cm-dialog-accent: oklch(0.55 0.14 40);
       width: min(92vw, 410px);
       padding: 0;
-      border: 1px solid color-mix(in oklch, var(--cm-dialog-text) 30%, transparent);
-      border-radius: 20px;
+      border: 0;
+      border-radius: 22px;
       color: var(--cm-dialog-text);
-      background: linear-gradient(165deg, color-mix(in oklch, var(--cm-dialog-text) 18%, transparent), color-mix(in oklch, var(--cm-dialog-text) 6%, transparent)), oklch(0.22 0.015 60 / 0.82);
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-dialog-text) 38%, transparent), 0 30px 80px oklch(0.08 0.01 60 / 0.6);
+      background: radial-gradient(120% 90% at 18% 0%, color-mix(in oklch, var(--cm-dialog-text) 20%, transparent), transparent 55%), linear-gradient(165deg, color-mix(in oklch, var(--cm-dialog-text) 14%, transparent), color-mix(in oklch, var(--cm-dialog-text) 5%, transparent)), oklch(0.22 0.015 60 / 0.82);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-dialog-text) 42%, transparent), inset 0 -14px 30px color-mix(in oklch, black 22%, transparent), 0 34px 90px oklch(0.08 0.01 60 / 0.65), 0 0 70px color-mix(in oklch, var(--cm-dialog-accent) 16%, transparent);
       backdrop-filter: blur(18px) saturate(1.25);
       -webkit-backdrop-filter: blur(18px) saturate(1.25);
     }
-    .cm-glass-dialog::backdrop { background: oklch(0.1 0.01 60 / 0.45); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
-    .cm-glass-dialog[open] { animation: cm-dialog-in 320ms cubic-bezier(0.22, 1, 0.36, 1); }
-    .cm-glass-dialog[open]::backdrop { animation: cm-dialog-fade 320ms ease; }
-    @keyframes cm-dialog-in { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
+    /* bezel ring: masked 1.5px band with its own backdrop-filter, so the edge
+       samples and brightens whatever sits behind the dialog (same trick as the
+       liquid button's orb ring) */
+    .cm-glass-dialog::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.5px;
+      pointer-events: none;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      background: linear-gradient(165deg, color-mix(in oklch, var(--cm-dialog-text) 85%, transparent), color-mix(in oklch, var(--cm-dialog-text) 22%, transparent) 45%, color-mix(in oklch, var(--cm-dialog-text) 55%, transparent));
+      -webkit-backdrop-filter: blur(4px) brightness(1.5) saturate(1.3);
+      backdrop-filter: blur(4px) brightness(1.5) saturate(1.3);
+    }
+    /* specular sheen across the top edge */
+    .cm-glass-dialog::after {
+      content: '';
+      position: absolute;
+      inset: 0 0 60%;
+      border-radius: 22px 22px 0 0;
+      pointer-events: none;
+      background: radial-gradient(140% 100% at 50% -30%, color-mix(in oklch, var(--cm-dialog-text) 26%, transparent), transparent 62%);
+    }
+    .cm-glass-dialog::backdrop { background: oklch(0.1 0.01 60 / 0.5); -webkit-backdrop-filter: blur(8px) saturate(0.9); backdrop-filter: blur(8px) saturate(0.9); }
+    .cm-glass-dialog[open] { animation: cm-dialog-in 460ms cubic-bezier(0.26, 1.2, 0.4, 1); }
+    .cm-glass-dialog[open]::backdrop { animation: cm-dialog-fade 460ms ease; }
+    .cm-glass-dialog[open] :is(.cm-glass-dialog__title, .cm-glass-dialog__copy, .cm-glass-dialog__actions) { animation: cm-dialog-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+    .cm-glass-dialog[open] .cm-glass-dialog__copy { animation-delay: 60ms; }
+    .cm-glass-dialog[open] .cm-glass-dialog__actions { animation-delay: 110ms; }
+    @keyframes cm-dialog-in { from { opacity: 0; transform: translateY(22px) scale(0.92); filter: blur(8px); } }
+    @keyframes cm-dialog-rise { from { opacity: 0; transform: translateY(10px); } }
     @keyframes cm-dialog-fade { from { opacity: 0; } }
     .cm-glass-dialog__body { padding: 28px; }
     .cm-glass-dialog__title { margin: 0; font: 600 24px/1.15 Georgia, serif; }
@@ -417,7 +451,7 @@
       .cm-glass-card, .cm-glass-card:hover { transform: none; }
       .cm-glass-card__glare { display: none; }
       .cm-glass-toggle::after { transition: none; }
-      .cm-glass-dialog[open], .cm-glass-dialog[open]::backdrop { animation: none; }
+      .cm-glass-dialog[open], .cm-glass-dialog[open]::backdrop, .cm-glass-dialog[open] :is(.cm-glass-dialog__title, .cm-glass-dialog__copy, .cm-glass-dialog__actions) { animation: none; }
     }
   </style>
 </head>
@@ -950,7 +984,7 @@ document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
     inset 0 -2px 3px rgba(0,0,0,0.22),
     0 3px 8px rgba(0,0,0,0.45);
   transition: transform 320ms var(--cm-toggle-ease),
-    width 150ms ease;
+    width 320ms var(--cm-toggle-ease);
 }
 .cm-glass-toggle[aria-checked="true"] {
   border-color: color-mix(in oklch,
@@ -965,9 +999,16 @@ document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
   transform: translateX(
     calc(var(--cm-toggle-w) - var(--cm-toggle-h) + 2px));
 }
-/* press squash: thumb widens while held */
+/* press squash: thumb stretches toward the direction
+   of travel while held, same spring as the slide */
 .cm-glass-toggle:active::after {
-  width: calc(var(--cm-toggle-h) - 4px);
+  width: calc(var(--cm-toggle-h) - 2px);
+}
+/* pressed while checked: pin the right edge so the
+   stretch grows inward, not past the track */
+.cm-glass-toggle[aria-checked="true"]:active::after {
+  transform: translateX(
+    calc(var(--cm-toggle-w) - var(--cm-toggle-h) - 4px));
 }
 .cm-glass-toggle:focus-visible {
   outline: 2px solid var(--cm-toggle-text);
@@ -1192,36 +1233,99 @@ document.querySelectorAll('.cm-glass-card-wrap').forEach(function (wrap) {
   --cm-dialog-text: oklch(0.98 0.01 85);
   --cm-dialog-muted: color-mix(in oklch,
     var(--cm-dialog-text) 62%, transparent);
+  --cm-dialog-accent: oklch(0.55 0.14 40);
   width: min(92vw, 410px);
   padding: 0;
-  border: 1px solid color-mix(in oklch,
-    var(--cm-dialog-text) 30%, transparent);
-  border-radius: 20px;
+  border: 0;
+  border-radius: 22px;
   color: var(--cm-dialog-text);
-  background: linear-gradient(165deg,
-    color-mix(in oklch, var(--cm-dialog-text) 18%, transparent),
-    color-mix(in oklch, var(--cm-dialog-text) 6%, transparent)),
+  background:
+    radial-gradient(120% 90% at 18% 0%,
+      color-mix(in oklch, var(--cm-dialog-text) 20%, transparent),
+      transparent 55%),
+    linear-gradient(165deg,
+      color-mix(in oklch, var(--cm-dialog-text) 14%, transparent),
+      color-mix(in oklch, var(--cm-dialog-text) 5%, transparent)),
     oklch(0.22 0.015 60 / 0.82);
   box-shadow:
     inset 0 1px 0 color-mix(in oklch,
-      var(--cm-dialog-text) 38%, transparent),
-    0 30px 80px oklch(0.08 0.01 60 / 0.6);
+      var(--cm-dialog-text) 42%, transparent),
+    inset 0 -14px 30px color-mix(in oklch,
+      black 22%, transparent),
+    0 34px 90px oklch(0.08 0.01 60 / 0.65),
+    0 0 70px color-mix(in oklch,
+      var(--cm-dialog-accent) 16%, transparent);
   backdrop-filter: blur(18px) saturate(1.25);
   -webkit-backdrop-filter: blur(18px) saturate(1.25);
 }
+/* bezel ring: masked 1.5px band with its own
+   backdrop-filter, so the edge samples and brightens
+   whatever sits behind the dialog */
+.cm-glass-dialog::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  background: linear-gradient(165deg,
+    color-mix(in oklch, var(--cm-dialog-text) 85%, transparent),
+    color-mix(in oklch,
+      var(--cm-dialog-text) 22%, transparent) 45%,
+    color-mix(in oklch, var(--cm-dialog-text) 55%, transparent));
+  -webkit-backdrop-filter: blur(4px) brightness(1.5)
+    saturate(1.3);
+  backdrop-filter: blur(4px) brightness(1.5) saturate(1.3);
+}
+/* specular sheen across the top edge */
+.cm-glass-dialog::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 60%;
+  border-radius: 22px 22px 0 0;
+  pointer-events: none;
+  background: radial-gradient(140% 100% at 50% -30%,
+    color-mix(in oklch, var(--cm-dialog-text) 26%, transparent),
+    transparent 62%);
+}
 .cm-glass-dialog::backdrop {
-  background: oklch(0.1 0.01 60 / 0.45);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  background: oklch(0.1 0.01 60 / 0.5);
+  -webkit-backdrop-filter: blur(8px) saturate(0.9);
+  backdrop-filter: blur(8px) saturate(0.9);
 }
 .cm-glass-dialog[open] {
-  animation: cm-dialog-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: cm-dialog-in 460ms cubic-bezier(0.26, 1.2, 0.4, 1);
 }
 .cm-glass-dialog[open]::backdrop {
-  animation: cm-dialog-fade 320ms ease;
+  animation: cm-dialog-fade 460ms ease;
+}
+/* content rises in a beat behind the panel */
+.cm-glass-dialog[open] :is(.cm-glass-dialog__title,
+  .cm-glass-dialog__copy, .cm-glass-dialog__actions) {
+  animation: cm-dialog-rise 520ms
+    cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.cm-glass-dialog[open] .cm-glass-dialog__copy {
+  animation-delay: 60ms;
+}
+.cm-glass-dialog[open] .cm-glass-dialog__actions {
+  animation-delay: 110ms;
 }
 @keyframes cm-dialog-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.92);
+    filter: blur(8px);
+  }
+}
+@keyframes cm-dialog-rise {
+  from { opacity: 0; transform: translateY(10px); }
 }
 @keyframes cm-dialog-fade { from { opacity: 0; } }
 .cm-glass-dialog__body { padding: 28px; }
@@ -1273,7 +1377,10 @@ body:has(.cm-glass-dialog[open]) { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .cm-glass-dialog[open],
-  .cm-glass-dialog[open]::backdrop { animation: none; }
+  .cm-glass-dialog[open]::backdrop,
+  .cm-glass-dialog[open] :is(.cm-glass-dialog__title,
+    .cm-glass-dialog__copy,
+    .cm-glass-dialog__actions) { animation: none; }
 }</code></pre>
             </div>
             <div class="code-panel code-panel--wide">
