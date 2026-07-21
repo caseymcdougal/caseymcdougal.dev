@@ -275,14 +275,16 @@
       border-radius: 50%;
       background: linear-gradient(180deg, #ffffff, #cfd3d8 78%, #b9bec5);
       box-shadow: inset 0 1px 0 #fff, inset 0 -2px 3px rgba(0,0,0,0.22), 0 3px 8px rgba(0,0,0,0.45);
-      transition: transform 320ms var(--cm-toggle-ease);
+      transition: transform 320ms var(--cm-toggle-ease), width 320ms var(--cm-toggle-ease);
     }
     .cm-glass-toggle[aria-checked="true"] {
       border-color: color-mix(in oklch, var(--accent) 70%, white);
       background: linear-gradient(180deg, color-mix(in oklch, black 16%, transparent), color-mix(in oklch, var(--cm-toggle-text) 8%, transparent)), color-mix(in oklch, var(--accent) 62%, oklch(0.2 0.015 60));
     }
     .cm-glass-toggle[aria-checked="true"]::after { transform: translateX(calc(var(--cm-toggle-w) - var(--cm-toggle-h) + 2px)); }
-    .cm-glass-toggle:active::after { width: calc(var(--cm-toggle-h) - 4px); }
+    .cm-glass-toggle:active::after { width: calc(var(--cm-toggle-h) - 2px); }
+    /* pressed while checked: pin the thumb's right edge so the stretch grows inward instead of spilling past the track */
+    .cm-glass-toggle[aria-checked="true"]:active::after { transform: translateX(calc(var(--cm-toggle-w) - var(--cm-toggle-h) - 4px)); }
     .cm-glass-toggle-row { display: flex; align-items: center; gap: 14px; color: oklch(0.98 0.01 85); font-size: 14px; font-weight: 550; }
 
     .cm-glass-field {
@@ -315,16 +317,44 @@
     }
 
     .cm-glass-dialog-mini {
+      --cm-dialog-text: oklch(0.98 0.01 85);
+      position: relative;
       width: min(100%, 250px);
       padding: 20px;
-      border: 1px solid color-mix(in oklch, var(--surface) 30%, transparent);
+      border: 0;
       border-radius: 18px;
-      color: oklch(0.98 0.01 85);
-      background: linear-gradient(165deg, color-mix(in oklch, var(--surface) 18%, transparent), color-mix(in oklch, var(--surface) 6%, transparent)), oklch(0.22 0.015 60 / 0.7);
-      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--surface) 38%, transparent), 0 22px 48px oklch(0.08 0.01 60 / 0.55);
+      color: var(--cm-dialog-text);
+      background: radial-gradient(120% 90% at 18% 0%, color-mix(in oklch, var(--cm-dialog-text) 20%, transparent), transparent 55%), linear-gradient(165deg, color-mix(in oklch, var(--cm-dialog-text) 14%, transparent), color-mix(in oklch, var(--cm-dialog-text) 5%, transparent)), oklch(0.22 0.015 60 / 0.7);
+      box-shadow: inset 0 1px 0 color-mix(in oklch, var(--cm-dialog-text) 42%, transparent), inset 0 -14px 30px color-mix(in oklch, black 22%, transparent), 0 24px 56px oklch(0.08 0.01 60 / 0.6), 0 0 60px color-mix(in oklch, var(--accent) 15%, transparent);
       backdrop-filter: blur(16px) saturate(1.25);
       -webkit-backdrop-filter: blur(16px) saturate(1.25);
     }
+    /* bezel ring: masked 1.5px band with its own backdrop-filter, so the edge samples and brightens whatever sits behind it (same trick as the library dialog) */
+    .cm-glass-dialog-mini::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.5px;
+      pointer-events: none;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      background: linear-gradient(165deg, color-mix(in oklch, var(--cm-dialog-text) 85%, transparent), color-mix(in oklch, var(--cm-dialog-text) 22%, transparent) 45%, color-mix(in oklch, var(--cm-dialog-text) 55%, transparent));
+      -webkit-backdrop-filter: blur(4px) brightness(1.5) saturate(1.3);
+      backdrop-filter: blur(4px) brightness(1.5) saturate(1.3);
+    }
+    /* specular sheen across the top edge */
+    .cm-glass-dialog-mini::after {
+      content: '';
+      position: absolute;
+      inset: 0 0 60%;
+      border-radius: 18px 18px 0 0;
+      pointer-events: none;
+      background: radial-gradient(140% 100% at 50% -30%, color-mix(in oklch, var(--cm-dialog-text) 26%, transparent), transparent 62%);
+    }
+    .cm-glass-dialog-mini strong, .cm-glass-dialog-mini p { position: relative; }
     .cm-glass-dialog-mini strong { display: block; font-family: var(--font-display); font-size: 19px; line-height: 1.15; }
     .cm-glass-dialog-mini p { margin: 8px 0 0; color: color-mix(in oklch, oklch(0.98 0.01 85) 62%, transparent); font-size: 13px; }
 
